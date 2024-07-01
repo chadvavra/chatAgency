@@ -2,7 +2,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 
 const anthropic = new Anthropic({
-    apiKey: 'ANTHROPIC_API_KEY', 
+    apiKey: 'my_api_key', // defaults to process.env["ANTHROPIC_API_KEY"]
   });
 
 export default async function handler(req, res) {
