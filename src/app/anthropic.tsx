@@ -1,10 +1,9 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 
-const configuration = new configuration({
-    apiKey: 'my_api_key',
-});
-const anthropic = new Anthropic(configuration);
+const anthropic = new Anthropic({
+    apiKey: 'my_api_key', // defaults to process.env["ANTHROPIC_API_KEY"]
+  });
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
