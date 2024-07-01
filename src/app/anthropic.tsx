@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       const completion = await anthropic.completions.create({
         model: "claude-3-5-sonnet-20240620",
         prompt: prompt,
-        max_tokens_to_sample: 300,
+        max_tokens_to_sample: 1024,
       });
       res.status(200).json({ response: completion.completion });
     } catch (error) {

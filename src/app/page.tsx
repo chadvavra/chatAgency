@@ -14,7 +14,6 @@ export default function AnthropicApiPage() {
     setError('');
     try {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
-       mode: 'no-cors',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,9 +34,15 @@ export default function AnthropicApiPage() {
         throw new Error('Received non-JSON response from server');
       }
     } catch (error) {
-      console.error('Error:', error);
-      setError(`An error occurred: ${error.message}`);
-      setResponse('');
+      if (error instanceof Error) {
+        console.error('Error:', error);
+        setError(`An error occurred: ${error.message}`);
+        setResponse('');
+      } else {
+        console.error('An unexpected error occurred:', error);
+        setError('An unexpected error occurred');
+        setResponse('');
+      }
     }
     setLoading(false);
   };
