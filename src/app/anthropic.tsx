@@ -1,6 +1,5 @@
-// pages/api/anthropic.js
 
-import { Configuration, AnthropicApi } from 'anthropic';
+import Anthropic from '@anthropic-ai/sdk';
 
 const configuration = new Configuration({
   apiKey: process.env.ANTHROPIC_API_KEY,
