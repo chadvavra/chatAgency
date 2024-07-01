@@ -14,6 +14,7 @@ export default function AnthropicApiPage() {
     setError('');
     try {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
+        mode: 'no-cors',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
