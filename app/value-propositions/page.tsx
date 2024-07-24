@@ -1,7 +1,4 @@
-'use client';
-
-import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { Suspense } from 'react';
 
 export default function ValuePropositionsPage() {
   return (
