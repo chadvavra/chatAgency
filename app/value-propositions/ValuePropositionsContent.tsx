@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 
 const ValuePropositionsContent: React.FC = () => {
   const searchParams = useSearchParams();
-  const searchParams = useSearchParams();
   const [idea, setIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState('');
   const [isLoading, setIsLoading] = useState(true);
