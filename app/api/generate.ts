@@ -9,6 +9,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ generatedIdea });
   } catch (error) {
     console.error('Error generating idea:', error);
-    return NextResponse.json({ error: 'Failed to generate idea' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to generate idea', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
