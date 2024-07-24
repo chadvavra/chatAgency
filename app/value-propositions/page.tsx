@@ -10,7 +10,6 @@ export default function ValuePropositionsPage() {
     </Suspense>
   );
 }
-  const searchParams = useSearchParams();
   const [idea, setIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState('');
   const [isLoading, setIsLoading] = useState(true);
