@@ -20,7 +20,9 @@ export default function IdeaForm() {
       });
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorBody = await response.text();
+        console.error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
+        throw new Error(`Server error: ${response.status}. Please try again later.`);
       }
       
       const data = await response.json();
@@ -34,7 +36,7 @@ export default function IdeaForm() {
       }
     } catch (error) {
       console.error('Error:', error);
-      setGeneratedIdea('An error occurred while generating the idea. Please try again.');
+      setGeneratedIdea(`An error occurred: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
