@@ -19,14 +19,16 @@ export default function IdeaForm() {
         body: JSON.stringify({ idea }),
       });
       
-      const data = await response.json();
-      
       if (!response.ok) {
-        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
+      const data = await response.json();
       
       if (data.generatedIdea) {
         setGeneratedIdea(data.generatedIdea);
+      } else if (data.error) {
+        throw new Error(data.error);
       } else {
         throw new Error('No idea generated');
       }
