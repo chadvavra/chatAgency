@@ -1,14 +1,7 @@
-// @ts-nocheck
-'use client';
-import React, { Suspense } from 'react';
 import ValuePropositionsContent from './ValuePropositionsContent';
 
 export default function ValuePropositionsPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ValuePropositionsContent />
-    </Suspense>
-  );
+  return <ValuePropositionsContent />;
 }
   const [idea, setIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState('');
