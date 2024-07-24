@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function IdeaPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [generatedIdea, setGeneratedIdea] = useState(searchParams.get('generatedIdea') || '');
   const [changeRequest, setChangeRequest] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -62,13 +63,22 @@ export default function IdeaPage() {
             required
           ></textarea>
         </div>
-        <button
-          type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Updating...' : 'Update Idea'}
-        </button>
+        <div className="flex space-x-4">
+          <button
+            type="submit"
+            className="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Updating...' : 'Update Idea'}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push(`/value-propositions?idea=${encodeURIComponent(generatedIdea)}`)}
+            className="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            Continue
+          </button>
+        </div>
       </form>
     </div>
   );
