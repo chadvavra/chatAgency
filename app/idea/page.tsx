@@ -11,7 +11,7 @@ export default function IdeaPage() {
   );
 }
 
-function IdeaPageContent() {
+const IdeaPageContent: React.FC = () => {
   const router = useRouter();
   const [generatedIdea, setGeneratedIdea] = useState('');
   const [changeRequest, setChangeRequest] = useState('');
