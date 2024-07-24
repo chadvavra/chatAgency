@@ -4,16 +4,16 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const ValuePropositionsContent: React.FC = () => {
-  const searchParams = useSearchParams();
   const [idea, setIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const searchParams = useSearchParams();
     const fetchedIdea = searchParams.get('idea') || '';
     setIdea(fetchedIdea);
     generateValuePropositions(fetchedIdea);
-  }, [searchParams]);
+  }, []);
 
   const generateValuePropositions = async (ideaText: string) => {
     setIsLoading(true);
