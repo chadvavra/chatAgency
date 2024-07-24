@@ -18,14 +18,18 @@ export default function IdeaForm() {
         },
         body: JSON.stringify({ idea }),
       });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      
       const data = await response.json();
-      if (data.error) {
-        throw new Error(data.error);
+      
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP error! status: ${response.status}`);
       }
-      setGeneratedIdea(data.generatedIdea);
+      
+      if (data.generatedIdea) {
+        setGeneratedIdea(data.generatedIdea);
+      } else {
+        throw new Error('No idea generated');
+      }
     } catch (error) {
       console.error('Error:', error);
       setGeneratedIdea('An error occurred while generating the idea. Please try again.');
