@@ -4,8 +4,15 @@ import { generateIdea } from '@/utils/anthropic';
 export async function POST(req: NextRequest) {
   console.log('API route hit');
   try {
-    const { idea } = await req.json();
-    const formattedPrompt = `\n\nHuman: Generate a detailed business idea or product feature based on the following concept: ${idea}\n\nAssistant:`;
+    const { idea, changeRequest } = await req.json();
+    let formattedPrompt;
+    
+    if (changeRequest) {
+      formattedPrompt = `\n\nHuman: Here's an existing business idea or product feature: ${idea}\n\nPlease update or improve this idea based on the following request: ${changeRequest}\n\nAssistant:`;
+    } else {
+      formattedPrompt = `\n\nHuman: Generate a detailed business idea or product feature based on the following concept: ${idea}\n\nAssistant:`;
+    }
+    
     console.log('Formatted prompt:', formattedPrompt);
     const generatedIdea = await generateIdea(formattedPrompt);
     console.log('Generated idea:', generatedIdea);

@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
-export default function IdeaForm() {
-  const [idea, setIdea] = useState('');
+export default function IdeaPage() {
+  const searchParams = useSearchParams();
+  const [generatedIdea, setGeneratedIdea] = useState(searchParams.get('generatedIdea') || '');
+  const [changeRequest, setChangeRequest] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleChangeRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
@@ -17,7 +18,7 @@ export default function IdeaForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ idea }),
+        body: JSON.stringify({ idea: generatedIdea, changeRequest }),
       });
       
       if (!response.ok) {
@@ -27,7 +28,8 @@ export default function IdeaForm() {
       const data = await response.json();
       
       if (data.generatedIdea) {
-        router.push(`/idea?generatedIdea=${encodeURIComponent(data.generatedIdea)}`);
+        setGeneratedIdea(data.generatedIdea);
+        setChangeRequest('');
       } else {
         throw new Error('No idea generated');
       }
@@ -40,19 +42,23 @@ export default function IdeaForm() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold mb-2">Generated Idea:</h2>
+        <p className="text-gray-700 whitespace-pre-wrap">{generatedIdea}</p>
+      </div>
+      <form onSubmit={handleChangeRequest} className="space-y-4">
         <div>
-          <label htmlFor="idea" className="block text-sm font-medium text-gray-700">
-            Your Business Idea or Product Feature
+          <label htmlFor="changeRequest" className="block text-sm font-medium text-gray-700">
+            Request Changes or Improvements
           </label>
           <textarea
-            id="idea"
-            name="idea"
+            id="changeRequest"
+            name="changeRequest"
             rows={4}
             className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={idea}
-            onChange={(e) => setIdea(e.target.value)}
+            value={changeRequest}
+            onChange={(e) => setChangeRequest(e.target.value)}
             required
           ></textarea>
         </div>
@@ -61,7 +67,7 @@ export default function IdeaForm() {
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           disabled={isLoading}
         >
-          {isLoading ? 'Generating...' : 'Generate Detailed Idea'}
+          {isLoading ? 'Updating...' : 'Update Idea'}
         </button>
       </form>
     </div>
