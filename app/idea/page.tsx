@@ -1,10 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import React, { useState, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function IdeaPage() {
-  const searchParams = useSearchParams();
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <IdeaPageContent />
+    </Suspense>
+  );
+}
+
+function IdeaPageContent() {
+  const { searchParams } = new URL(window.location.href);
   const router = useRouter();
   const [generatedIdea, setGeneratedIdea] = useState(searchParams.get('generatedIdea') || '');
   const [changeRequest, setChangeRequest] = useState('');
