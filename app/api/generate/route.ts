@@ -17,10 +17,10 @@ export async function POST(req: NextRequest) {
     const generatedIdea = await generateIdea(formattedPrompt);
     console.log('Generated idea:', generatedIdea);
     return NextResponse.json({ generatedIdea });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error generating idea:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorDetails = error.response?.data ? JSON.stringify(error.response.data) : 'No additional details';
+    const errorDetails = error instanceof Error && 'response' in error && error.response?.data ? JSON.stringify(error.response.data) : 'No additional details';
     return NextResponse.json(
       { 
         error: 'Failed to generate idea', 
