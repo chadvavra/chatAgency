@@ -1,7 +1,6 @@
 // @ts-nocheck
 'use client';
-import React, { Suspense, useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { Suspense } from 'react';
 
 export default function ValuePropositionsPage() {
   return (
@@ -11,7 +10,8 @@ export default function ValuePropositionsPage() {
   );
 }
 
-
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 const ValuePropositionsContent = () => {
   const searchParams = useSearchParams();
