@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { NextPage } from 'next';
 
-const ValuePropositionsPage: NextPage = () => {
+export default function ValuePropositionsPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ValuePropositionsContent />
@@ -12,7 +11,7 @@ const ValuePropositionsPage: NextPage = () => {
   );
 }
 
-const ValuePropositionsContent: React.FC = () => {
+const ValuePropositionsContent = () => {
   const [idea, setIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState('');
   const [isLoading, setIsLoading] = useState(true);
