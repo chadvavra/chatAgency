@@ -42,7 +42,8 @@ export default function ValuePropositionsPage() {
       }
     } catch (error) {
       console.error('Error:', error);
-      alert(`An error occurred: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      alert(`An error occurred: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
