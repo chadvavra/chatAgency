@@ -20,7 +20,11 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error('Error generating idea:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorDetails = error instanceof Error && 'response' in error && error.response?.data ? JSON.stringify(error.response.data) : 'No additional details';
+    let errorDetails = 'No additional details';
+    if (error instanceof Error && 'response' in error) {
+      const responseData = (error.response as any)?.data;
+      errorDetails = responseData ? JSON.stringify(responseData) : 'No response data';
+    }
     return NextResponse.json(
       { 
         error: 'Failed to generate idea', 
