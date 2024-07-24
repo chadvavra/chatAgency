@@ -1,4 +1,5 @@
 // @ts-nocheck
+'use client';
 import React, { Suspense } from 'react';
 
 export default function ValuePropositionsPage() {
@@ -9,7 +10,7 @@ export default function ValuePropositionsPage() {
   );
 }
 
-'use client';
+
 
 const ValuePropositionsContent = () => {
   const searchParams = useSearchParams();
