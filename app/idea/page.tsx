@@ -3,14 +3,6 @@
 import React, { useState, Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function IdeaPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <IdeaPageContent />
-    </Suspense>
-  );
-}
-
 const IdeaPageContent: React.FC = () => {
   const router = useRouter();
   const [generatedIdea, setGeneratedIdea] = useState('');
@@ -95,4 +87,6 @@ const IdeaPageContent: React.FC = () => {
       </form>
     </div>
   );
-}
+};
+
+export default IdeaPageContent;
