@@ -2,10 +2,18 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 export default function ValuePropositionsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ValuePropositionsContent />
+    </Suspense>
+  );
+}
+
+function ValuePropositionsContent() {
   const searchParams = useSearchParams();
   const [idea, setIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState('');
