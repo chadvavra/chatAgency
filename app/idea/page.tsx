@@ -42,10 +42,10 @@ export default function IdeaPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div>
         <h2 className="text-lg font-semibold mb-2">Generated Idea:</h2>
-        <p className="text-gray-700 whitespace-pre-wrap">{generatedIdea}</p>
+        <p className="text-gray-700 whitespace-pre-wrap bg-gray-100 p-4 rounded-md">{generatedIdea}</p>
       </div>
       <form onSubmit={handleChangeRequest} className="space-y-4">
         <div>
