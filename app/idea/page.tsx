@@ -12,11 +12,15 @@ export default function IdeaPage() {
 }
 
 function IdeaPageContent() {
-  const { searchParams } = new URL(window.location.href);
   const router = useRouter();
-  const [generatedIdea, setGeneratedIdea] = useState(searchParams.get('generatedIdea') || '');
+  const [generatedIdea, setGeneratedIdea] = useState('');
   const [changeRequest, setChangeRequest] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const { searchParams } = new URL(window.location.href);
+    setGeneratedIdea(searchParams.get('generatedIdea') || '');
+  }, []);
 
   const handleChangeRequest = async (e: React.FormEvent) => {
     e.preventDefault();
