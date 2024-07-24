@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateIdea } from '@/utils/anthropic';
 
 export async function POST(req: NextRequest) {
+  console.log('API route hit'); // Add this line
   try {
     const { idea } = await req.json();
     const generatedIdea = await generateIdea(idea);
