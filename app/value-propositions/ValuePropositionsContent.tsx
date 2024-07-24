@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const ValuePropositionsContent: React.FC = () => {
-  const searchParams = useMemo(() => useSearchParams(), []);
+  const searchParams = useSearchParams();
   const [idea, setIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState('');
   const [isLoading, setIsLoading] = useState(true);
