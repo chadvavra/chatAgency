@@ -1,11 +1,10 @@
-// @ts-nocheck
-
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { NextPage } from 'next';
 
-export default function ValuePropositionsPage() {
+const ValuePropositionsPage: NextPage = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ValuePropositionsContent />
@@ -13,7 +12,7 @@ export default function ValuePropositionsPage() {
   );
 }
 
-function ValuePropositionsContent() {
+const ValuePropositionsContent: React.FC = () => {
   const searchParams = useSearchParams();
   const [idea, setIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState('');
