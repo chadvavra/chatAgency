@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 export const createClient = () => {
   const cookieStore = cookies();
 
-
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -32,21 +31,6 @@ export const createClient = () => {
           }
         },
       },
-    },
+    }
   );
 };
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
-
-export const createClient = () => {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Supabase URL and Key must be provided')
-  }
-
-  return createSupabaseClient(supabaseUrl, supabaseKey, {
-    cookies: () => cookies()
-  })
-}
