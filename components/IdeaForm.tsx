@@ -17,13 +17,16 @@ export default function IdeaForm({ user }: { user: User }) {
       // Save the initial idea to Supabase
       try {
         console.log('Attempting to save idea for user:', user.id);
+        console.log('Idea content:', idea);
         const result = await saveIdea(user.id, idea);
         console.log('Idea saved successfully:', result);
       } catch (error) {
         console.error('Error saving idea:', error);
         if (error instanceof Error) {
+          console.error('Error details:', error.message, error.stack);
           alert(`Failed to save idea: ${error.message}`);
         } else {
+          console.error('Unknown error:', error);
           alert('Failed to save idea. Please try again.');
         }
         setIsLoading(false);
