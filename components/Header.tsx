@@ -20,7 +20,7 @@ export default async function Header() {
       </Link>
       <div className="flex-1 flex justify-center">
         {user && (
-          <Link href="/dashboard" className="text-foreground hover:underline">
+          <Link href="/dashboard" className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
             Dashboard
           </Link>
         )}
