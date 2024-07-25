@@ -65,6 +65,10 @@ export default function IdeaForm({ user }: { user: User | null }) {
     }
   };
 
+  if (!user) {
+    return <div>Please log in to submit ideas.</div>;
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-4">
