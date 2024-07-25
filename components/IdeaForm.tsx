@@ -14,7 +14,12 @@ export default function IdeaForm({ user }) {
     setIsLoading(true);
     try {
       // Save the initial idea to Supabase
-      await saveIdea(user.id, idea);
+      try {
+        await saveIdea(user.id, idea);
+        console.log('Idea saved successfully');
+      } catch (error) {
+        console.error('Error saving idea:', error);
+      }
 
       const response = await fetch('/api/generate', {
         method: 'POST',
