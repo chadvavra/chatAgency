@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { saveIdea } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 
 export default function IdeaForm({ user }: { user: User | null }) {
@@ -15,26 +14,8 @@ export default function IdeaForm({ user }: { user: User | null }) {
     e.preventDefault();
     setIsLoading(true);
     try {
-      // Save the initial idea to Supabase
       if (!user) {
         throw new Error('User is not authenticated');
-      }
-      try {
-        console.log('Attempting to save idea for user:', user.id);
-        console.log('Idea content:', idea);
-        const result = await saveIdea(user.id, idea);
-        console.log('Idea saved successfully:', result);
-      } catch (error) {
-        console.error('Error saving idea:', error);
-        if (error instanceof Error) {
-          console.error('Error details:', error.message, error.stack);
-          alert(`Failed to save idea: ${error.message}`);
-        } else {
-          console.error('Unknown error:', error);
-          alert('Failed to save idea. Please try again.');
-        }
-        setIsLoading(false);
-        return;
       }
 
       console.log('Sending idea to API for generation');
