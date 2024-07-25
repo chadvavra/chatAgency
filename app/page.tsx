@@ -1,6 +1,13 @@
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
 import IdeaForm from "@/components/IdeaForm";
+import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -8,7 +15,16 @@ export default function Home() {
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <h1 className="text-2xl font-semibold mb-6 text-center">Business Idea Generator</h1>
-            <IdeaForm />
+            {user ? (
+              <IdeaForm />
+            ) : (
+              <div className="text-center">
+                <p className="mb-4">Please log in to generate ideas.</p>
+                <Link href="/login" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Log In
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
