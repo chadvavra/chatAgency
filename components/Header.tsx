@@ -1,4 +1,3 @@
-import SupabaseLogo from "./SupabaseLogo";
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
@@ -19,7 +18,12 @@ export default async function Header() {
       <Link href="/" className="flex items-center gap-2">
         <span className="text-xl font-bold">Chat Agency AI</span>
       </Link>
-      <nav>
+      <nav className="flex items-center gap-4">
+        {user && (
+          <Link href="/dashboard" className="text-foreground hover:underline">
+            Dashboard
+          </Link>
+        )}
         {user ? (
           <form action={signOut}>
             <button type="submit" className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground">
