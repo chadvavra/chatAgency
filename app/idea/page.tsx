@@ -1,19 +1,22 @@
 'use client';
 
-import React, { useState, Suspense, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClient, updateDetailedIdea } from "@/utils/supabase/client";
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { createClient } from "@/utils/supabase/client";
 
-const IdeaPageContent: React.FC = () => {
+export default function IdeaPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [generatedIdea, setGeneratedIdea] = useState('');
   const [changeRequest, setChangeRequest] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const { searchParams } = new URL(window.location.href);
-    setGeneratedIdea(searchParams.get('generatedIdea') || '');
-  }, []);
+    const idea = searchParams.get('generatedIdea');
+    if (idea) {
+      setGeneratedIdea(decodeURIComponent(idea));
+    }
+  }, [searchParams]);
 
   const handleChangeRequest = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,9 +55,11 @@ const IdeaPageContent: React.FC = () => {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      await updateDetailedIdea(user.id, generatedIdea);
+      await supabase
+        .from('business_ideas')
+        .upsert({ user_id: user.id, detailed_idea: generatedIdea });
     }
-    router.push(`/value-propositions?idea=${encodeURIComponent(generatedIdea)}`);
+    router.push(`/value-propositions?generatedIdea=${encodeURIComponent(generatedIdea)}`);
   };
 
   return (
@@ -97,6 +102,4 @@ const IdeaPageContent: React.FC = () => {
       </form>
     </div>
   );
-};
-
-export default IdeaPageContent;
+}

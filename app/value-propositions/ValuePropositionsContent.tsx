@@ -4,32 +4,39 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
 
-const ValuePropositionsContent: React.FC = () => {
-  const searchParams = useSearchParams();
-  const [idea, setIdea] = useState('');
+interface ValuePropositionsContentProps {
+  generatedIdea?: string;
+}
+
+const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ generatedIdea }) => {
+  const [idea, setIdea] = useState(generatedIdea || '');
   const [valuePropositions, setValuePropositions] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchIdea = async () => {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data, error } = await supabase
-          .from('business_ideas')
-          .select('detailed_idea')
-          .eq('user_id', user.id)
-          .single();
-        
-        if (data) {
-          setIdea(data.detailed_idea);
-          generateValuePropositions(data.detailed_idea);
+    if (idea) {
+      generateValuePropositions(idea);
+    } else {
+      const fetchIdea = async () => {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data, error } = await supabase
+            .from('business_ideas')
+            .select('detailed_idea')
+            .eq('user_id', user.id)
+            .single();
+          
+          if (data) {
+            setIdea(data.detailed_idea);
+            generateValuePropositions(data.detailed_idea);
+          }
         }
-      }
-    };
+      };
 
-    fetchIdea();
-  }, []);
+      fetchIdea();
+    }
+  }, [idea]);
 
   const generateValuePropositions = async (ideaText: string) => {
     setIsLoading(true);
