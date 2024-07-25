@@ -18,17 +18,10 @@ export default async function Header() {
   return (
     <header className="w-full p-4 bg-background flex justify-between items-center">
       <div className="flex gap-8 justify-center items-center">
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          rel="noreferrer"
-        >
+        <Link href="/" className="flex items-center gap-2">
           <SupabaseLogo />
-        </a>
-        <span className="border-l rotate-45 h-6" />
-        <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
-          <NextLogo />
-        </a>
+          <span className="text-xl font-bold">My App</span>
+        </Link>
       </div>
       <nav>
         {user ? (
