@@ -4,8 +4,7 @@ import IdeaForm from "@/components/IdeaForm";
 import Link from "next/link";
 
 export default async function Home() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
