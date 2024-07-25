@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { saveIdea } from '@/utils/supabase/client';
+import { User } from '@supabase/supabase-js';
 
-export default function IdeaForm({ user }) {
+export default function IdeaForm({ user }: { user: User }) {
   const [idea, setIdea] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
