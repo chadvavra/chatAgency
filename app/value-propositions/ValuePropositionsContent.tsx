@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { createClient } from "@/utils/supabase/client";
 
 const ValuePropositionsContent: React.FC = () => {
   const searchParams = useSearchParams();
@@ -10,10 +11,25 @@ const ValuePropositionsContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchedIdea = searchParams.get('idea') || '';
-    setIdea(fetchedIdea);
-    generateValuePropositions(fetchedIdea);
-  }, [searchParams]);
+    const fetchIdea = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from('business_ideas')
+          .select('detailed_idea')
+          .eq('user_id', user.id)
+          .single();
+        
+        if (data) {
+          setIdea(data.detailed_idea);
+          generateValuePropositions(data.detailed_idea);
+        }
+      }
+    };
+
+    fetchIdea();
+  }, []);
 
   const generateValuePropositions = async (ideaText: string) => {
     setIsLoading(true);
@@ -37,6 +53,14 @@ const ValuePropositionsContent: React.FC = () => {
       
       if (data.generatedIdea) {
         setValuePropositions(data.generatedIdea);
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase
+            .from('business_ideas')
+            .update({ value_propositions: data.generatedIdea })
+            .eq('user_id', user.id);
+        }
       } else {
         throw new Error('No value propositions generated');
       }

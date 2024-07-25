@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient, saveIdea } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import IdeaForm from "@/components/IdeaForm";
 import Link from "next/link";
@@ -6,6 +6,13 @@ import Link from "next/link";
 export default async function Home() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
+
+  const handleIdeaSubmit = async (formData: FormData) => {
+    'use server'
+    if (!user) return;
+    const idea = formData.get('idea') as string;
+    await saveIdea(user.id, idea);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -15,7 +22,7 @@ export default async function Home() {
           <div className="max-w-md mx-auto">
             <h1 className="text-2xl font-semibold mb-6 text-center">Business Idea Generator</h1>
             {user ? (
-              <IdeaForm />
+              <IdeaForm onSubmit={handleIdeaSubmit} />
             ) : (
               <div className="text-center">
                 <p className="mb-4">Please log in to generate ideas.</p>

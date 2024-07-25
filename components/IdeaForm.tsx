@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function IdeaForm() {
+export default function IdeaForm({ onSubmit }) {
   const [idea, setIdea] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -14,6 +14,10 @@ export default function IdeaForm() {
     e.preventDefault();
     setIsLoading(true);
     try {
+      const formData = new FormData();
+      formData.append('idea', idea);
+      await onSubmit(formData);
+
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: {
