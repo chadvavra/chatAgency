@@ -17,8 +17,7 @@ export default async function Header() {
   return (
     <header className="w-full p-4 bg-background flex justify-between items-center">
       <Link href="/" className="flex items-center gap-2">
-        <SupabaseLogo />
-        <span className="text-xl font-bold">My App</span>
+        <span className="text-xl font-bold">Chat Agency AI</span>
       </Link>
       <nav>
         {user ? (
