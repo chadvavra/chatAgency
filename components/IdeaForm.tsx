@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { saveIdea } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 
-export default function IdeaForm({ user }: { user: User }) {
+export default function IdeaForm({ user }: { user: User | null }) {
   const [idea, setIdea] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -15,6 +15,9 @@ export default function IdeaForm({ user }: { user: User }) {
     setIsLoading(true);
     try {
       // Save the initial idea to Supabase
+      if (!user) {
+        throw new Error('User is not authenticated');
+      }
       try {
         console.log('Attempting to save idea for user:', user.id);
         console.log('Idea content:', idea);
