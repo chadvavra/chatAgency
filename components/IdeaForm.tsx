@@ -34,7 +34,7 @@ export default function IdeaForm({ user }: { user: User | null }) {
       const data = await response.json();
       
       if (data.generatedIdea) {
-        router.push(`/idea?generatedIdea=${encodeURIComponent(data.generatedIdea)}`);
+        router.push(`/value-propositions?generatedIdea=${encodeURIComponent(data.generatedIdea)}`);
       } else {
         throw new Error('No idea generated');
       }
