@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { saveIdea } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 
@@ -66,7 +67,14 @@ export default function IdeaForm({ user }: { user: User | null }) {
   };
 
   if (!user) {
-    return <div>Please log in to submit ideas.</div>;
+    return (
+      <div className="text-center">
+        <p className="mb-4">Please log in to submit ideas.</p>
+        <Link href="/login" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Log In
+        </Link>
+      </div>
+    );
   }
 
   return (
