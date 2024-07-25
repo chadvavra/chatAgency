@@ -21,7 +21,11 @@ export default function IdeaForm({ user }: { user: User }) {
         console.log('Idea saved successfully:', result);
       } catch (error) {
         console.error('Error saving idea:', error);
-        alert('Failed to save idea. Please try again.');
+        if (error instanceof Error) {
+          alert(`Failed to save idea: ${error.message}`);
+        } else {
+          alert('Failed to save idea. Please try again.');
+        }
         setIsLoading(false);
         return;
       }
