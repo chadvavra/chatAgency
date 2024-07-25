@@ -18,12 +18,14 @@ export default async function Header() {
       <Link href="/" className="flex items-center gap-2">
         <span className="text-xl font-bold">Chat Agency AI</span>
       </Link>
-      <nav className="flex items-center gap-4">
+      <div className="flex-1 flex justify-center">
         {user && (
           <Link href="/dashboard" className="text-foreground hover:underline">
             Dashboard
           </Link>
         )}
+      </div>
+      <nav>
         {user ? (
           <form action={signOut}>
             <button type="submit" className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground">
