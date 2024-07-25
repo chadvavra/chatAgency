@@ -2,6 +2,7 @@
 
 import React, { useState, Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClient, updateDetailedIdea } from "@/utils/supabase/client";
 
 const IdeaPageContent: React.FC = () => {
   const router = useRouter();
@@ -47,6 +48,15 @@ const IdeaPageContent: React.FC = () => {
     }
   };
 
+  const handleContinue = async () => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      await updateDetailedIdea(user.id, generatedIdea);
+    }
+    router.push(`/value-propositions?idea=${encodeURIComponent(generatedIdea)}`);
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div>
@@ -78,7 +88,7 @@ const IdeaPageContent: React.FC = () => {
           </button>
           <button
             type="button"
-            onClick={() => router.push(`/value-propositions?idea=${encodeURIComponent(generatedIdea)}`)}
+            onClick={handleContinue}
             className="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
             Continue
