@@ -1,11 +1,10 @@
-// @ts-nocheck
-
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { saveIdea } from '@/utils/supabase/client';
 
-export default function IdeaForm({ onSubmit }) {
+export default function IdeaForm({ user }) {
   const [idea, setIdea] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -14,9 +13,8 @@ export default function IdeaForm({ onSubmit }) {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const formData = new FormData();
-      formData.append('idea', idea);
-      await onSubmit(formData);
+      // Save the initial idea to Supabase
+      await saveIdea(user.id, idea);
 
       const response = await fetch('/api/generate', {
         method: 'POST',
