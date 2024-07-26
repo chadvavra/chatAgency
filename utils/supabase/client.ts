@@ -16,11 +16,15 @@ export const createClient = () =>
         },
       },
       cookies: {
-        name: 'sb',
-        lifetime: 60 * 60 * 24 * 7, // 7 days
-        domain: '',
-        path: '/',
-        sameSite: 'lax',
+        get(name: string) {
+          return document.cookie.split('; ').find(row => row.startsWith(`${name}=`))?.split('=')[1];
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          document.cookie = `${name}=${value}; max-age=${options.maxAge}; path=${options.path}; domain=${options.domain}; samesite=${options.sameSite}; secure`;
+        },
+        remove(name: string, options: CookieOptions) {
+          document.cookie = `${name}=; max-age=0; path=${options.path}; domain=${options.domain}; samesite=${options.sameSite}; secure`;
+        },
       },
     }
   );
