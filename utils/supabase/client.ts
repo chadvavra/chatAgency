@@ -11,10 +11,15 @@ export const createClient = () => {
         detectSessionInUrl: true,
       },
       cookies: {
-        lifetime: 60 * 60 * 24 * 7,
-        domain: '',
-        path: '/',
-        sameSite: 'lax',
+        get(name: string) {
+          return document.cookie.split('; ').find(row => row.startsWith(`${name}=`))?.split('=')[1];
+        },
+        set(name: string, value: string, options: any) {
+          document.cookie = `${name}=${value}; max-age=${60 * 60 * 24 * 7}; path=/; samesite=lax`;
+        },
+        remove(name: string, options: any) {
+          document.cookie = `${name}=; max-age=0; path=/; samesite=lax`;
+        },
       },
     }
   );
