@@ -1,7 +1,7 @@
-import { createBrowserClient, CookieOptions } from "@supabase/ssr";
+import { createBrowserClient } from "@supabase/ssr";
 
-export const createClient = () =>
-  createBrowserClient(
+export const createClient = () => {
+  const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -10,24 +10,22 @@ export const createClient = () =>
         autoRefreshToken: true,
         detectSessionInUrl: true,
       },
-      global: {
-        headers: {
-          'X-Forwarded-Proto': 'https',
-        },
-      },
       cookies: {
-        get(name: string) {
-          return document.cookie.split('; ').find(row => row.startsWith(`${name}=`))?.split('=')[1];
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          document.cookie = `${name}=${value}; max-age=${options.maxAge}; path=${options.path}; domain=${options.domain}; samesite=${options.sameSite}; secure`;
-        },
-        remove(name: string, options: CookieOptions) {
-          document.cookie = `${name}=; max-age=0; path=${options.path}; domain=${options.domain}; samesite=${options.sameSite}; secure`;
-        },
+        name: 'sb-auth',
+        lifetime: 60 * 60 * 24 * 7,
+        domain: '',
+        path: '/',
+        sameSite: 'lax',
       },
     }
   );
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    console.log('Auth state changed:', event, session);
+  });
+
+  return supabase;
+};
 
 export const saveIdea = async (userId: string, initialIdea: string) => {
   const supabase = createClient();
