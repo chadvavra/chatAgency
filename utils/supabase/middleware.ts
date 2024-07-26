@@ -26,6 +26,8 @@ export const updateSession = async (request: NextRequest) => {
               name,
               value,
               ...options,
+              sameSite: 'lax',
+              secure: true,
             });
             response = NextResponse.next({
               request: {
@@ -36,6 +38,8 @@ export const updateSession = async (request: NextRequest) => {
               name,
               value,
               ...options,
+              sameSite: 'lax',
+              secure: true,
             });
           },
           remove(name: string, options: CookieOptions) {
@@ -44,6 +48,9 @@ export const updateSession = async (request: NextRequest) => {
               name,
               value: "",
               ...options,
+              maxAge: 0,
+              sameSite: 'lax',
+              secure: true,
             });
             response = NextResponse.next({
               request: {
@@ -54,6 +61,9 @@ export const updateSession = async (request: NextRequest) => {
               name,
               value: "",
               ...options,
+              maxAge: 0,
+              sameSite: 'lax',
+              secure: true,
             });
           },
         },
