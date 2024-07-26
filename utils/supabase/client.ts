@@ -11,10 +11,10 @@ export const createClient = () => {
         detectSessionInUrl: true,
       },
       cookies: {
-        get(name: string) {
+        getAll(name: string) {
           return document.cookie.split('; ').find(row => row.startsWith(`${name}=`))?.split('=')[1];
         },
-        set(name: string, value: string, options: any) {
+        setAll(name: string, value: string, options: any) {
           document.cookie = `${name}=${value}; max-age=${60 * 60 * 24 * 7}; path=/; samesite=lax`;
         },
         remove(name: string, options: any) {
