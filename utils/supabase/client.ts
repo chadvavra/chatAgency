@@ -16,12 +16,11 @@ export const createClient = () =>
         },
       },
       cookies: {
-        name: 'sb-auth-token',
+        name: 'sb',
         lifetime: 60 * 60 * 24 * 7, // 7 days
         domain: '',
         path: '/',
-        sameSite: 'Lax',
-        secure: true,
+        sameSite: 'lax',
       },
     }
   );
