@@ -11,7 +11,6 @@ export const createClient = () => {
         detectSessionInUrl: true,
       },
       cookies: {
-        name: 'sb',
         lifetime: 60 * 60 * 24 * 7,
         domain: '',
         path: '/',
