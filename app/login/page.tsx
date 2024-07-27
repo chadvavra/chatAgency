@@ -73,7 +73,7 @@ export default function Login({
         </svg>{" "}
         Back
       </Link>
-<p>Login is not working right now.  Please try back later.</p>
+<p>Login is not working right now.  Please try back later.  </p>
       <form className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
         <label className="text-md" htmlFor="email">
           Email
