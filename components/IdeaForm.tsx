@@ -62,7 +62,7 @@ export default function IdeaForm({ user }: { user: User | null }) {
     <div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="idea" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="idea" className="block text-sm font-medium text-gray-900">
             Your Business Idea or Product Feature
           </label>
           <textarea
