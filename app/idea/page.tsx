@@ -59,9 +59,17 @@ export default function IdeaPage() {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-      await saveIdea(user.id, '', generatedIdea, []);
+      try {
+        await saveIdea(user.id, '', generatedIdea, []);
+        router.push(`/value-propositions?generatedIdea=${encodeURIComponent(generatedIdea)}`);
+      } catch (error) {
+        console.error('Error saving idea:', error);
+        alert('Failed to save the idea. Please try again.');
+      }
+    } else {
+      alert('You must be logged in to continue.');
+      router.push('/login');
     }
-    router.push(`/value-propositions?generatedIdea=${encodeURIComponent(generatedIdea)}`);
   };
 
   return (
