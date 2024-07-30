@@ -19,6 +19,8 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
     const urlIdea = searchParams.get('generatedIdea');
     const urlOriginalIdea = searchParams.get('originalIdea');
 
+    console.log('URL params:', { urlIdea, urlOriginalIdea });
+
     if (urlIdea) {
       setIdea(decodeURIComponent(urlIdea));
     }
@@ -41,6 +43,8 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
             .eq('user_id', user.id)
             .single();
           
+          console.log('Fetched from Supabase:', data);
+          
           if (data) {
             setIdea(data.generated_idea || '');
             setOriginalIdea(data.original_idea || '');
@@ -52,6 +56,8 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
 
     fetchIdea();
   }, [searchParams, idea]);
+
+  console.log('Current state:', { idea, originalIdea, valuePropositions });
 
   const generateValuePropositions = async (ideaText: string) => {
     setIsLoading(true);
