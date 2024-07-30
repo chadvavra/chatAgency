@@ -67,6 +67,7 @@ export default function ValuePropositionsPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       try {
+        console.log('Saving idea:', { originalIdea, generatedIdea, valuePropositions });
         await saveIdea(user.id, originalIdea, generatedIdea, valuePropositions);
         alert('Idea saved successfully!');
         router.push('/dashboard');
