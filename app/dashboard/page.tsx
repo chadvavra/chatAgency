@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface Idea {
   id: string;
@@ -56,9 +57,11 @@ export default function Dashboard() {
       <h1 className="text-2xl font-bold mb-6">Your Ideas Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {ideas.map((idea) => (
-          <div key={idea.id} className="bg-white shadow-md rounded-lg p-6">
-            <p className="text-gray-600">{idea.original_idea}</p>
-          </div>
+          <Link href={`/saved-idea?id=${idea.id}`} key={idea.id}>
+            <div className="bg-white shadow-md rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200">
+              <p className="text-gray-600">{idea.original_idea}</p>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
