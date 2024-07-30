@@ -35,48 +35,27 @@ export const createClient = () => {
 export const saveIdea = async (userId: string, originalIdea: string, generatedIdea: string, valuePropositions: string[]) => {
   const supabase = createClient();
   
-  const updateData = {
+  const newIdea = {
     user_id: userId,
     original_idea: originalIdea || '',
     generated_idea: generatedIdea || '',
     value_propositions: valuePropositions || []
   };
 
-  console.log('Saving idea with data:', updateData);
+  console.log('Saving new idea with data:', newIdea);
 
-  // First, check if a record exists for this user
-  const { data: existingIdea, error: fetchError } = await supabase
+  const { data, error } = await supabase
     .from('ideas')
-    .select('id')
-    .eq('user_id', userId)
-    .single();
+    .insert(newIdea)
+    .select();
 
-  if (fetchError && fetchError.code !== 'PGRST116') {
-    console.error('Supabase error:', fetchError);
-    throw new Error(`Failed to check existing idea: ${fetchError.message}`);
-  }
-
-  let result;
-  if (existingIdea) {
-    // If a record exists, update it
-    result = await supabase
-      .from('ideas')
-      .update(updateData)
-      .eq('user_id', userId);
-  } else {
-    // If no record exists, insert a new one
-    result = await supabase
-      .from('ideas')
-      .insert(updateData);
-  }
-
-  if (result.error) {
-    console.error('Supabase error:', result.error);
-    throw new Error(`Failed to save idea: ${result.error.message}`);
+  if (error) {
+    console.error('Supabase error:', error);
+    throw new Error(`Failed to save idea: ${error.message}`);
   }
   
-  console.log('Idea saved successfully:', result.data);
-  return result.data;
+  console.log('New idea saved successfully:', data);
+  return data[0];
 };
 
 export const getIdea = async (userId: string) => {
