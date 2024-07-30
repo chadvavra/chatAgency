@@ -47,10 +47,11 @@ export default function ValuePropositionsPage() {
       
       const data = await response.json();
       
-      if (data.valuePropositions) {
+      if (data.valuePropositions && Array.isArray(data.valuePropositions)) {
         setValuePropositions(data.valuePropositions);
       } else {
-        throw new Error('No value propositions generated');
+        console.error('Unexpected response format:', data);
+        throw new Error('No valid value propositions generated');
       }
     } catch (error) {
       console.error('Error:', error);

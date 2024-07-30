@@ -25,7 +25,11 @@ export async function POST(req: Request) {
       max_tokens: 200,
     });
 
-    const valuePropositions = completion.choices[0].message.content?.split('\n').filter(vp => vp.trim() !== '');
+    const content = completion.choices[0].message.content || '';
+    const valuePropositions = content.split('\n')
+      .filter(vp => vp.trim() !== '')
+      .map(vp => vp.replace(/^\d+\.\s*/, '').trim()) // Remove numbering if present
+      .slice(0, 5); // Ensure we have at most 5 propositions
 
     return NextResponse.json({ valuePropositions });
   } catch (error) {
