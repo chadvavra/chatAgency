@@ -10,12 +10,19 @@
     --foreground: 200 50% 3%;
   }
 
+  /* If the user prefers dark mode, 
+we of course apply color-scheme: dark, as usual */
+  @media (prefers-color-scheme: dark) {
+    html {
+      color-scheme: light;
+    }
+  }
+
+  /* If the user prefers light mode, 
+we still enforce color-scheme: dark, despite the user preference */
   @media (prefers-color-scheme: light) {
-    :root {
-      --background: 200 50% 3%;
-      --btn-background: 200 10% 9%;
-      --btn-background-hover: 200 10% 12%;
-      --foreground: 200 20% 96%;
+    html {
+      color-scheme: light;
     }
   }
 }
