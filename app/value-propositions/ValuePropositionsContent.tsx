@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { createClient } from "@/utils/supabase/client";
+import { createClient, saveIdea } from "@/utils/supabase/client";
 
 interface ValuePropositionsContentProps {
   generatedIdea?: string;
@@ -12,7 +12,7 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
   const searchParams = useSearchParams();
   const [idea, setIdea] = useState(generatedIdea || '');
   const [originalIdea, setOriginalIdea] = useState('');
-  const [valuePropositions, setValuePropositions] = useState('');
+  const [valuePropositions, setValuePropositions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -37,13 +37,12 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
         if (user) {
           const { data, error } = await supabase
             .from('ideas')
-            .select('generated_idea, original_idea')
+            .select('generated_idea')
             .eq('user_id', user.id)
             .single();
           
           if (data) {
             setIdea(data.generated_idea || '');
-            setOriginalIdea(data.original_idea || '');
             generateValuePropositions(data.generated_idea || '');
           }
         }
@@ -56,15 +55,12 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
   const generateValuePropositions = async (ideaText: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/generate', {
+      const response = await fetch('/api/generate-value-propositions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          idea: ideaText,
-          changeRequest: "describe core value propositions and what can makes its offering valuable and distinct from similar businesses. Identify the unique benefits and features that will appeal to the target",
-        }),
+        body: JSON.stringify({ idea: ideaText }),
       });
       
       if (!response.ok) {
@@ -73,12 +69,12 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
       
       const data = await response.json();
       
-      if (data.generatedIdea) {
-        setValuePropositions(data.generatedIdea);
+      if (data.valuePropositions) {
+        setValuePropositions(data.valuePropositions);
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          await saveIdea(user.id, idea, [data.generatedIdea]);
+          await saveIdea(user.id, idea, data.valuePropositions);
         }
       } else {
         throw new Error('No value propositions generated');
@@ -100,9 +96,9 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
         <textarea
           className="w-full p-2 border rounded-md"
           rows={4}
-          value={idea}
-          onChange={(e) => setIdea(e.target.value)}
-          placeholder="Enter your original idea here"
+          value={originalIdea}
+          readOnly
+          placeholder="Original idea will be displayed here"
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -115,7 +111,11 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
           {isLoading ? (
             <p>Loading value propositions...</p>
           ) : (
-            <p className="text-gray-700 whitespace-pre-wrap bg-gray-100 p-4 rounded-md">{valuePropositions}</p>
+            <ul className="list-disc pl-5 space-y-2">
+              {valuePropositions.map((vp, index) => (
+                <li key={index} className="text-gray-700">{vp}</li>
+              ))}
+            </ul>
           )}
         </div>
       </div>
