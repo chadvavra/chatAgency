@@ -70,23 +70,30 @@ export default function IdeaPage() {
   };
 
   useEffect(() => {
-    const loadExistingIdea = async () => {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        try {
-          const existingIdea = await getIdea(user.id);
-          if (existingIdea && existingIdea.generated_idea) {
-            setGeneratedIdea(existingIdea.generated_idea);
+    const loadIdea = async () => {
+      const idea = searchParams.get('generatedIdea');
+      if (idea) {
+        console.log('Received generated idea from URL:', decodeURIComponent(idea));
+        setGeneratedIdea(decodeURIComponent(idea));
+      } else {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          try {
+            const existingIdea = await getIdea(user.id);
+            if (existingIdea && existingIdea.generated_idea) {
+              console.log('Loaded existing idea from Supabase:', existingIdea.generated_idea);
+              setGeneratedIdea(existingIdea.generated_idea);
+            }
+          } catch (error) {
+            console.error('Error loading existing idea:', error);
           }
-        } catch (error) {
-          console.error('Error loading existing idea:', error);
         }
       }
     };
 
-    loadExistingIdea();
-  }, []);
+    loadIdea();
+  }, [searchParams]);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
