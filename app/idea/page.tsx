@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createClient, saveIdea } from "@/utils/supabase/client";
+import { createClient, saveIdea, getIdea } from "@/utils/supabase/client";
 
 export default function IdeaPage() {
   const router = useRouter();
