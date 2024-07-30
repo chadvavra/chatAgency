@@ -42,17 +42,37 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
     value_propositions: valuePropositions.length > 0 ? valuePropositions : null
   };
 
-  const { data, error } = await supabase
+  // First, check if a record exists for this user
+  const { data: existingData, error: fetchError } = await supabase
     .from('ideas')
-    .upsert(updateData, { 
-      onConflict: 'user_id'
-    });
+    .select('*')
+    .eq('user_id', userId)
+    .single();
 
-  if (error) {
-    console.error('Supabase error:', error);
-    throw new Error(`Failed to save idea: ${error.message}`);
+  if (fetchError && fetchError.code !== 'PGRST116') {
+    console.error('Supabase fetch error:', fetchError);
+    throw new Error(`Failed to check existing idea: ${fetchError.message}`);
   }
-  return data;
+
+  let result;
+  if (existingData) {
+    // If a record exists, update it
+    result = await supabase
+      .from('ideas')
+      .update(updateData)
+      .eq('user_id', userId);
+  } else {
+    // If no record exists, insert a new one
+    result = await supabase
+      .from('ideas')
+      .insert(updateData);
+  }
+
+  if (result.error) {
+    console.error('Supabase error:', result.error);
+    throw new Error(`Failed to save idea: ${result.error.message}`);
+  }
+  return result.data;
 };
 
 export const getIdea = async (userId: string) => {
