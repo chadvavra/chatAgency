@@ -48,15 +48,16 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
   }
 
   let result;
+  const updateData: any = {};
+  if (idea !== '') updateData.idea = idea;
+  if (generatedIdea !== '') updateData.generated_idea = generatedIdea;
+  if (valuePropositions.length > 0) updateData.value_propositions = JSON.stringify(valuePropositions);
+
   if (existingIdea) {
     // If an idea exists, update it
     const { data, error } = await supabase
       .from('ideas')
-      .update({ 
-        idea: idea, 
-        generated_idea: generatedIdea, 
-        value_propositions: JSON.stringify(valuePropositions) 
-      })
+      .update(updateData)
       .eq('user_id', userId)
       .select();
     
@@ -64,14 +65,10 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
     result = data;
   } else {
     // If no idea exists, insert a new one
+    updateData.user_id = userId;
     const { data, error } = await supabase
       .from('ideas')
-      .insert({ 
-        user_id: userId, 
-        idea: idea, 
-        generated_idea: generatedIdea, 
-        value_propositions: JSON.stringify(valuePropositions) 
-      })
+      .insert(updateData)
       .select();
     
     if (error) throw error;
