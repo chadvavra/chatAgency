@@ -35,8 +35,10 @@ export default function IdeaForm({ user }: { user: User | null }) {
       const data = await response.json();
       
       if (data.generatedIdea) {
+        console.log('Generated idea:', data.generatedIdea);
         router.push(`/idea?generatedIdea=${encodeURIComponent(data.generatedIdea)}&originalIdea=${encodeURIComponent(idea)}`);
       } else {
+        console.error('No idea generated');
         throw new Error('No idea generated');
       }
     } catch (error) {
