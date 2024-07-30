@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Link from 'next/link';
 
 interface Idea {
   id: string;
@@ -46,7 +45,11 @@ export default function Dashboard() {
   }, [router]);
 
   if (isLoading) {
-    return <div className="container mx-auto px-4 py-8">Loading...</div>;
+    return (
+      <div className="container mx-auto px-4 py-8 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
   }
 
   if (!user) {
