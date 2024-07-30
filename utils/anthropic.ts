@@ -21,5 +21,11 @@ export async function generateIdea(initialIdea: string): Promise<string> {
     ]
   });
 
-  return response.content[0].text;
+  // Extract text content from the response
+  const textContent = response.content
+    .filter(block => block.type === 'text')
+    .map(block => (block as { text: string }).text)
+    .join('\n');
+
+  return textContent;
 }
