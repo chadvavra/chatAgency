@@ -35,47 +35,22 @@ export const createClient = () => {
 export const saveIdea = async (userId: string, idea: string, generatedIdea: string, valuePropositions: string[]) => {
   const supabase = createClient();
   
-  // First, check if an idea already exists for this user
-  const { data: existingIdea, error: fetchError } = await supabase
+  const updateData: any = {
+    user_id: userId,
+    idea: idea || null,
+    generated_idea: generatedIdea || null,
+    value_propositions: valuePropositions.length > 0 ? JSON.stringify(valuePropositions) : null
+  };
+
+  const { data, error } = await supabase
     .from('ideas')
-    .select('*')
-    .eq('user_id', userId)
-    .single();
+    .upsert(updateData, { 
+      onConflict: 'user_id',
+      returning: 'minimal'
+    });
 
-  if (fetchError && fetchError.code !== 'PGRST116') {
-    // PGRST116 means no rows returned, which is fine
-    throw fetchError;
-  }
-
-  let result;
-  const updateData: any = {};
-  if (idea !== '') updateData.idea = idea;
-  if (generatedIdea !== '') updateData.generated_idea = generatedIdea;
-  if (valuePropositions.length > 0) updateData.value_propositions = JSON.stringify(valuePropositions);
-
-  if (existingIdea) {
-    // If an idea exists, update it
-    const { data, error } = await supabase
-      .from('ideas')
-      .update(updateData)
-      .eq('user_id', userId)
-      .select();
-    
-    if (error) throw error;
-    result = data;
-  } else {
-    // If no idea exists, insert a new one
-    updateData.user_id = userId;
-    const { data, error } = await supabase
-      .from('ideas')
-      .insert(updateData)
-      .select();
-    
-    if (error) throw error;
-    result = data;
-  }
-
-  return result;
+  if (error) throw error;
+  return data;
 };
 
 export const getIdea = async (userId: string) => {
@@ -86,7 +61,7 @@ export const getIdea = async (userId: string) => {
     .eq('user_id', userId)
     .single();
   
-  if (error) throw error;
-  return data;
+  if (error && error.code !== 'PGRST116') throw error;
+  return data || null;
 };
 

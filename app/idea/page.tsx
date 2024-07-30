@@ -72,6 +72,25 @@ export default function IdeaPage() {
     }
   };
 
+  useEffect(() => {
+    const loadExistingIdea = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        try {
+          const existingIdea = await getIdea(user.id);
+          if (existingIdea && existingIdea.generated_idea) {
+            setGeneratedIdea(existingIdea.generated_idea);
+          }
+        } catch (error) {
+          console.error('Error loading existing idea:', error);
+        }
+      }
+    };
+
+    loadExistingIdea();
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div>
