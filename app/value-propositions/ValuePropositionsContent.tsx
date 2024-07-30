@@ -80,9 +80,19 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold mb-4">Value Propositions</h1>
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">Original Idea:</h2>
+        <textarea
+          className="w-full p-2 border rounded-md"
+          rows={4}
+          value={idea}
+          onChange={(e) => setIdea(e.target.value)}
+          placeholder="Enter your original idea here"
+        />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Original Idea:</h2>
+          <h2 className="text-lg font-semibold">Generated Idea:</h2>
           <p className="text-gray-700 whitespace-pre-wrap bg-gray-100 p-4 rounded-md">{idea}</p>
         </div>
         <div className="space-y-4">
