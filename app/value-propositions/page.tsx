@@ -68,7 +68,7 @@ export default function ValuePropositionsPage() {
     if (user) {
       try {
         console.log('Saving idea:', { originalIdea, generatedIdea, valuePropositions });
-        await saveIdea(user.id, originalIdea, generatedIdea, valuePropositions);
+        await saveIdea(user.id, generatedIdea, valuePropositions);
         alert('Idea saved successfully!');
         router.push('/dashboard');
       } catch (error) {

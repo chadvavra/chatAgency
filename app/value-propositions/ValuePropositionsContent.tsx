@@ -78,7 +78,7 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          await saveIdea(user.id, ideaText, idea, [data.generatedIdea]);
+          await saveIdea(user.id, idea, [data.generatedIdea]);
         }
       } else {
         throw new Error('No value propositions generated');
