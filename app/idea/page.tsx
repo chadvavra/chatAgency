@@ -61,7 +61,9 @@ export default function IdeaPage() {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) {
-        router.push(`/value-propositions?generatedIdea=${encodeURIComponent(generatedIdea)}`);
+        const originalIdeaParam = searchParams.get('originalIdea');
+        const originalIdeaEncoded = originalIdeaParam ? encodeURIComponent(originalIdeaParam) : '';
+        router.push(`/value-propositions?generatedIdea=${encodeURIComponent(generatedIdea)}&originalIdea=${originalIdeaEncoded}`);
       } else {
         alert('You must be logged in to continue.');
         router.push('/login');
