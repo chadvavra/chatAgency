@@ -60,7 +60,7 @@ export default function SavedIdeaPage() {
         </section>
         <section>
           <h2 className="text-xl font-semibold mb-2">Generated Idea:</h2>
-          <p className="text-gray-700 bg-gray-100 p-4 rounded-md">{idea.generated_idea}</p>
+          <p className="text-gray-700 whitespace-pre-wrap bg-gray-100 p-4 rounded-md">{idea.generated_idea}</p>
         </section>
         <section>
           <h2 className="text-xl font-semibold mb-2">Value Propositions:</h2>
