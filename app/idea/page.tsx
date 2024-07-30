@@ -17,9 +17,14 @@ export default function IdeaPage() {
 
   useEffect(() => {
     const idea = searchParams.get('generatedIdea');
+    const original = searchParams.get('originalIdea');
     if (idea) {
       console.log('Received generated idea:', decodeURIComponent(idea));
       setGeneratedIdea(decodeURIComponent(idea));
+    }
+    if (original) {
+      console.log('Received original idea:', decodeURIComponent(original));
+      // You might want to store this original idea in state if needed
     }
   }, [searchParams]);
 
