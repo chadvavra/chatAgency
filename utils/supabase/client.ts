@@ -32,12 +32,12 @@ export const createClient = () => {
   return supabase;
 };
 
-export const saveIdea = async (userId: string, generatedIdea: string, valuePropositions: string[]) => {
+export const saveIdea = async (userId: string, originalIdea: string, generatedIdea: string, valuePropositions: string[]) => {
   const supabase = createClient();
   
   const updateData = {
     user_id: userId,
-    idea: originalIdea,
+    original_idea: originalIdea,
     generated_idea: generatedIdea,
     value_propositions: valuePropositions
   };
