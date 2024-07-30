@@ -39,7 +39,7 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
     user_id: userId,
     idea: idea || null,
     generated_idea: generatedIdea || null,
-    value_propositions: valuePropositions.length > 0 ? JSON.stringify(valuePropositions) : null
+    value_propositions: valuePropositions.length > 0 ? valuePropositions : null
   };
 
   const { data, error } = await supabase
@@ -48,7 +48,10 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
       onConflict: 'user_id'
     });
 
-  if (error) throw error;
+  if (error) {
+    console.error('Supabase error:', error);
+    throw new Error(`Failed to save idea: ${error.message}`);
+  }
   return data;
 };
 
