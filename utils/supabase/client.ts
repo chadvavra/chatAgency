@@ -40,7 +40,7 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
       user_id: userId, 
       idea: idea, 
       generated_idea: generatedIdea, 
-      value_propositions: valuePropositions 
+      value_propositions: JSON.stringify(valuePropositions) 
     }, { onConflict: 'user_id' })
     .select();
   
