@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient, saveIdea } from "@/utils/supabase/client";
 
 interface ValuePropositionsContentProps {
@@ -10,12 +10,14 @@ interface ValuePropositionsContentProps {
 
 const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ generatedIdea }) => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [idea, setIdea] = useState(generatedIdea || '');
   const [originalIdea, setOriginalIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [ideaSaved, setIdeaSaved] = useState(false);
   const [showSaveButton, setShowSaveButton] = useState(false);
+  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     const urlIdea = searchParams.get('generatedIdea');
@@ -59,6 +61,20 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
     fetchIdea();
   }, [searchParams, idea]);
 
+  const handleBeforeUnload = useCallback((event: BeforeUnloadEvent) => {
+    if (isModified && !ideaSaved) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  }, [isModified, ideaSaved]);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [handleBeforeUnload]);
+
   console.log('Current state:', { idea, originalIdea, valuePropositions });
 
   const generateValuePropositions = async (ideaText: string) => {
@@ -81,6 +97,7 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
       if (data.valuePropositions) {
         setValuePropositions(data.valuePropositions);
         setShowSaveButton(true);
+        setIsModified(true);
       } else {
         throw new Error('No value propositions generated');
       }
@@ -106,6 +123,7 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
         });
         await saveIdea(user.id, originalIdea, idea, valuePropositions);
         setIdeaSaved(true);
+        setIsModified(false);
         alert('Idea saved successfully!');
       } else {
         alert('You must be logged in to save ideas.');
@@ -115,6 +133,11 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       alert(`Failed to save idea: ${errorMessage}`);
     }
+  };
+
+  const handleDiscard = () => {
+    setIsModified(false);
+    router.push('/');
   };
 
   return (
@@ -148,12 +171,20 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
                 ))}
               </ul>
               {showSaveButton && !ideaSaved && (
-                <button
-                  onClick={handleSaveIdea}
-                  className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                >
-                  Save Idea
-                </button>
+                <div className="mt-4 space-x-4">
+                  <button
+                    onClick={handleSaveIdea}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Save Idea
+                  </button>
+                  <button
+                    onClick={handleDiscard}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Discard
+                  </button>
+                </div>
               )}
               {ideaSaved && (
                 <p className="mt-4 text-green-600 font-semibold">Idea saved successfully!</p>
