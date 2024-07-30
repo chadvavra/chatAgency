@@ -19,7 +19,7 @@ export default function IdeaForm({ user }: { user: User | null }) {
         throw new Error('User is not authenticated');
       }
 
-      console.log('Sending idea to API for generation');
+      console.log('Sending idea to API for generation:', idea);
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: {
@@ -72,7 +72,10 @@ export default function IdeaForm({ user }: { user: User | null }) {
             rows={4}
             className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm p-2.5" 
             value={idea}
-            onChange={(e) => setIdea(e.target.value)}
+            onChange={(e) => {
+              setIdea(e.target.value);
+              console.log('Idea updated:', e.target.value); // Add this line for debugging
+            }}
             required
           ></textarea>
         </div>
