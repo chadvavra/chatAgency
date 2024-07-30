@@ -1,9 +1,9 @@
-import React, { Suspense } from 'react';
+
 import ValuePropositionsContent from './ValuePropositionsContent';
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient, saveIdea } from "@/utils/supabase/client";
 
