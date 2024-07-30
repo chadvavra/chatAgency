@@ -16,7 +16,7 @@ export async function generateIdea(initialIdea: string): Promise<string> {
   const response = await anthropic.completions.create({
     model: 'claude-3-5-sonnet-20240620',
     prompt: prompt,
-    max_tokens_to_sample: 2048,
+    max_tokens_to_sample: 1000,
   });
 
   return response.completion;
