@@ -14,6 +14,7 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
   const [originalIdea, setOriginalIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [ideaSaved, setIdeaSaved] = useState(false);
 
   useEffect(() => {
     const urlIdea = searchParams.get('generatedIdea');
@@ -78,16 +79,19 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
       
       if (data.valuePropositions) {
         setValuePropositions(data.valuePropositions);
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          console.log('Saving idea with:', {
-            userId: user.id,
-            originalIdea,
-            idea,
-            valuePropositions: data.valuePropositions
-          });
-          await saveIdea(user.id, originalIdea, idea, data.valuePropositions);
+        if (!ideaSaved) {
+          const supabase = createClient();
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            console.log('Saving idea with:', {
+              userId: user.id,
+              originalIdea,
+              idea,
+              valuePropositions: data.valuePropositions
+            });
+            await saveIdea(user.id, originalIdea, idea, data.valuePropositions);
+            setIdeaSaved(true);
+          }
         }
       } else {
         throw new Error('No value propositions generated');
