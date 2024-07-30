@@ -37,9 +37,9 @@ export const saveIdea = async (userId: string, originalIdea: string, generatedId
   
   const updateData = {
     user_id: userId,
-    original_idea: originalIdea,
-    generated_idea: generatedIdea,
-    value_propositions: valuePropositions
+    original_idea: originalIdea || '',
+    generated_idea: generatedIdea || '',
+    value_propositions: valuePropositions || []
   };
 
   console.log('Saving idea with data:', updateData);
@@ -74,6 +74,8 @@ export const saveIdea = async (userId: string, originalIdea: string, generatedId
     console.error('Supabase error:', result.error);
     throw new Error(`Failed to save idea: ${result.error.message}`);
   }
+  
+  console.log('Idea saved successfully:', result.data);
   return result.data;
 };
 
