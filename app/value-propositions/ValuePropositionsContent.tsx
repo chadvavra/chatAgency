@@ -75,6 +75,12 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
+          console.log('Saving idea with:', {
+            userId: user.id,
+            originalIdea,
+            idea,
+            valuePropositions: data.valuePropositions
+          });
           await saveIdea(user.id, originalIdea, idea, data.valuePropositions);
         }
       } else {
