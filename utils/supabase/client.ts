@@ -35,9 +35,9 @@ export const createClient = () => {
 export const saveIdea = async (userId: string, idea: string, generatedIdea: string, valuePropositions: string[]) => {
   const supabase = createClient();
   
-  // First, check if a record exists for this user
+  // Check if a record exists for this user
   const { data: existingData, error: fetchError } = await supabase
-    .from('business_ideas')
+    .from('ideas')
     .select('*')
     .eq('user_id', userId)
     .single();
@@ -56,19 +56,9 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
 
   console.log('Saving idea with data:', updateData);
 
-  let result;
-  if (existingData) {
-    // If a record exists, update it
-    result = await supabase
-      .from('ideas')
-      .update(updateData)
-      .eq('user_id', userId);
-  } else {
-    // If no record exists, insert a new one
-    result = await supabase
-      .from('ideas')
-      .insert(updateData);
-  }
+  const result = await supabase
+    .from('ideas')
+    .upsert(updateData, { onConflict: 'user_id' });
 
   if (result.error) {
     console.error('Supabase error:', result.error);
