@@ -9,12 +9,26 @@ interface ValuePropositionsContentProps {
 }
 
 const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ generatedIdea }) => {
+  const searchParams = useSearchParams();
   const [idea, setIdea] = useState(generatedIdea || '');
+  const [originalIdea, setOriginalIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (idea) {
+    const urlIdea = searchParams.get('generatedIdea');
+    const urlOriginalIdea = searchParams.get('originalIdea');
+
+    if (urlIdea) {
+      setIdea(decodeURIComponent(urlIdea));
+    }
+    if (urlOriginalIdea) {
+      setOriginalIdea(decodeURIComponent(urlOriginalIdea));
+    }
+
+    if (urlIdea) {
+      generateValuePropositions(decodeURIComponent(urlIdea));
+    } else if (idea) {
       generateValuePropositions(idea);
     } else {
       const fetchIdea = async () => {
@@ -22,21 +36,22 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           const { data, error } = await supabase
-            .from('business_ideas')
-            .select('detailed_idea')
+            .from('ideas')
+            .select('generated_idea, original_idea')
             .eq('user_id', user.id)
             .single();
           
           if (data) {
-            setIdea(data.detailed_idea);
-            generateValuePropositions(data.detailed_idea);
+            setIdea(data.generated_idea || '');
+            setOriginalIdea(data.original_idea || '');
+            generateValuePropositions(data.generated_idea || '');
           }
         }
       };
 
       fetchIdea();
     }
-  }, [idea]);
+  }, [searchParams, idea]);
 
   const generateValuePropositions = async (ideaText: string) => {
     setIsLoading(true);
