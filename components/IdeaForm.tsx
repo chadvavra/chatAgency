@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
-import { saveIdea } from '@/utils/supabase/client';
+import { createClient } from '@/utils/supabase/client';
 
 export default function IdeaForm({ user }: { user: User | null }) {
   const [idea, setIdea] = useState('');
@@ -35,8 +35,7 @@ export default function IdeaForm({ user }: { user: User | null }) {
       const data = await response.json();
       
       if (data.generatedIdea) {
-        await saveIdea(user.id, idea, data.generatedIdea, []);
-        router.push(`/idea?generatedIdea=${encodeURIComponent(data.generatedIdea)}`);
+        router.push(`/idea?generatedIdea=${encodeURIComponent(data.generatedIdea)}&originalIdea=${encodeURIComponent(idea)}`);
       } else {
         throw new Error('No idea generated');
       }
