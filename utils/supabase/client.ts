@@ -49,7 +49,7 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
 
   const updateData = {
     user_id: userId,
-    idea: idea || existingData?.idea || null,
+    original_idea: idea || existingData?.original_idea || null,
     generated_idea: generatedIdea || existingData?.generated_idea || null,
     value_propositions: valuePropositions.length > 0 ? valuePropositions : existingData?.value_propositions || null
   };

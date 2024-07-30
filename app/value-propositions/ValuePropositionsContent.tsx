@@ -65,7 +65,10 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
         if (user) {
           await supabase
             .from('business_ideas')
-            .update({ value_propositions: data.generatedIdea })
+            .update({ 
+              original_idea: ideaText,
+              value_propositions: data.generatedIdea 
+            })
             .eq('user_id', user.id);
         }
       } else {
