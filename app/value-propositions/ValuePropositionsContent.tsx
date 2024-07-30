@@ -6,12 +6,13 @@ import { createClient, saveIdea } from "@/utils/supabase/client";
 
 interface ValuePropositionsContentProps {
   generatedIdea?: string;
+  originalIdea?: string;
 }
 
 const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ generatedIdea }) => {
   const searchParams = useSearchParams();
   const [idea, setIdea] = useState(generatedIdea || '');
-  const [originalIdea, setOriginalIdea] = useState('');
+  const [originalIdea, setOriginalIdea] = useState(originalIdea || '');
   const [valuePropositions, setValuePropositions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

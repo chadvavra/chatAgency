@@ -32,26 +32,14 @@ export const createClient = () => {
   return supabase;
 };
 
-export const saveIdea = async (userId: string, idea: string, generatedIdea: string, valuePropositions: string[]) => {
+export const saveIdea = async (userId: string, generatedIdea: string, valuePropositions: string[]) => {
   const supabase = createClient();
   
-  // Check if a record exists for this user
-  const { data: existingData, error: fetchError } = await supabase
-    .from('ideas')
-    .select('*')
-    .eq('user_id', userId)
-    .single();
-
-  if (fetchError && fetchError.code !== 'PGRST116') {
-    console.error('Supabase fetch error:', fetchError);
-    throw new Error(`Failed to check existing idea: ${fetchError.message}`);
-  }
-
   const updateData = {
     user_id: userId,
-    original_idea: idea || existingData?.original_idea || null,
-    generated_idea: generatedIdea || existingData?.generated_idea || null,
-    value_propositions: valuePropositions.length > 0 ? valuePropositions : existingData?.value_propositions || null
+    idea: originalIdea,
+    generated_idea: generatedIdea,
+    value_propositions: valuePropositions
   };
 
   console.log('Saving idea with data:', updateData);
