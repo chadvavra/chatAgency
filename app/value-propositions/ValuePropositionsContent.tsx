@@ -26,30 +26,31 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
       setOriginalIdea(decodeURIComponent(urlOriginalIdea));
     }
 
-    if (urlIdea) {
-      generateValuePropositions(decodeURIComponent(urlIdea));
-    } else if (idea) {
-      generateValuePropositions(idea);
-    } else {
-      const fetchIdea = async () => {
+    const fetchIdea = async () => {
+      if (urlIdea) {
+        await generateValuePropositions(decodeURIComponent(urlIdea));
+      } else if (idea) {
+        await generateValuePropositions(idea);
+      } else {
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           const { data, error } = await supabase
             .from('ideas')
-            .select('generated_idea')
+            .select('original_idea, generated_idea')
             .eq('user_id', user.id)
             .single();
           
           if (data) {
             setIdea(data.generated_idea || '');
-            generateValuePropositions(data.generated_idea || '');
+            setOriginalIdea(data.original_idea || '');
+            await generateValuePropositions(data.generated_idea || '');
           }
         }
-      };
+      }
+    };
 
-      fetchIdea();
-    }
+    fetchIdea();
   }, [searchParams, idea]);
 
   const generateValuePropositions = async (ideaText: string) => {
@@ -94,13 +95,11 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
       
       <section className="space-y-4">
         <h2 className="text-lg font-semibold">Original Idea:</h2>
-        <textarea
-          className="w-full p-2 border rounded-md"
-          rows={4}
-          value={originalIdea}
-          readOnly
-          placeholder="Original idea will be displayed here"
-        />
+        {originalIdea ? (
+          <p className="text-gray-700 whitespace-pre-wrap bg-gray-100 p-4 rounded-md">{originalIdea}</p>
+        ) : (
+          <p className="text-gray-500 italic">No original idea available</p>
+        )}
       </section>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
