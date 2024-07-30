@@ -29,7 +29,9 @@ export default function IdeaForm({ user }: { user: User | null }) {
       });
       
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status}. Please try again later.`);
+        const errorText = await response.text();
+        console.error('Server response:', errorText);
+        throw new Error(`Server error: ${response.status}. ${errorText}`);
       }
       
       const data = await response.json();

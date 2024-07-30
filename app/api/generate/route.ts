@@ -25,13 +25,16 @@ export async function POST(req: NextRequest) {
       const responseData = (error.response as any)?.data;
       errorDetails = responseData ? JSON.stringify(responseData) : 'No response data';
     }
-    return NextResponse.json(
-      { 
+    return new NextResponse(
+      JSON.stringify({ 
         error: 'Failed to generate idea', 
         message: errorMessage,
         details: errorDetails
-      }, 
-      { status: 500 }
+      }), 
+      { 
+        status: 500, 
+        headers: { 'Content-Type': 'application/json' }
+      }
     );
   }
 }
