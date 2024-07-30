@@ -21,3 +21,18 @@ export async function generateIdea(initialIdea: string): Promise<string> {
 
   return response.completion;
 }
+import Anthropic from '@anthropic-ai/sdk';
+
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
+
+export async function generateIdea(prompt: string): Promise<string> {
+  const completion = await anthropic.completions.create({
+    model: "claude-2",
+    max_tokens_to_sample: 300,
+    prompt: prompt,
+  });
+
+  return completion.completion;
+}
