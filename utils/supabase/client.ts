@@ -35,7 +35,7 @@ export const createClient = () => {
 export const saveIdea = async (userId: string, idea: string, generatedIdea: string, valuePropositions: string[]) => {
   const supabase = createClient();
   
-  const updateData: any = {
+  const updateData = {
     user_id: userId,
     idea: idea || null,
     generated_idea: generatedIdea || null,
@@ -45,8 +45,7 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
   const { data, error } = await supabase
     .from('ideas')
     .upsert(updateData, { 
-      onConflict: 'user_id',
-      returning: 'minimal'
+      onConflict: 'user_id'
     });
 
   if (error) throw error;
