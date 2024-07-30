@@ -25,7 +25,9 @@ export default function ValuePropositionsPage() {
     if (original) {
       setOriginalIdea(decodeURIComponent(original));
     }
-    generateValuePropositions(decodeURIComponent(idea || ''));
+    if (idea) {
+      generateValuePropositions(decodeURIComponent(idea));
+    }
   }, [searchParams]);
 
   const generateValuePropositions = async (idea: string) => {
