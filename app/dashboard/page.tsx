@@ -1,30 +1,63 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+'use client';
 
-export default async function Dashboard() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+import React, { useEffect, useState } from 'react';
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from 'next/navigation';
 
-  if (!user) {
-    return redirect('/login');
+interface Idea {
+  id: string;
+  original_idea: string;
+}
+
+export default function Dashboard() {
+  const [user, setUser] = useState<any>(null);
+  const [ideas, setIdeas] = useState<Idea[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    const fetchUserAndIdeas = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        setUser(user);
+        const { data, error } = await supabase
+          .from('ideas')
+          .select('id, original_idea')
+          .eq('user_id', user.id);
+
+        if (error) {
+          console.error('Error fetching ideas:', error);
+        } else {
+          setIdeas(data || []);
+        }
+      } else {
+        router.push('/login');
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchUserAndIdeas();
+  }, [router]);
+
+  if (isLoading) {
+    return <div className="container mx-auto px-4 py-8">Loading...</div>;
   }
 
-  // TODO: Fetch actual ideas and outputs from the database
-  const mockIdeas = [
-    { id: 1, title: "Idea 1", output: "Generated output 1" },
-    { id: 2, title: "Idea 2", output: "Generated output 2" },
-    { id: 3, title: "Idea 3", output: "Generated output 3" },
-    // Add more mock data as needed
-  ];
+  if (!user) {
+    return null; // This will prevent any flash of content before redirect
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Your Ideas Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockIdeas.map((idea) => (
+        {ideas.map((idea) => (
           <div key={idea.id} className="bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-2">{idea.title}</h2>
-            <p className="text-gray-600">{idea.output}</p>
+            <p className="text-gray-600">{idea.original_idea}</p>
           </div>
         ))}
       </div>
