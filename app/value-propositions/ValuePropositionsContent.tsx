@@ -15,6 +15,7 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
   const [valuePropositions, setValuePropositions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [ideaSaved, setIdeaSaved] = useState(false);
+  const [showSaveButton, setShowSaveButton] = useState(false);
 
   useEffect(() => {
     const urlIdea = searchParams.get('generatedIdea');
@@ -79,20 +80,7 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
       
       if (data.valuePropositions) {
         setValuePropositions(data.valuePropositions);
-        if (!ideaSaved) {
-          const supabase = createClient();
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            console.log('Saving idea with:', {
-              userId: user.id,
-              originalIdea,
-              idea,
-              valuePropositions: data.valuePropositions
-            });
-            await saveIdea(user.id, originalIdea, idea, data.valuePropositions);
-            setIdeaSaved(true);
-          }
-        }
+        setShowSaveButton(true);
       } else {
         throw new Error('No value propositions generated');
       }
@@ -102,6 +90,30 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
       alert(`An error occurred: ${errorMessage}`);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSaveIdea = async () => {
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        console.log('Saving idea with:', {
+          userId: user.id,
+          originalIdea,
+          idea,
+          valuePropositions
+        });
+        await saveIdea(user.id, originalIdea, idea, valuePropositions);
+        setIdeaSaved(true);
+        alert('Idea saved successfully!');
+      } else {
+        alert('You must be logged in to save ideas.');
+      }
+    } catch (error) {
+      console.error('Error saving idea:', error);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      alert(`Failed to save idea: ${errorMessage}`);
     }
   };
 
@@ -129,11 +141,24 @@ const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ gen
           {isLoading ? (
             <p>Loading value propositions...</p>
           ) : (
-            <ul className="list-disc pl-5 space-y-2">
-              {valuePropositions.map((vp, index) => (
-                <li key={index} className="text-gray-700">{vp}</li>
-              ))}
-            </ul>
+            <>
+              <ul className="list-disc pl-5 space-y-2">
+                {valuePropositions.map((vp, index) => (
+                  <li key={index} className="text-gray-700">{vp}</li>
+                ))}
+              </ul>
+              {showSaveButton && !ideaSaved && (
+                <button
+                  onClick={handleSaveIdea}
+                  className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Save Idea
+                </button>
+              )}
+              {ideaSaved && (
+                <p className="mt-4 text-green-600 font-semibold">Idea saved successfully!</p>
+              )}
+            </>
           )}
         </section>
       </div>
