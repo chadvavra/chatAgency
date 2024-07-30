@@ -37,7 +37,7 @@ export const saveIdea = async (userId: string, idea: string, generatedIdea: stri
   
   // First, check if a record exists for this user
   const { data: existingData, error: fetchError } = await supabase
-    .from('ideas')
+    .from('business_ideas')
     .select('*')
     .eq('user_id', userId)
     .single();
