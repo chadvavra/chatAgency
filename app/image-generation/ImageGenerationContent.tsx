@@ -22,13 +22,22 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
       const response = await fetch(`/api/generate-image?id=${ideaId}`);
       console.log('Response status:', response.status);
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate image');
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
+
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('Error parsing JSON:', parseError);
+        throw new Error('Invalid JSON response from server');
       }
+
+      console.log('Parsed response data:', data);
       
-      const data = await response.json();
-      console.log('Response data:', data);
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate image');
+      }
       
       if (!data.imageUrl) {
         throw new Error('No image URL in the response');
