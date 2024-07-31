@@ -65,8 +65,16 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
 
         {error && <p className="text-red-500">{error}</p>}
 
+        {isLoading && (
+          <div className="text-center">
+            <p className="mb-2">Generating image, please wait...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        )}
+
         {generatedImageUrl && (
           <div>
+            <p className="mb-2 text-green-600">Image generated successfully!</p>
             <img src={generatedImageUrl} alt="Generated Image" className="max-w-full h-auto rounded shadow-lg" />
           </div>
         )}
