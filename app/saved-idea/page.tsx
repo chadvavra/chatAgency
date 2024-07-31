@@ -3,8 +3,6 @@ import SavedIdeaContent from './SavedIdeaContent';
 export default function Page() {
   return <SavedIdeaContent />;
 }
-    const fetchIdea = async () => {
-      const ideaId = searchParams.get('id');
       if (!ideaId) {
         setIsLoading(false);
         return;
