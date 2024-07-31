@@ -9,12 +9,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Missing idea ID' }, { status: 400 });
   }
 
-  if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
     return NextResponse.json({ error: 'OpenAI API key is not set' }, { status: 500 });
   }
 
   const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
   });
 
   try {
