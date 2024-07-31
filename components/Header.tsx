@@ -43,7 +43,7 @@ export default function Header() {
             </Link>
           )}
           {user ? (
-            <button onClick={signOut} className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground">
+            <button onClick={signOut} className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
               Log out
             </button>
           ) : (
@@ -54,14 +54,14 @@ export default function Header() {
         </nav>
       </div>
       {isMenuOpen && (
-        <nav className="mt-4 flex flex-col gap-2 md:hidden">
+        <nav className="mt-4 flex flex-col items-center gap-2 md:hidden">
           {user && (
             <Link href="/dashboard" className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
               Dashboard
             </Link>
           )}
           {user ? (
-            <button onClick={signOut} className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground">
+            <button onClick={signOut} className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
               Log out
             </button>
           ) : (
