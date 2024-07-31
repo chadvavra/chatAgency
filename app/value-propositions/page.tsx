@@ -1,9 +1,8 @@
-
 'use client';
 
 import React from 'react';
 import ValuePropositionsContent from './ValuePropositionsContent';
 
-export default function ValuePropositionsPage() {
+export default function Page() {
   return <ValuePropositionsContent />;
 }
