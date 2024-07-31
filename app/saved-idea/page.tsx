@@ -1,18 +1,8 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { createClient } from "@/utils/supabase/client";
-import LeftNavigation from '@/components/LeftNavigation';
-
-interface Idea {
-  id: string;
-  original_idea: string;
-  generated_idea: string;
-  value_propositions: string[];
-}
+import SavedIdeaContent from './SavedIdeaContent';
 
 export default function Page() {
+  return <SavedIdeaContent />;
+}
   const [idea, setIdea] = useState<Idea | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
