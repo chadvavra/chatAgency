@@ -8,6 +8,7 @@ import Link from 'next/link';
 interface Idea {
   id: string;
   original_idea: string;
+  created_at: string;
 }
 
 export default function Dashboard() {
@@ -26,7 +27,7 @@ export default function Dashboard() {
         setUser(user);
         const { data, error } = await supabase
           .from('ideas')
-          .select('id, original_idea')
+          .select('id, original_idea, created_at')
           .eq('user_id', user.id);
 
         if (error) {
@@ -64,6 +65,9 @@ export default function Dashboard() {
           <Link href={`/saved-idea?id=${idea.id}`} key={idea.id}>
             <div className="bg-white shadow-md rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200">
               <p className="text-gray-600">{idea.original_idea}</p>
+              <p className="text-sm text-gray-400 mt-2">
+                Created: {new Date(idea.created_at).toLocaleDateString()}
+              </p>
             </div>
           </Link>
         ))}
