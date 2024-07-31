@@ -3,8 +3,6 @@ import SavedIdeaContent from './SavedIdeaContent';
 export default function Page() {
   return <SavedIdeaContent />;
 }
-  const [idea, setIdea] = useState<Idea | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedIdea, setEditedIdea] = useState('');
   const [updateRequest, setUpdateRequest] = useState('');
