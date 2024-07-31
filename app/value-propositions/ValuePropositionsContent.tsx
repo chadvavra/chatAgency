@@ -4,11 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient, saveIdea } from "@/utils/supabase/client";
 
-interface ValuePropositionsContentProps {
-  generatedIdea?: string;
-}
-
-const ValuePropositionsContent: React.FC<ValuePropositionsContentProps> = ({ generatedIdea }) => {
+const ValuePropositionsContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [idea, setIdea] = useState(generatedIdea || '');
