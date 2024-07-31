@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
 
   if (!id) {
@@ -32,3 +32,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });
   }
 }
+
+export const dynamic = 'force-dynamic';
