@@ -3,8 +3,6 @@ import SavedIdeaContent from './SavedIdeaContent';
 export default function Page() {
   return <SavedIdeaContent />;
 }
-      if (!ideaId) {
-        setIsLoading(false);
         return;
       }
 
