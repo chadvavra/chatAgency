@@ -34,28 +34,30 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
 
   return (
     <div>
-      <button
-        onClick={handleGenerateImage}
-        disabled={isLoading}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        {isLoading ? 'Generating...' : 'Generate Image'}
-      </button>
+      <div className="space-y-4">
+        <button
+          onClick={handleGenerateImage}
+          disabled={isLoading}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+        >
+          {isLoading ? 'Generating...' : 'Generate Image'}
+        </button>
 
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+        {error && <p className="text-red-500">{error}</p>}
 
-      {generatedImageUrl && (
-        <div className="mt-4">
-          <img src={generatedImageUrl} alt="Generated Image" className="max-w-full h-auto" />
-        </div>
-      )}
+        {generatedImageUrl && (
+          <div>
+            <img src={generatedImageUrl} alt="Generated Image" className="max-w-full h-auto rounded shadow-lg" />
+          </div>
+        )}
 
-      <button
-        onClick={() => router.back()}
-        className="mt-4 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
-      >
-        Back
-      </button>
+        <button
+          onClick={() => router.back()}
+          className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+        >
+          Back
+        </button>
+      </div>
     </div>
   );
 };
