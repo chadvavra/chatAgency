@@ -3,13 +3,6 @@ import SavedIdeaContent from './SavedIdeaContent';
 export default function Page() {
   return <SavedIdeaContent />;
 }
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedIdea, setEditedIdea] = useState('');
-  const [updateRequest, setUpdateRequest] = useState('');
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  useEffect(() => {
     const fetchIdea = async () => {
       const ideaId = searchParams.get('id');
       if (!ideaId) {
