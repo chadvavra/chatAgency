@@ -15,7 +15,7 @@ export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards');
+  const [viewMode, setViewMode] = useState<'cards' | 'list'>('list');
   const router = useRouter();
 
   useEffect(() => {
