@@ -1,8 +1,10 @@
 import SavedIdeaContent from './SavedIdeaContent';
 
-export default function Page() {
+const Page = () => {
   return <SavedIdeaContent />;
-}
+};
+
+export default Page;
         return;
       }
 
