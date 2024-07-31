@@ -17,14 +17,14 @@ export async function GET(request: Request) {
   const supabase = createClient();
 
   // Check if an image already exists for this idea
-  const { data: existingImage } = await supabase
-    .from('images')
+  const { data: existingIdea } = await supabase
+    .from('ideas')
     .select('image_url')
-    .eq('idea_id', id)
+    .eq('id', id)
     .single();
 
-  if (existingImage) {
-    return NextResponse.json({ imageUrl: existingImage.image_url });
+  if (existingIdea && existingIdea.image_url) {
+    return NextResponse.json({ imageUrl: existingIdea.image_url });
   }
 
   const openai = new OpenAI({
@@ -44,13 +44,14 @@ export async function GET(request: Request) {
 
     const imageUrl = response.data[0].url;
 
-    // Save the image URL to the database
-    const { error: insertError } = await supabase
-      .from('images')
-      .insert({ idea_id: id, image_url: imageUrl });
+    // Update the image URL in the ideas table
+    const { error: updateError } = await supabase
+      .from('ideas')
+      .update({ image_url: imageUrl })
+      .eq('id', id);
 
-    if (insertError) {
-      console.error('Error saving image to database:', insertError);
+    if (updateError) {
+      console.error('Error saving image to database:', updateError);
       return NextResponse.json({ error: 'Failed to save image' }, { status: 500 });
     }
 
