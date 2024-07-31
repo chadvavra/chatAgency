@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface ImageGenerationContentProps {
@@ -12,6 +12,22 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkExistingImage = async () => {
+      try {
+        const response = await fetch(`/api/generate-image?id=${ideaId}`);
+        const data = await response.json();
+        if (data.imageUrl) {
+          setGeneratedImageUrl(data.imageUrl);
+        }
+      } catch (err) {
+        console.error('Error checking existing image:', err);
+      }
+    };
+
+    checkExistingImage();
+  }, [ideaId]);
 
   const handleGenerateImage = async () => {
     setIsLoading(true);
@@ -60,7 +76,7 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
           disabled={isLoading}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
         >
-          {isLoading ? 'Generating...' : 'Generate Image'}
+          {isLoading ? 'Generating...' : (generatedImageUrl ? 'Regenerate Image' : 'Generate Image')}
         </button>
 
         {error && <p className="text-red-500">{error}</p>}

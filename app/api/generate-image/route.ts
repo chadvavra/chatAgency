@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { createClient } from '@/utils/supabase/server';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -11,6 +12,19 @@ export async function GET(request: Request) {
 
   if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
     return NextResponse.json({ error: 'OpenAI API key is not set' }, { status: 500 });
+  }
+
+  const supabase = createClient();
+
+  // Check if an image already exists for this idea
+  const { data: existingImage } = await supabase
+    .from('images')
+    .select('image_url')
+    .eq('idea_id', id)
+    .single();
+
+  if (existingImage) {
+    return NextResponse.json({ imageUrl: existingImage.image_url });
   }
 
   const openai = new OpenAI({
@@ -29,6 +43,16 @@ export async function GET(request: Request) {
     });
 
     const imageUrl = response.data[0].url;
+
+    // Save the image URL to the database
+    const { error: insertError } = await supabase
+      .from('images')
+      .insert({ idea_id: id, image_url: imageUrl });
+
+    if (insertError) {
+      console.error('Error saving image to database:', insertError);
+      return NextResponse.json({ error: 'Failed to save image' }, { status: 500 });
+    }
 
     return NextResponse.json({ imageUrl });
   } catch (error) {
