@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient, getIdea } from "@/utils/supabase/client";
 
-export default function IdeaPage() {
+export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [generatedIdea, setGeneratedIdea] = useState('');
