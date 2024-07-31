@@ -66,7 +66,7 @@ export default function Dashboard() {
             <div className="bg-white shadow-md rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200">
               <p className="text-gray-600">{idea.original_idea}</p>
               <p className="text-sm text-gray-400 mt-2">
-                Created: {new Date(idea.created_at).toLocaleDateString()}
+                Created: {new Date(idea.created_at).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
               </p>
             </div>
           </Link>
