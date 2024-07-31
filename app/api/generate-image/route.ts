@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
@@ -12,6 +8,14 @@ export async function GET(request: Request) {
   if (!id) {
     return NextResponse.json({ error: 'Missing idea ID' }, { status: 400 });
   }
+
+  if (!process.env.OPENAI_API_KEY) {
+    return NextResponse.json({ error: 'OpenAI API key is not set' }, { status: 500 });
+  }
+
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
 
   try {
     // TODO: Fetch the idea description from your database using the id
