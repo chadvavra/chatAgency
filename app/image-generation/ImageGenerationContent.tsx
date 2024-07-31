@@ -18,15 +18,26 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
     setError(null);
 
     try {
+      console.log('Fetching image with ideaId:', ideaId);
       const response = await fetch(`/api/generate-image?id=${ideaId}`);
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Failed to generate image');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate image');
       }
+      
       const data = await response.json();
+      console.log('Response data:', data);
+      
+      if (!data.imageUrl) {
+        throw new Error('No image URL in the response');
+      }
+      
       setGeneratedImageUrl(data.imageUrl);
     } catch (err) {
-      setError('An error occurred while generating the image. Please try again.');
-      console.error(err);
+      console.error('Error in handleGenerateImage:', err);
+      setError(`An error occurred while generating the image: ${err.message}`);
     } finally {
       setIsLoading(false);
     }
