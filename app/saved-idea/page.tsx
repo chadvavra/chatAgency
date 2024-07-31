@@ -12,7 +12,7 @@ interface Idea {
   value_propositions: string[];
 }
 
-export default function SavedIdeaPage() {
+export default function Page() {
   const [idea, setIdea] = useState<Idea | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
