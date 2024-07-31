@@ -34,6 +34,11 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
             Color Palette
           </Link>
         </li>
+        <li>
+          <Link href={`/image-generation?id=${ideaId}`} className="text-blue-600 hover:underline">
+            Generate Image
+          </Link>
+        </li>
       </ul>
     </nav>
   );
