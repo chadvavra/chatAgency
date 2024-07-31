@@ -32,8 +32,23 @@ export async function GET(request: Request) {
   });
 
   try {
-    // TODO: Fetch the idea description from your database using the id
-    const ideaDescription = "A futuristic smart home device"; // Replace this with actual idea fetching logic
+    // Fetch the idea description from the database
+    const { data: idea, error: fetchError } = await supabase
+      .from('ideas')
+      .select('generated_description')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) {
+      console.error('Error fetching idea:', fetchError);
+      return NextResponse.json({ error: 'Failed to fetch idea' }, { status: 500 });
+    }
+
+    if (!idea || !idea.generated_description) {
+      return NextResponse.json({ error: 'Idea description not found' }, { status: 404 });
+    }
+
+    const ideaDescription = idea.generated_description;
 
     const response = await openai.images.generate({
       model: "dall-e-3",
