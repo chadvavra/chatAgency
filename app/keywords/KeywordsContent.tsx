@@ -72,30 +72,30 @@ const KeywordsContent = () => {
   };
 
   if (isLoading) {
-    return <div className="container mx-auto px-4 py-8 text-center" aria-live="polite">Loading...</div>;
+    return <div className="container mx-auto px-4 py-8 text-center" role="status" aria-live="polite">Loading...</div>;
   }
 
   if (error) {
-    return <div className="container mx-auto px-4 py-8 text-center text-red-500" aria-live="assertive">Error: {error}</div>;
+    return <div className="container mx-auto px-4 py-8 text-center text-red-500" role="alert" aria-live="assertive">Error: {error}</div>;
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">Keywords for Your Idea</h1>
-      {/* <p className="mb-4"><strong>Original Idea:</strong> {idea}</p> */}
       <div className="bg-white shadow-md rounded-lg p-6 mt-4">
         <h2 className="text-xl font-semibold mb-4">Generated Adjectives:</h2>
         {adjectives.length > 0 ? (
           <>
             <ul className="list-disc pl-5 space-y-2 mb-4">
               {adjectives.map((adj, index) => (
-                <li key={index} className="text-gray-700">{adj}</li>
+                <li key={`adj-${index}`} className="text-gray-700">{adj}</li>
               ))}
             </ul>
             <button
               onClick={generateNewKeywords}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               disabled={isLoading}
+              aria-busy={isLoading}
             >
               {isLoading ? 'Generating...' : 'Generate New Keywords'}
             </button>
@@ -107,6 +107,7 @@ const KeywordsContent = () => {
               onClick={generateNewKeywords}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               disabled={isLoading}
+              aria-busy={isLoading}
             >
               {isLoading ? 'Generating...' : 'Generate Keywords'}
             </button>
