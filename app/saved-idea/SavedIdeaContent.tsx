@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
 import LeftNavigation from '@/components/LeftNavigation';
+import { FaCopy } from 'react-icons/fa';
 
 interface Idea {
   id: string;
@@ -115,6 +116,14 @@ export default function SavedIdeaContent() {
     );
   }
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex">
@@ -124,12 +133,32 @@ export default function SavedIdeaContent() {
         <div className="w-3/4">
           <h1 className="text-2xl font-bold mb-6">Saved Idea</h1>
           <section>
-            <h2 className="text-xl font-semibold mb-2">Original Idea:</h2>
+            <h2 className="text-xl font-semibold mb-2 flex items-center">
+              Original Idea
+              <button 
+                onClick={() => copyToClipboard(idea.original_idea)}
+                className="ml-2 text-gray-500 hover:text-gray-700"
+                title="Copy to clipboard"
+              >
+                <FaCopy />
+              </button>
+            </h2>
             <p className="text-gray-700 bg-gray-100 p-4 rounded-md">{idea.original_idea}</p>
           </section>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <section>
-              <h2 className="text-xl font-semibold mb-2">Generated Idea:</h2>
+              <h2 className="text-xl font-semibold mb-2 flex items-center">
+                Generated Idea
+                {!isEditing && (
+                  <button 
+                    onClick={() => copyToClipboard(idea.generated_idea)}
+                    className="ml-2 text-gray-500 hover:text-gray-700"
+                    title="Copy to clipboard"
+                  >
+                    <FaCopy />
+                  </button>
+                )}
+              </h2>
               {isEditing ? (
                 <div>
                   <textarea
@@ -179,7 +208,16 @@ export default function SavedIdeaContent() {
               )}
             </section>
             <section>
-              <h2 className="text-xl font-semibold mb-2">Value Propositions:</h2>
+              <h2 className="text-xl font-semibold mb-2 flex items-center">
+                Value Propositions
+                <button 
+                  onClick={() => copyToClipboard(idea.value_propositions.join('\n'))}
+                  className="ml-2 text-gray-500 hover:text-gray-700"
+                  title="Copy to clipboard"
+                >
+                  <FaCopy />
+                </button>
+              </h2>
               <ul className="list-disc pl-5 space-y-2 bg-gray-100 p-4 rounded-md h-full">
                 {idea.value_propositions.map((vp, index) => (
                   <li key={index} className="text-gray-700">{vp}</li>
