@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "user",
-          content: `Given the following adjectives, provide exactly 5 hex codes and names for colors that represent the adjectives. Separate the adjectives with commas:
+          content: `Given the adjectives, return 5 hex colors. Do not provide explainations. Do not number the colors:
 
           ${idea.generated_idea}
 
