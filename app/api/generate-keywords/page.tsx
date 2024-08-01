@@ -1,0 +1,12 @@
+import React, { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+
+const KeywordsContent = dynamic(() => import('./KeywordsContent'));
+
+export default function KeywordsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <KeywordsContent />
+    </Suspense>
+  );
+}
