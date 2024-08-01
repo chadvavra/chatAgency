@@ -47,7 +47,16 @@ export async function POST(request: Request) {
       ]
     });
 
-    const generatedAdjectives = response.content[0].text.trim().split(',').map(adj => adj.trim());
+    let generatedText = '';
+    if (response.content[0].type === 'text') {
+      generatedText = response.content[0].text;
+    } else if (response.content[0].type === 'image' && 'text' in response.content[0]) {
+      generatedText = response.content[0].text;
+    } else {
+      throw new Error('Unexpected response format from Anthropic API');
+    }
+
+    const generatedAdjectives = generatedText.trim().split(',').map(adj => adj.trim());
 
     // Save adjectives to the database
     const { error: updateError } = await supabase
