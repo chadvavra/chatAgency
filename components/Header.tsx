@@ -1,14 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import NavLinks from './NavLinks';
 
 export default function Header() {
   const [user, setUser] = useState<any>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     const supabase = createClient();
@@ -16,13 +15,6 @@ export default function Header() {
       setUser(user);
     });
   }, []);
-
-  const signOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    setUser(null);
-    router.push('/login');
-  };
 
   return (
     <header className="w-full p-4 bg-background">
@@ -37,38 +29,12 @@ export default function Header() {
           ☰
         </button>
         <nav className="hidden md:flex items-center gap-4">
-          {user && (
-            <Link href="/dashboard" className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
-              Dashboard
-            </Link>
-          )}
-          {user ? (
-            <button onClick={signOut} className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
-              Log out
-            </button>
-          ) : (
-            <Link href="/login" className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
-              Log in
-            </Link>
-          )}
+          <NavLinks user={user} />
         </nav>
       </div>
       {isMenuOpen && (
         <nav className="mt-4 flex flex-col items-center gap-2 md:hidden">
-          {user && (
-            <Link href="/dashboard" className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
-              Dashboard
-            </Link>
-          )}
-          {user ? (
-            <button onClick={signOut} className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
-              Log out
-            </button>
-          ) : (
-            <Link href="/login" className="bg-btn-background hover:bg-btn-background-hover rounded-md px-4 py-2 text-foreground no-underline">
-              Log in
-            </Link>
-          )}
+          <NavLinks user={user} />
         </nav>
       )}
     </header>
