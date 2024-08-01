@@ -116,10 +116,9 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
           className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300"
           disabled={isLoading}
           aria-busy={isLoading}
-          aria-label={palette.length > 0 ? 'Regenerate color palette' : 'Generate color palette'}
         >
-          <FaRedo className="w-4 h-4" />
-          <span>{palette.length > 0 ? 'Regenerate' : 'Generate'}</span>
+          <FaRedo className="w-4 h-4" aria-hidden="true" />
+          <span>{palette.length > 0 ? 'Regenerate color palette' : 'Generate color palette'}</span>
         </button>
       </div>
       {palette.length > 0 ? (
@@ -129,7 +128,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
               <div className="flex flex-col rounded-t-lg overflow-hidden">
                 <div
                   className="h-24"
-                  style={{ backgroundColor: `#${color.hexCode}` }}
+                  style={{ backgroundColor: color.hexCode }}
                   aria-label={`Color swatch: ${color.name}`}
                   role="img"
                 ></div>
@@ -138,7 +137,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
                     <div
                       key={i}
                       className="flex-1 flex items-center justify-center text-xs font-mono"
-                      style={{ backgroundColor: `#${color.hexCode}`, color: textColor }}
+                      style={{ backgroundColor: color.hexCode, color: textColor }}
                     >
                       {color.hexCode}
                     </div>
@@ -146,7 +145,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
                 </div>
               </div>
               <div className="bg-white p-4 rounded-b-lg shadow">
-                <div className="w-full h-8 mb-2 rounded" style={{ backgroundColor: `#${color.hexCode}` }}></div>
+                <div className="w-full h-8 mb-2 rounded" style={{ backgroundColor: color.hexCode }}></div>
                 <h3 className="font-semibold text-lg mb-1">{color.name}</h3>
                 <p className="text-sm text-gray-600 mb-2">{color.description}</p>
                 <div className="flex justify-between items-center">
