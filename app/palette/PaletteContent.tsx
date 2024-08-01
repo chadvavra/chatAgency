@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
 
@@ -46,7 +46,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
     fetchPalette();
   }, [ideaId]);
 
-  const generateNewPalette = async () => {
+  const generateNewPalette = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/generate-palette?id=${ideaId}`, {
@@ -63,10 +63,10 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
       setError('Error generating colors');
     }
     setIsLoading(false);
-  };
+  }, [ideaId]);
 
   if (isLoading) {
-    return <div className="text-center" aria-live="polite">Loading...</div>;
+    return <div className="text-center" aria-live="polite" role="status">Loading...</div>;
   }
 
   if (error) {
@@ -75,9 +75,9 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Color Palette:</h2>
+      <h2 className="text-xl font-semibold mb-4" id="palette-heading">Color Palette:</h2>
       {palette.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4" aria-labelledby="palette-heading">
           {palette.map((color, index) => {
             const [hexCode, name, description] = color.split(':').map(item => item.trim());
             return (
