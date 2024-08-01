@@ -3,50 +3,64 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
+import { FaClipboard, FaRedo } from 'react-icons/fa';
 
 interface PaletteContentProps {
   ideaId: string;
 }
 
+interface Color {
+  hexCode: string;
+  name: string;
+  description: string;
+}
+
 const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
-  const [palette, setPalette] = useState<string[]>([]);
+  const [palette, setPalette] = useState<Color[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchPalette = async () => {
-      if (!ideaId) {
-        setError('No idea ID provided');
-        setIsLoading(false);
-        return;
-      }
-
-      const supabase = createClient();
-      
-      const { data, error: fetchError } = await supabase
-        .from('ideas')
-        .select('colors')
-        .eq('id', ideaId)
-        .single();
-
-      if (fetchError) {
-        setError('Error fetching colors');
-        setIsLoading(false);
-        return;
-      }
-
-      if (data.colors) {
-        setPalette(data.colors);
-      }
-
+  const fetchPalette = useCallback(async () => {
+    if (!ideaId) {
+      setError('No idea ID provided');
       setIsLoading(false);
-    };
+      return;
+    }
 
-    fetchPalette();
+    const supabase = createClient();
+    
+    const { data, error: fetchError } = await supabase
+      .from('ideas')
+      .select('colors')
+      .eq('id', ideaId)
+      .single();
+
+    if (fetchError) {
+      setError('Error fetching colors');
+      setIsLoading(false);
+      return;
+    }
+
+    if (data.colors) {
+      setPalette(data.colors.map((colorData: string) => {
+        try {
+          return JSON.parse(colorData);
+        } catch {
+          const [hexCode, name, description] = colorData.split(':').map(item => item.trim());
+          return { hexCode, name, description };
+        }
+      }));
+    }
+
+    setIsLoading(false);
   }, [ideaId]);
 
-  const generateNewPalette = useCallback(async () => {
+  useEffect(() => {
+    fetchPalette();
+  }, [fetchPalette]);
+
+  const generateNewPalette = async () => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/generate-palette?id=${ideaId}`, {
@@ -57,13 +71,16 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
         throw new Error('Failed to generate colors');
       }
 
-      const result = await response.json();
-      setPalette(result.colors);
+      await fetchPalette();
     } catch (apiError) {
       setError('Error generating colors');
+      setIsLoading(false);
     }
-    setIsLoading(false);
-  }, [ideaId]);
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
 
   if (isLoading) {
     return <div className="text-center" aria-live="polite" role="status">Loading...</div>;
@@ -74,59 +91,52 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4" id="palette-heading">Color Palette:</h2>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold" id="palette-heading">Color Palette</h2>
+        <button
+          onClick={generateNewPalette}
+          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300"
+          disabled={isLoading}
+          aria-busy={isLoading}
+        >
+          <FaRedo className="w-4 h-4" />
+          <span>{palette.length > 0 ? 'Regenerate' : 'Generate'}</span>
+        </button>
+      </div>
       {palette.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4" aria-labelledby="palette-heading">
-          {palette.map((colorData, index) => {
-            let hexCode, name, description;
-            try {
-              ({ hexCode, name, description } = JSON.parse(colorData));
-            } catch {
-              // If parsing fails, assume it's the old format
-              [hexCode, name, description] = colorData.split(':').map(item => item.trim());
-            }
-            return (
-              <div key={index} className="flex flex-col items-center">
-                <div
-                  className="w-24 h-24"
-                  style={{ backgroundColor: hexCode }}
-                  aria-label={`Color swatch: ${name}, Hex code: ${hexCode}`}
-                  role="img"
-                ></div>
-                <dl className="mt-2 text-center">
-                  <dt className="sr-only">Hex Code</dt>
-                  <dd className="font-bold">{hexCode}</dd>
-                  <dt className="sr-only">Color Name</dt>
-                  <dd className="text-sm">{name}</dd>
-                  <dt className="sr-only">Description</dt>
-                  <dd className="text-xs mt-1">{description}</dd>
-                </dl>
-                <button
-                  onClick={() => navigator.clipboard.writeText(hexCode)}
-                  className="mt-1 text-xs text-blue-600 hover:text-blue-800"
-                  aria-label={`Copy ${hexCode} to clipboard`}
-                >
-                  Copy Hex
-                </button>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6" aria-labelledby="palette-heading">
+          {palette.map((color, index) => (
+            <div key={index} className="flex flex-col">
+              <div
+                className="h-32 rounded-t-lg"
+                style={{ backgroundColor: color.hexCode }}
+                aria-label={`Color swatch: ${color.name}`}
+                role="img"
+              ></div>
+              <div className="bg-white p-4 rounded-b-lg shadow">
+                <h3 className="font-semibold text-lg mb-1">{color.name}</h3>
+                <p className="text-sm text-gray-600 mb-2">{color.description}</p>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-mono">{color.hexCode}</span>
+                  <button
+                    onClick={() => copyToClipboard(color.hexCode)}
+                    className="text-blue-500 hover:text-blue-600 transition duration-300"
+                    aria-label={`Copy ${color.hexCode} to clipboard`}
+                  >
+                    <FaClipboard className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       ) : (
-        <p className="text-gray-500 italic mb-4">No color palette generated yet.</p>
+        <p className="text-gray-500 italic">No color palette generated yet.</p>
       )}
       <button
-        onClick={generateNewPalette}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        disabled={isLoading}
-        aria-busy={isLoading}
-      >
-        {palette.length > 0 ? 'Generate New Palette' : 'Generate Palette'}
-      </button>
-      <button
         onClick={() => router.back()}
-        className="mt-4 ml-4 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+        className="mt-6 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded transition duration-300"
       >
         Back
       </button>
