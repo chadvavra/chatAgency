@@ -42,15 +42,28 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
       return;
     }
 
-    if (data.colors) {
-      setPalette(data.colors.map((colorData: string) => {
-        try {
-          return JSON.parse(colorData);
-        } catch {
-          const [hexCode, name, description] = colorData.split(':').map(item => item.trim());
-          return { hexCode, name, description };
+    if (data.colors && data.colors.length > 0) {
+      try {
+        const parsedData = JSON.parse(data.colors[0]);
+        if (parsedData.name) {
+          const colors = parsedData.name.split('\n\n').map((colorString: string) => {
+            const [hexCode, name, ...descriptionParts] = colorString.split(' - ');
+            return {
+              hexCode: hexCode.trim(),
+              name: name.trim(),
+              description: descriptionParts.join(' - ').trim()
+            };
+          });
+          setPalette(colors);
+        } else {
+          setError('Invalid color data format');
         }
-      }));
+      } catch (parseError) {
+        console.error('Error parsing color data:', parseError);
+        setError('Error parsing color data');
+      }
+    } else {
+      setPalette([]);
     }
 
     setIsLoading(false);
