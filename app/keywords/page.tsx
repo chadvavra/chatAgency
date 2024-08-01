@@ -76,16 +76,18 @@ const KeywordsPage = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">Keywords for Your Idea</h1>
       {/* <p className="mb-4"><strong>Original Idea:</strong> {idea}</p> */}
-      <h2 className="text-xl font-semibold mb-2">Generated Adjectives:</h2>
-      <ul className="list-disc pl-5">
+      <div className="bg-white shadow-md rounded-lg p-6 mt-4">
+        <h2 className="text-xl font-semibold mb-4">Generated Adjectives:</h2>
         {adjectives.length > 0 ? (
-          adjectives.map((adj, index) => (
-            <li key={index}>{adj}</li>
-          ))
+          <ul className="list-disc pl-5 space-y-2">
+            {adjectives.map((adj, index) => (
+              <li key={index} className="text-gray-700">{adj}</li>
+            ))}
+          </ul>
         ) : (
-          <li>No adjectives generated yet.</li>
+          <p className="text-gray-500 italic">No adjectives generated yet.</p>
         )}
-      </ul>
+      </div>
     </div>
   );
 };
