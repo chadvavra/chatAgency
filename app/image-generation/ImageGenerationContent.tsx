@@ -71,12 +71,14 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
   };
 
   return (
-    <section aria-label="Image Generation">
+    <section aria-labelledby="image-generation-heading">
+      <h2 id="image-generation-heading" className="sr-only">Image Generation</h2>
       <div className="space-y-4">
         <button
           onClick={handleGenerateImage}
           disabled={isLoading}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+          aria-busy={isLoading}
         >
           {isLoading ? 'Generating...' : (generatedImageUrl ? 'Regenerate Image' : 'Generate Image')}
         </button>
@@ -86,14 +88,16 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
         {isLoading && (
           <div className="text-center" aria-live="polite">
             <p className="mb-2">Generating image, please wait...</p>
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" aria-hidden="true"></div>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
           </div>
         )}
 
         {generatedImageUrl && (
           <div>
             <p className="mb-2 text-green-600">Image generated successfully!</p>
-            <img src={generatedImageUrl} alt="Generated product image" className="max-w-full h-auto rounded shadow-lg" />
+            <img src={generatedImageUrl} alt="Generated product" className="max-w-full h-auto rounded shadow-lg" />
           </div>
         )}
 
