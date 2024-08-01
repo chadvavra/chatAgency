@@ -54,9 +54,9 @@ export async function POST(request: Request) {
       throw new Error('Unexpected response format from Anthropic API');
     }
 
-    const generatedAdjectives = generatedText.trim().split(',').map(adj => adj.trim());
+    const generatedColors = generatedText.trim().split(',').map(color => color.trim());
 
-    // Save adjectives to the database
+    // Save colors to the database
     const { error: updateError } = await supabase
       .from('ideas')
       .update({ colors: generatedColors })
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Error saving colors' }, { status: 500 });
     }
 
-    return NextResponse.json({ adjectives: generatedAdjectives });
+    return NextResponse.json({ colors: generatedColors });
   } catch (error) {
     console.error('Error generating colors:', error);
     return NextResponse.json({ error: 'Failed to generate colors' }, { status: 500 });
