@@ -70,8 +70,7 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
       console.error('Error in handleGenerateImage:', err);
       setError(`An error occurred while generating the image: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
-      setIsLo
-ading(false);
+      setIsLoading(false);
     }
   };
 
