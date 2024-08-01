@@ -21,7 +21,7 @@ export default function Header() {
     <header className="w-full p-4 bg-background">
       <div className="flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Chat Agency AI Logo" width={32} height={32} />
+          <Image src="/favicon.ico" alt="Chat Agency AI Logo" width={32} height={32} />
         </Link>
         <button
           className="md:hidden"
