@@ -50,8 +50,6 @@ export async function POST(request: Request) {
     let generatedText = '';
     if (response.content[0].type === 'text') {
       generatedText = response.content[0].text;
-    } else if (response.content[0].type === 'image' && 'text' in response.content[0]) {
-      generatedText = response.content[0].text;
     } else {
       throw new Error('Unexpected response format from Anthropic API');
     }
