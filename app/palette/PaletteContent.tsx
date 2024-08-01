@@ -77,17 +77,22 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
     <div>
       <h2 className="text-xl font-semibold mb-4">Color Palette:</h2>
       {palette.length > 0 ? (
-        <div className="flex flex-wrap gap-4 mb-4">
-          {palette.map((color, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <div
-                className="w-20 h-20 rounded-full"
-                style={{ backgroundColor: color }}
-                aria-label={`Color swatch: ${color}`}
-              ></div>
-              <span className="mt-2">{color}</span>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+          {palette.map((color, index) => {
+            const [hexCode, name, description] = color.split(':').map(item => item.trim());
+            return (
+              <div key={index} className="flex flex-col items-center">
+                <div
+                  className="w-24 h-24"
+                  style={{ backgroundColor: hexCode }}
+                  aria-label={`Color swatch: ${hexCode}`}
+                ></div>
+                <span className="mt-2 font-bold">{hexCode}</span>
+                <span className="text-sm">{name}</span>
+                <p className="text-xs text-center mt-1">{description}</p>
+              </div>
+            );
+          })}
         </div>
       ) : (
         <p className="text-gray-500 italic mb-4">No color palette generated yet.</p>
