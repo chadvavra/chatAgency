@@ -99,12 +99,12 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
         <h2 className="text-2xl font-semibold">Color Palette</h2>
         <button
           onClick={generateNewPalette}
-          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300"
+          className={`flex items-center space-x-2 ${isLoading ? 'bg-blue-400' : 'bg-blue-500 hover:bg-blue-600'} text-white font-bold py-2 px-4 rounded transition duration-300`}
           disabled={isLoading}
           aria-busy={isLoading}
         >
-          <FaRedo className="w-4 h-4" aria-hidden="true" />
-          <span>{palette.length > 0 ? 'Regenerate color palette' : 'Generate color palette'}</span>
+          <FaRedo className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} aria-hidden="true" />
+          <span>{isLoading ? 'Generating...' : (palette.length > 0 ? 'Regenerate color palette' : 'Generate color palette')}</span>
         </button>
       </div>
       {palette.length > 0 ? (
