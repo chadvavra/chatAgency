@@ -79,7 +79,11 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
   };
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Color code copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
   };
 
   if (isLoading) {
