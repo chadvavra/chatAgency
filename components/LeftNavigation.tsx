@@ -7,8 +7,8 @@ interface LeftNavigationProps {
 
 const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
   return (
-    <nav className="bg-gray-100 p-4 rounded-lg">
-      <ul className="space-y-2">
+    <nav className="bg-gray-100 p-4 rounded-lg" aria-label="Left Navigation">
+      <ul className="space-y-2" role="list">
         <li>
           <Link href="/dashboard" className="text-blue-600 hover:underline">
             Back

@@ -66,11 +66,11 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
   };
 
   if (isLoading) {
-    return <div className="text-center">Loading...</div>;
+    return <div className="text-center" aria-live="polite">Loading...</div>;
   }
 
   if (error) {
-    return <div className="text-center text-red-500">Error: {error}</div>;
+    return <div className="text-center text-red-500" role="alert">Error: {error}</div>;
   }
 
   return (
@@ -95,6 +95,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
         onClick={generateNewPalette}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         disabled={isLoading}
+        aria-busy={isLoading}
       >
         {palette.length > 0 ? 'Generate New Palette' : 'Generate Palette'}
       </button>
