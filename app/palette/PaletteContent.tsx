@@ -100,7 +100,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
   };
 
   if (isLoading) {
-    return <div className="text-center" aria-live="polite" role="status">Loading...</div>;
+    return <div className="text-center" aria-live="polite">Loading...</div>;
   }
 
   if (error) {
@@ -110,7 +110,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold" id="palette-heading">Color Palette</h2>
+        <h2 className="text-2xl font-semibold">Color Palette</h2>
         <button
           onClick={generateNewPalette}
           className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300"
@@ -122,9 +122,9 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
         </button>
       </div>
       {palette.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6" aria-labelledby="palette-heading">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           {palette.map((color, index) => (
-            <div key={index} className="flex flex-col">
+            <div key={`color-${color.hexCode}`} className="flex flex-col">
               <div
                 className="h-32 rounded-t-lg"
                 style={{ backgroundColor: color.hexCode }}
