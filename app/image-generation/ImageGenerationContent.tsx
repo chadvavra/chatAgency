@@ -12,6 +12,7 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
   const [originalIdea, setOriginalIdea] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -106,7 +107,13 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
             <p className="mb-2 text-green-600">Images generated successfully!</p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {generatedImageUrls.map((url, index) => (
-                <img key={index} src={url} alt={`Generated product ${index + 1}`} className="max-w-full h-auto rounded shadow-lg" />
+                <img 
+                  key={index} 
+                  src={url} 
+                  alt={`Generated product ${index + 1}`} 
+                  className="max-w-full h-auto rounded shadow-lg cursor-pointer" 
+                  onClick={() => setSelectedImage(url)}
+                />
               ))}
             </div>
           </div>
@@ -120,6 +127,27 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
         </button>
       </div>
     </section>
+    {selectedImage && (
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        onClick={() => setSelectedImage(null)}
+      >
+        <div className="relative">
+          <img 
+            src={selectedImage} 
+            alt="Enlarged product" 
+            className="max-w-full max-h-[90vh] rounded shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button 
+            className="absolute top-2 right-2 bg-white text-black rounded-full w-8 h-8 flex items-center justify-center"
+            onClick={() => setSelectedImage(null)}
+          >
+            ×
+          </button>
+        </div>
+      </div>
+    )}
   );
 };
 
