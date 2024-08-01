@@ -1,9 +1,7 @@
 import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 
-const KeywordsContent = dynamic(() => import('./KeywordsContent'), {
-  loading: () => <div>Loading...</div>,
-});
+const KeywordsContent = dynamic(() => import('./KeywordsContent'));
 
 export default function KeywordsPage() {
   return (
