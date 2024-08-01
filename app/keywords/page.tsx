@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
 
 const KeywordsPage = () => {
+  const router = useRouter();
   const [idea, setIdea] = useState<string | null>(null);
   const [adjectives, setAdjectives] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -112,6 +113,12 @@ const KeywordsPage = () => {
           </>
         )}
       </div>
+      <button
+        onClick={() => router.back()}
+        className="mt-4 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+      >
+        Back
+      </button>
     </div>
   );
 };
