@@ -76,78 +76,80 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
   };
 
   return (
-    <section aria-labelledby="image-generation-heading">
-      <h2 id="image-generation-heading" className="sr-only">Image Generation</h2>
-      {originalIdea && (
-        <p className="mb-4 text-lg font-semibold">Original Idea: {originalIdea}</p>
-      )}
-      <div className="space-y-4">
-        <button
-          onClick={handleGenerateImage}
-          disabled={isLoading}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-          aria-busy={isLoading}
-        >
-          {isLoading ? 'Generating...' : (generatedImageUrls.length > 0 ? 'Generate Another Image' : 'Generate Image')}
-        </button>
-
-        {error && <p role="alert" className="text-red-500">{error}</p>}
-
-        {isLoading && (
-          <div className="text-center" aria-live="polite">
-            <p className="mb-2">Generating image, please wait...</p>
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
-          </div>
+    <div>
+      <section aria-labelledby="image-generation-heading">
+        <h2 id="image-generation-heading" className="sr-only">Image Generation</h2>
+        {originalIdea && (
+          <p className="mb-4 text-lg font-semibold">Original Idea: {originalIdea}</p>
         )}
-
-        {generatedImageUrls.length > 0 && (
-          <div>
-            <p className="mb-2 text-green-600">Images generated successfully!</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {generatedImageUrls.map((url, index) => (
-                <img 
-                  key={index} 
-                  src={url} 
-                  alt={`Generated product ${index + 1}`} 
-                  className="max-w-full h-auto rounded shadow-lg cursor-pointer" 
-                  onClick={() => setSelectedImage(url)}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        <button
-          onClick={() => router.back()}
-          className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
-        >
-          Back
-        </button>
-      </div>
-    </section>,
-    {selectedImage && (
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        onClick={() => setSelectedImage(null)}
-      >
-        <div className="relative">
-          <img 
-            src={selectedImage} 
-            alt="Enlarged product" 
-            className="max-w-full max-h-[90vh] rounded shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          />
-          <button 
-            className="absolute top-2 right-2 bg-white text-black rounded-full w-8 h-8 flex items-center justify-center"
-            onClick={() => setSelectedImage(null)}
+        <div className="space-y-4">
+          <button
+            onClick={handleGenerateImage}
+            disabled={isLoading}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+            aria-busy={isLoading}
           >
-            ×
+            {isLoading ? 'Generating...' : (generatedImageUrls.length > 0 ? 'Generate Another Image' : 'Generate Image')}
+          </button>
+
+          {error && <p role="alert" className="text-red-500">{error}</p>}
+
+          {isLoading && (
+            <div className="text-center" aria-live="polite">
+              <p className="mb-2">Generating image, please wait...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          )}
+
+          {generatedImageUrls.length > 0 && (
+            <div>
+              <p className="mb-2 text-green-600">Images generated successfully!</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {generatedImageUrls.map((url, index) => (
+                  <img 
+                    key={index} 
+                    src={url} 
+                    alt={`Generated product ${index + 1}`} 
+                    className="max-w-full h-auto rounded shadow-lg cursor-pointer" 
+                    onClick={() => setSelectedImage(url)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          <button
+            onClick={() => router.back()}
+            className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+          >
+            Back
           </button>
         </div>
-      </div>
-    )}
+      </section>
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative">
+            <img 
+              src={selectedImage} 
+              alt="Enlarged product" 
+              className="max-w-full max-h-[90vh] rounded shadow-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button 
+              className="absolute top-2 right-2 bg-white text-black rounded-full w-8 h-8 flex items-center justify-center"
+              onClick={() => setSelectedImage(null)}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
