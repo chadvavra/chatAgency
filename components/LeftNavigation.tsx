@@ -24,11 +24,11 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
             Keywords
           </Link>
         </li>
-        {/* <li>
-          <Link href={`/color-palette?id=${ideaId}`} className="text-blue-600 hover:underline">
+        <li>
+          <Link href={`/palette?id=${ideaId}`} className="text-blue-600 hover:underline">
             Color Palette
           </Link>
-        </li> */}
+        </li>
         <li>
           <Link href={`/image-generation?id=${ideaId}`} className="text-blue-600 hover:underline">
             Product Image (beta)
