@@ -78,8 +78,14 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
       <h2 className="text-xl font-semibold mb-4" id="palette-heading">Color Palette:</h2>
       {palette.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4" aria-labelledby="palette-heading">
-          {palette.map((colorJson, index) => {
-            const { hexCode, name, description } = JSON.parse(colorJson);
+          {palette.map((colorData, index) => {
+            let hexCode, name, description;
+            try {
+              ({ hexCode, name, description } = JSON.parse(colorData));
+            } catch {
+              // If parsing fails, assume it's the old format
+              [hexCode, name, description] = colorData.split(':').map(item => item.trim());
+            }
             return (
               <div key={index} className="flex flex-col items-center">
                 <div
