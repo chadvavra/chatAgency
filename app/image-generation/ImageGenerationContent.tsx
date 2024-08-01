@@ -35,7 +35,9 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
 
     try {
       console.log('Fetching image with ideaId:', ideaId);
-      const response = await fetch(`/api/generate-image?id=${ideaId}`);
+      const response = await fetch(`/api/generate-image?id=${ideaId}&regenerate=true`, {
+        method: 'POST',
+      });
       console.log('Response status:', response.status);
       
       const responseText = await response.text();

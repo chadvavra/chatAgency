@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { createClient } from '@/utils/supabase/server';
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
+  const regenerate = searchParams.get('regenerate') === 'true';
 
   if (!id) {
     return NextResponse.json({ error: 'Missing idea ID' }, { status: 400 });
@@ -15,18 +16,6 @@ export async function GET(request: Request) {
   }
 
   const supabase = createClient();
-
-  // Check if an image already exists for this idea
-  const { data: existingIdea } = await supabase
-    .from('ideas')
-    .select('image_url')
-    .eq('id', id)
-    .single();
-
-  if (existingIdea && existingIdea.image_url) {
-    return NextResponse.json({ imageUrl: existingIdea.image_url });
-  }
-
   const openai = new OpenAI({
     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
   });
@@ -35,7 +24,7 @@ export async function GET(request: Request) {
     // Fetch the generated idea from the database
     const { data: idea, error: fetchError } = await supabase
       .from('ideas')
-      .select('generated_idea')
+      .select('generated_idea, image_url')
       .eq('id', id)
       .single();
 
@@ -46,6 +35,11 @@ export async function GET(request: Request) {
 
     if (!idea || !idea.generated_idea) {
       return NextResponse.json({ error: 'Generated idea not found' }, { status: 404 });
+    }
+
+    // If not regenerating and an image already exists, return the existing image
+    if (!regenerate && idea.image_url) {
+      return NextResponse.json({ imageUrl: idea.image_url });
     }
 
     const ideaDescription = idea.generated_idea;
@@ -75,6 +69,10 @@ export async function GET(request: Request) {
     console.error('Error generating image:', error);
     return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });
   }
+}
+
+export async function GET(request: Request) {
+  return POST(request);
 }
 
 export const dynamic = 'force-dynamic';
