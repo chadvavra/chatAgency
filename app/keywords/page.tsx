@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
-import { Anthropic } from '@anthropic-ai/sdk';
 
 const KeywordsPage = () => {
   const [idea, setIdea] = useState<string | null>(null);
@@ -26,7 +25,7 @@ const KeywordsPage = () => {
       // Fetch the idea
       const { data, error: fetchError } = await supabase
         .from('ideas')
-        .select('generated_idea')
+        .select('generated_idea, adjectives')
         .eq('id', ideaId)
         .single();
 
@@ -38,36 +37,25 @@ const KeywordsPage = () => {
 
       setIdea(data.generated_idea);
 
-      // Generate keywords using Anthropic API
-      try {
-        const anthropic = new Anthropic({
-          apiKey: process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY,
-        });
+      if (data.adjectives && data.adjectives.length > 0) {
+        setAdjectives(data.adjectives);
+        setIsLoading(false);
+      } else {
+        // Generate keywords using the new API route
+        try {
+          const response = await fetch(`/api/generate-keywords?id=${ideaId}`, {
+            method: 'POST',
+          });
 
-        const completion = await anthropic.completions.create({
-          model: "claude-2",
-          max_tokens_to_sample: 300,
-          prompt: `Given the following business idea, provide exactly 5 adjectives that best describe it. Separate the adjectives with commas:
+          if (!response.ok) {
+            throw new Error('Failed to generate keywords');
+          }
 
-          ${data.generated_idea}
-
-          5 adjectives:`,
-        });
-
-        const generatedAdjectives = completion.completion.trim().split(',').map(adj => adj.trim());
-        setAdjectives(generatedAdjectives);
-
-        // Save adjectives to the database
-        const { error: updateError } = await supabase
-          .from('ideas')
-          .update({ adjectives: generatedAdjectives })
-          .eq('id', ideaId);
-
-        if (updateError) {
-          setError('Error saving adjectives');
+          const result = await response.json();
+          setAdjectives(result.adjectives);
+        } catch (apiError) {
+          setError('Error generating adjectives');
         }
-      } catch (apiError) {
-        setError('Error generating adjectives');
       }
 
       setIsLoading(false);
