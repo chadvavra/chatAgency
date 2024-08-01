@@ -85,11 +85,24 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
                 <div
                   className="w-24 h-24"
                   style={{ backgroundColor: hexCode }}
-                  aria-label={`Color swatch: ${hexCode}`}
+                  aria-label={`Color swatch: ${name}, Hex code: ${hexCode}`}
+                  role="img"
                 ></div>
-                <span className="mt-2 font-bold">{hexCode}</span>
-                <span className="text-sm">{name}</span>
-                <p className="text-xs text-center mt-1">{description}</p>
+                <dl className="mt-2 text-center">
+                  <dt className="sr-only">Hex Code</dt>
+                  <dd className="font-bold">{hexCode}</dd>
+                  <dt className="sr-only">Color Name</dt>
+                  <dd className="text-sm">{name}</dd>
+                  <dt className="sr-only">Description</dt>
+                  <dd className="text-xs mt-1">{description}</dd>
+                </dl>
+                <button
+                  onClick={() => navigator.clipboard.writeText(hexCode)}
+                  className="mt-1 text-xs text-blue-600 hover:text-blue-800"
+                  aria-label={`Copy ${hexCode} to clipboard`}
+                >
+                  Copy Hex
+                </button>
               </div>
             );
           })}
