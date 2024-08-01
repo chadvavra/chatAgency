@@ -32,17 +32,22 @@ export async function POST(request: Request) {
       apiKey: process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY,
     });
 
-    const completion = await anthropic.completions.create({
-      model: "claude-2",
-      max_tokens_to_sample: 300,
-      prompt: `Given the following business idea, provide exactly 5 adjectives that best describe it. Separate the adjectives with commas:
+    const response = await anthropic.messages.create({
+      model: "claude-3-sonnet-20240229",
+      max_tokens: 300,
+      messages: [
+        {
+          role: "user",
+          content: `Given the following business idea, provide exactly 5 adjectives that best describe it. Separate the adjectives with commas:
 
-      ${idea.generated_idea}
+          ${idea.generated_idea}
 
-      5 adjectives:`,
+          5 adjectives:`
+        }
+      ]
     });
 
-    const generatedAdjectives = completion.completion.trim().split(',').map(adj => adj.trim());
+    const generatedAdjectives = response.content[0].text.trim().split(',').map(adj => adj.trim());
 
     // Save adjectives to the database
     const { error: updateError } = await supabase
