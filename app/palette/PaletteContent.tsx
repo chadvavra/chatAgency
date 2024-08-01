@@ -86,11 +86,21 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
   };
 
   if (isLoading) {
-    return <div className="text-center" aria-live="polite">Loading...</div>;
+    return (
+      <div className="text-center" aria-live="polite">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+        <p>Loading color palette...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center text-red-500" role="alert">Error: {error}</div>;
+    return (
+      <div className="text-center text-red-500 p-4 bg-red-100 rounded-md" role="alert">
+        <p className="font-bold">Error</p>
+        <p>{error}</p>
+      </div>
+    );
   }
 
   return (
