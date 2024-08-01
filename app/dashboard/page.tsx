@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import IdeaForm from '@/components/IdeaForm';
 
 interface Idea {
   id: string;
@@ -120,6 +121,10 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <section className="mb-8">
+        <h2 className="text-2xl font-bold mb-4">Generate New Idea</h2>
+        <IdeaForm user={user} />
+      </section>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Your Ideas Dashboard</h1>
         <div className="flex space-x-2">
