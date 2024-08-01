@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import NavLinks from './NavLinks';
@@ -20,7 +21,7 @@ export default function Header() {
     <header className="w-full p-4 bg-background">
       <div className="flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/android-chrome-192x192.png" alt="Chat Agency AI Logo" className="h-8 w-8" />
+          <Image src="/android-chrome-192x192.png" alt="Chat Agency AI Logo" width={32} height={32} />
         </Link>
         <button
           className="md:hidden"
