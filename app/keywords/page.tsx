@@ -9,16 +9,18 @@ const KeywordsPage = () => {
   const [adjectives, setAdjectives] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [ideaId, setIdeaId] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const fetchIdeaAndGenerateKeywords = async () => {
-      const ideaId = searchParams.get('id');
-      if (!ideaId) {
+    const fetchIdea = async () => {
+      const id = searchParams.get('id');
+      if (!id) {
         setError('No idea ID provided');
         setIsLoading(false);
         return;
       }
+      setIdeaId(id);
 
       const supabase = createClient();
       
@@ -26,7 +28,7 @@ const KeywordsPage = () => {
       const { data, error: fetchError } = await supabase
         .from('ideas')
         .select('generated_idea, adjectives')
-        .eq('id', ideaId)
+        .eq('id', id)
         .single();
 
       if (fetchError) {
@@ -39,30 +41,34 @@ const KeywordsPage = () => {
 
       if (data.adjectives && data.adjectives.length > 0) {
         setAdjectives(data.adjectives);
-        setIsLoading(false);
-      } else {
-        // Generate keywords using the new API route
-        try {
-          const response = await fetch(`/api/generate-keywords?id=${ideaId}`, {
-            method: 'POST',
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to generate keywords');
-          }
-
-          const result = await response.json();
-          setAdjectives(result.adjectives);
-        } catch (apiError) {
-          setError('Error generating adjectives');
-        }
       }
 
       setIsLoading(false);
     };
 
-    fetchIdeaAndGenerateKeywords();
+    fetchIdea();
   }, [searchParams]);
+
+  const generateNewKeywords = async () => {
+    if (!ideaId) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/generate-keywords?id=${ideaId}`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate keywords');
+      }
+
+      const result = await response.json();
+      setAdjectives(result.adjectives);
+    } catch (apiError) {
+      setError('Error generating adjectives');
+    }
+    setIsLoading(false);
+  };
 
   if (isLoading) {
     return <div className="container mx-auto px-4 py-8 text-center" aria-live="polite">Loading...</div>;
@@ -79,11 +85,20 @@ const KeywordsPage = () => {
       <div className="bg-white shadow-md rounded-lg p-6 mt-4">
         <h2 className="text-xl font-semibold mb-4">Generated Adjectives:</h2>
         {adjectives.length > 0 ? (
-          <ul className="list-disc pl-5 space-y-2">
-            {adjectives.map((adj, index) => (
-              <li key={index} className="text-gray-700">{adj}</li>
-            ))}
-          </ul>
+          <>
+            <ul className="list-disc pl-5 space-y-2 mb-4">
+              {adjectives.map((adj, index) => (
+                <li key={index} className="text-gray-700">{adj}</li>
+              ))}
+            </ul>
+            <button
+              onClick={generateNewKeywords}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Generating...' : 'Generate New Keywords'}
+            </button>
+          </>
         ) : (
           <p className="text-gray-500 italic">No adjectives generated yet.</p>
         )}
