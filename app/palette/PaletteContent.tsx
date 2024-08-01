@@ -83,6 +83,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
               <div
                 className="w-20 h-20 rounded-full"
                 style={{ backgroundColor: color }}
+                aria-label={`Color swatch: ${color}`}
               ></div>
               <span className="mt-2">{color}</span>
             </div>
