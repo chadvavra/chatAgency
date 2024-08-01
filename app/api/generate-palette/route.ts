@@ -54,7 +54,10 @@ export async function POST(request: Request) {
       throw new Error('Unexpected response format from Anthropic API');
     }
 
-    const generatedColors = generatedText.trim().split(',').map(color => color.trim());
+    const generatedColors = generatedText.trim().split(',').map(color => {
+      const [hexCode, name, description] = color.trim().split(':').map(item => item.trim());
+      return JSON.stringify({ hexCode, name, description });
+    });
 
     // Save colors to the database
     const { error: updateError } = await supabase
