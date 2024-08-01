@@ -11,8 +11,6 @@ interface PaletteContentProps {
 
 interface Color {
   hexCode: string;
-  name: string;
-  description: string;
 }
 
 const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
@@ -44,20 +42,8 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
 
     if (data.colors && data.colors.length > 0) {
       try {
-        const parsedData = JSON.parse(data.colors[0]);
-        if (parsedData.name) {
-          const colors = parsedData.name.split('\n\n').map((colorString: string) => {
-            const [hexCode, name, ...descriptionParts] = colorString.split(' - ');
-            return {
-              hexCode: hexCode.trim().replace(/^.*?#/, '#'),
-              name: name.trim(),
-              description: descriptionParts.join(' - ').trim()
-            };
-          });
-          setPalette(colors);
-        } else {
-          setError('Invalid color data format');
-        }
+        const colors = data.colors.map((colorString: string) => JSON.parse(colorString));
+        setPalette(colors);
       } catch (parseError) {
         console.error('Error parsing color data:', parseError);
         setError('Error parsing color data');
@@ -124,39 +110,25 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
       {palette.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           {palette.map((color, index) => (
-            <div key={`color-${color.hexCode}`} className="flex flex-col">
-              <div className="flex flex-col rounded-t-lg overflow-hidden">
+            <div key={`color-${index}`} className="flex flex-col">
+              <div className="flex flex-col rounded-lg overflow-hidden shadow">
                 <div
                   className="h-24"
                   style={{ backgroundColor: color.hexCode }}
-                  aria-label={`Color swatch: ${color.name}`}
+                  aria-label={`Color swatch ${index + 1}`}
                   role="img"
                 ></div>
-                <div className="h-8 flex">
-                  {['#FFF', '#000'].map((textColor, i) => (
-                    <div
-                      key={i}
-                      className="flex-1 flex items-center justify-center text-xs font-mono"
-                      style={{ backgroundColor: color.hexCode, color: textColor }}
+                <div className="bg-white p-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-mono">{color.hexCode}</span>
+                    <button
+                      onClick={() => copyToClipboard(color.hexCode)}
+                      className="text-blue-500 hover:text-blue-600 transition duration-300"
+                      aria-label={`Copy ${color.hexCode} to clipboard`}
                     >
-                      {color.hexCode}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="bg-white p-4 rounded-b-lg shadow">
-                <div className="w-full h-8 mb-2 rounded" style={{ backgroundColor: color.hexCode }}></div>
-                <h3 className="font-semibold text-lg mb-1">{color.name}</h3>
-                <p className="text-sm text-gray-600 mb-2">{color.description}</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-mono">{color.hexCode}</span>
-                  <button
-                    onClick={() => copyToClipboard(color.hexCode)}
-                    className="text-blue-500 hover:text-blue-600 transition duration-300"
-                    aria-label={`Copy ${color.hexCode} to clipboard`}
-                  >
-                    <FaClipboard className="w-4 h-4" />
-                  </button>
+                      <FaClipboard className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
