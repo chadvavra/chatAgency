@@ -1,12 +1,6 @@
-import React, { Suspense } from 'react';
-import dynamic from 'next/dynamic';
-
-const KeywordsContent = dynamic(() => import('./KeywordsContent'));
+import React from 'react';
+import { NextResponse } from 'next/server';
 
 export default function KeywordsPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <KeywordsContent />
-    </Suspense>
-  );
+  return NextResponse.json({ error: 'This page should not be accessed directly' }, { status: 404 });
 }
