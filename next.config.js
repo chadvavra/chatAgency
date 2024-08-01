@@ -8,6 +8,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'supabase.chatagency.ai',
+        port: '',
+        pathname: '/storage/v1/object/public/idea-images/**',
+      },
     ],
   },
 };
