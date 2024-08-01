@@ -14,6 +14,9 @@ export default async function Home() {
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <h1 className="text-2xl font-semibold mb-6 text-center">Business Idea Generator</h1>
+            <p className="text-center mb-6 text-gray-600">
+              Welcome to Chat Agency AI - The Agency Alternative. We're here to help you validate and develop your business ideas quickly and efficiently.
+            </p>
             {user ? (
               <IdeaForm user={user} />
             ) : (
