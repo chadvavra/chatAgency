@@ -146,6 +146,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
                 </div>
               </div>
               <div className="bg-white p-4 rounded-b-lg shadow">
+                <div className="w-full h-8 mb-2 rounded" style={{ backgroundColor: color.hexCode }}></div>
                 <h3 className="font-semibold text-lg mb-1">{color.name}</h3>
                 <p className="text-sm text-gray-600 mb-2">{color.description}</p>
                 <div className="flex justify-between items-center">
