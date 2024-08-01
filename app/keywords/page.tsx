@@ -77,11 +77,11 @@ const KeywordsPage = () => {
   }, [searchParams]);
 
   if (isLoading) {
-    return <div className="container mx-auto px-4 py-8 text-center">Loading...</div>;
+    return <div className="container mx-auto px-4 py-8 text-center" aria-live="polite">Loading...</div>;
   }
 
   if (error) {
-    return <div className="container mx-auto px-4 py-8 text-center text-red-500">Error: {error}</div>;
+    return <div className="container mx-auto px-4 py-8 text-center text-red-500" aria-live="assertive">Error: {error}</div>;
   }
 
   return (
