@@ -53,10 +53,34 @@ export async function POST(request: Request) {
 
     const imageUrl = response.data[0].url;
 
+    // Download the image
+    const imageResponse = await fetch(imageUrl);
+    const imageBuffer = await imageResponse.arrayBuffer();
+
+    // Upload the image to Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('idea-images')
+      .upload(`${id}.png`, imageBuffer, {
+        contentType: 'image/png',
+        upsert: true
+      });
+
+    if (uploadError) {
+      console.error('Error uploading image to storage:', uploadError);
+      return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 });
+    }
+
+    // Get the public URL of the uploaded image
+    const { data: publicUrlData } = supabase.storage
+      .from('idea-images')
+      .getPublicUrl(`${id}.png`);
+
+    const storedImageUrl = publicUrlData.publicUrl;
+
     // Update the image URL in the ideas table
     const { error: updateError } = await supabase
       .from('ideas')
-      .update({ image_url: imageUrl })
+      .update({ image_url: storedImageUrl })
       .eq('id', id);
 
     if (updateError) {
@@ -64,7 +88,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to save image' }, { status: 500 });
     }
 
-    return NextResponse.json({ imageUrl });
+    return NextResponse.json({ imageUrl: storedImageUrl });
   } catch (error) {
     console.error('Error generating image:', error);
     return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });
