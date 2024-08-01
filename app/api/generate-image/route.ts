@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     // Fetch the generated idea from the database
     const { data: idea, error: fetchError } = await supabase
       .from('ideas')
-      .select('generated_idea, image_url')
+      .select('original_idea, generated_idea, image_url')
       .eq('id', id)
       .single();
 
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
     // If not regenerating and an image already exists, return the existing image
     if (!regenerate && idea.image_url) {
-      return NextResponse.json({ imageUrl: idea.image_url });
+      return NextResponse.json({ imageUrl: idea.image_url, originalIdea: idea.original_idea });
     }
 
     const ideaDescription = idea.generated_idea;

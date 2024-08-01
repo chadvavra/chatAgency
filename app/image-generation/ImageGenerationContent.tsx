@@ -9,6 +9,7 @@ interface ImageGenerationContentProps {
 
 const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId }) => {
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
+  const [originalIdea, setOriginalIdea] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -20,6 +21,9 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
         const data = await response.json();
         if (data.imageUrl) {
           setGeneratedImageUrl(data.imageUrl);
+        }
+        if (data.originalIdea) {
+          setOriginalIdea(data.originalIdea);
         }
       } catch (err) {
         console.error('Error checking existing image:', err);
@@ -73,6 +77,9 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
   return (
     <section aria-labelledby="image-generation-heading">
       <h2 id="image-generation-heading" className="sr-only">Image Generation</h2>
+      {originalIdea && (
+        <p className="mb-4 text-lg font-semibold">Original Idea: {originalIdea}</p>
+      )}
       <div className="space-y-4">
         <button
           onClick={handleGenerateImage}
