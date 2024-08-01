@@ -53,6 +53,10 @@ export async function POST(request: Request) {
 
     const imageUrl = response.data[0].url;
 
+    if (!imageUrl) {
+      throw new Error('No image URL generated');
+    }
+
     // Download the image
     const imageResponse = await fetch(imageUrl);
     const imageBuffer = await imageResponse.arrayBuffer();
