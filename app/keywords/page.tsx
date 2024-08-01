@@ -77,11 +77,11 @@ const KeywordsPage = () => {
   }, [searchParams]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="container mx-auto px-4 py-8 text-center">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="container mx-auto px-4 py-8 text-center text-red-500">Error: {error}</div>;
   }
 
   return (
@@ -90,9 +90,13 @@ const KeywordsPage = () => {
       <p className="mb-4"><strong>Original Idea:</strong> {idea}</p>
       <h2 className="text-xl font-semibold mb-2">Generated Adjectives:</h2>
       <ul className="list-disc pl-5">
-        {adjectives.map((adj, index) => (
-          <li key={index}>{adj}</li>
-        ))}
+        {adjectives.length > 0 ? (
+          adjectives.map((adj, index) => (
+            <li key={index}>{adj}</li>
+          ))
+        ) : (
+          <li>No adjectives generated yet.</li>
+        )}
       </ul>
     </div>
   );
