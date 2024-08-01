@@ -116,6 +116,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
           className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300"
           disabled={isLoading}
           aria-busy={isLoading}
+          aria-label={palette.length > 0 ? 'Regenerate color palette' : 'Generate color palette'}
         >
           <FaRedo className="w-4 h-4" />
           <span>{palette.length > 0 ? 'Regenerate' : 'Generate'}</span>
