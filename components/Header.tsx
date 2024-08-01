@@ -20,7 +20,7 @@ export default function Header() {
     <header className="w-full p-4 bg-background">
       <div className="flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
-          <img src="android-chrome-192x192.png" alt="Chat Agency AI Logo" className="h-8 w-8" />
+          <img src="/android-chrome-192x192.png" alt="Chat Agency AI Logo" className="h-8 w-8" />
         </Link>
         <button
           className="md:hidden"
