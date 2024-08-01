@@ -31,7 +31,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
         </li> */}
         <li>
           <Link href={`/image-generation?id=${ideaId}`} className="text-blue-600 hover:underline">
-            Generate Product Image
+            Product Image (beta)
           </Link>
         </li>
       </ul>
