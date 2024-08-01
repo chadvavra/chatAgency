@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     // Fetch the generated idea from the database
     const { data: idea, error: fetchError } = await supabase
       .from('ideas')
-      .select('original_idea, generated_idea, image_url')
+      .select('original_idea, generated_idea, image_urls')
       .eq('id', id)
       .single();
 
@@ -37,9 +37,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Generated idea not found' }, { status: 404 });
     }
 
-    // If not regenerating and an image already exists, return the existing image
-    if (!regenerate && idea.image_url) {
-      return NextResponse.json({ imageUrl: idea.image_url, originalIdea: idea.original_idea });
+    // If not regenerating and images already exist, return the existing images
+    if (!regenerate && idea.image_urls && idea.image_urls.length > 0) {
+      return NextResponse.json({ imageUrls: idea.image_urls, originalIdea: idea.original_idea });
     }
 
     const ideaDescription = idea.generated_idea;
@@ -61,12 +61,14 @@ export async function POST(request: Request) {
     const imageResponse = await fetch(imageUrl);
     const imageBuffer = await imageResponse.arrayBuffer();
 
+    // Generate a unique filename
+    const filename = `${id}_${Date.now()}.png`;
+
     // Upload the image to Supabase Storage
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('idea-images')
-      .upload(`${id}.png`, imageBuffer, {
+      .upload(filename, imageBuffer, {
         contentType: 'image/png',
-        upsert: true
       });
 
     if (uploadError) {
@@ -77,14 +79,27 @@ export async function POST(request: Request) {
     // Get the public URL of the uploaded image
     const { data: publicUrlData } = supabase.storage
       .from('idea-images')
-      .getPublicUrl(`${id}.png`);
+      .getPublicUrl(filename);
 
     const storedImageUrl = publicUrlData.publicUrl;
 
-    // Update the image URL in the ideas table
+    // Update the image URLs in the ideas table
+    const { data: currentIdea, error: getCurrentError } = await supabase
+      .from('ideas')
+      .select('image_urls')
+      .eq('id', id)
+      .single();
+
+    if (getCurrentError) {
+      console.error('Error getting current idea:', getCurrentError);
+      return NextResponse.json({ error: 'Failed to get current idea' }, { status: 500 });
+    }
+
+    const updatedImageUrls = currentIdea.image_urls ? [...currentIdea.image_urls, storedImageUrl] : [storedImageUrl];
+
     const { error: updateError } = await supabase
       .from('ideas')
-      .update({ image_url: storedImageUrl })
+      .update({ image_urls: updatedImageUrls })
       .eq('id', id);
 
     if (updateError) {
@@ -92,7 +107,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to save image' }, { status: 500 });
     }
 
-    return NextResponse.json({ imageUrl: storedImageUrl });
+    return NextResponse.json({ imageUrls: updatedImageUrls });
   } catch (error) {
     console.error('Error generating image:', error);
     return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });

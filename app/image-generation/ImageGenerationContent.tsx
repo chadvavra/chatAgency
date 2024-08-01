@@ -8,29 +8,29 @@ interface ImageGenerationContentProps {
 }
 
 const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId }) => {
-  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
+  const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
   const [originalIdea, setOriginalIdea] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const checkExistingImage = async () => {
+    const checkExistingImages = async () => {
       try {
         const response = await fetch(`/api/generate-image?id=${ideaId}`);
         const data = await response.json();
-        if (data.imageUrl) {
-          setGeneratedImageUrl(data.imageUrl);
+        if (data.imageUrls) {
+          setGeneratedImageUrls(data.imageUrls);
         }
         if (data.originalIdea) {
           setOriginalIdea(data.originalIdea);
         }
       } catch (err) {
-        console.error('Error checking existing image:', err);
+        console.error('Error checking existing images:', err);
       }
     };
 
-    checkExistingImage();
+    checkExistingImages();
   }, [ideaId]);
 
   const handleGenerateImage = async () => {
@@ -61,16 +61,17 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
         throw new Error(data.error || 'Failed to generate image');
       }
       
-      if (!data.imageUrl) {
-        throw new Error('No image URL in the response');
+      if (!data.imageUrls || data.imageUrls.length === 0) {
+        throw new Error('No image URLs in the response');
       }
       
-      setGeneratedImageUrl(data.imageUrl);
+      setGeneratedImageUrls(data.imageUrls);
     } catch (err) {
       console.error('Error in handleGenerateImage:', err);
       setError(`An error occurred while generating the image: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
-      setIsLoading(false);
+      setIsLo
+ading(false);
     }
   };
 
@@ -87,7 +88,7 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
           aria-busy={isLoading}
         >
-          {isLoading ? 'Generating...' : (generatedImageUrl ? 'Regenerate Image' : 'Generate Image')}
+          {isLoading ? 'Generating...' : (generatedImageUrls.length > 0 ? 'Generate Another Image' : 'Generate Image')}
         </button>
 
         {error && <p role="alert" className="text-red-500">{error}</p>}
@@ -101,10 +102,14 @@ const ImageGenerationContent: React.FC<ImageGenerationContentProps> = ({ ideaId 
           </div>
         )}
 
-        {generatedImageUrl && (
+        {generatedImageUrls.length > 0 && (
           <div>
-            <p className="mb-2 text-green-600">Image generated successfully!</p>
-            <img src={generatedImageUrl} alt="Generated product" className="max-w-full h-auto rounded shadow-lg" />
+            <p className="mb-2 text-green-600">Images generated successfully!</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {generatedImageUrls.map((url, index) => (
+                <img key={index} src={url} alt={`Generated product ${index + 1}`} className="max-w-full h-auto rounded shadow-lg" />
+              ))}
+            </div>
           </div>
         )}
 
