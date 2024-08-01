@@ -125,12 +125,25 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           {palette.map((color, index) => (
             <div key={`color-${color.hexCode}`} className="flex flex-col">
-              <div
-                className="h-32 rounded-t-lg"
-                style={{ backgroundColor: color.hexCode }}
-                aria-label={`Color swatch: ${color.name}`}
-                role="img"
-              ></div>
+              <div className="flex flex-col rounded-t-lg overflow-hidden">
+                <div
+                  className="h-24"
+                  style={{ backgroundColor: color.hexCode }}
+                  aria-label={`Color swatch: ${color.name}`}
+                  role="img"
+                ></div>
+                <div className="h-8 flex">
+                  {['#FFF', '#000'].map((textColor, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 flex items-center justify-center text-xs font-mono"
+                      style={{ backgroundColor: color.hexCode, color: textColor }}
+                    >
+                      {color.hexCode}
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div className="bg-white p-4 rounded-b-lg shadow">
                 <h3 className="font-semibold text-lg mb-1">{color.name}</h3>
                 <p className="text-sm text-gray-600 mb-2">{color.description}</p>
