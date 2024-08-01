@@ -11,7 +11,7 @@ interface Idea {
   id: string;
   original_idea: string;
   created_at: string;
-  image_url?: string;
+  image_urls?: string[];
 }
 
 export default function Dashboard() {
@@ -31,7 +31,7 @@ export default function Dashboard() {
         setUser(user);
         const { data, error } = await supabase
           .from('ideas')
-          .select('id, original_idea, created_at, image_url')
+          .select('id, original_idea, created_at, image_urls')
           .eq('user_id', user.id);
 
         if (error) {
@@ -68,10 +68,10 @@ export default function Dashboard() {
           {ideas.map((idea) => (
             <Link href={`/saved-idea?id=${idea.id}`} key={idea.id}>
               <div className="bg-white shadow-md rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200">
-                {idea.image_url && (
+                {idea.image_urls && idea.image_urls.length > 0 && (
                   <div className="mb-4">
                     <Image
-                      src={idea.image_url}
+                      src={idea.image_urls[idea.image_urls.length - 1]}
                       alt={`Thumbnail for ${idea.original_idea}`}
                       width={100}
                       height={100}
@@ -95,10 +95,10 @@ export default function Dashboard() {
             <li key={idea.id} className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-200">
               <Link href={`/saved-idea?id=${idea.id}`} className="flex justify-between items-center">
                 <div className="flex items-center">
-                  {idea.image_url && (
+                  {idea.image_urls && idea.image_urls.length > 0 && (
                     <div className="mr-4">
                       <Image
-                        src={idea.image_url}
+                        src={idea.image_urls[idea.image_urls.length - 1]}
                         alt={`Thumbnail for ${idea.original_idea}`}
                         width={50}
                         height={50}
