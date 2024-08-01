@@ -49,7 +49,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
           const colors = parsedData.name.split('\n\n').map((colorString: string) => {
             const [hexCode, name, ...descriptionParts] = colorString.split(' - ');
             return {
-              hexCode: hexCode.trim(),
+              hexCode: hexCode.trim().replace(/^.*?#/, '#'),
               name: name.trim(),
               description: descriptionParts.join(' - ').trim()
             };
