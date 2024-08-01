@@ -75,7 +75,7 @@ const KeywordsPage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">Keywords for Your Idea</h1>
-      <p className="mb-4"><strong>Original Idea:</strong> {idea}</p>
+      {/* <p className="mb-4"><strong>Original Idea:</strong> {idea}</p> */}
       <h2 className="text-xl font-semibold mb-2">Generated Adjectives:</h2>
       <ul className="list-disc pl-5">
         {adjectives.length > 0 ? (
