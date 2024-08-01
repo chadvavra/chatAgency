@@ -100,7 +100,16 @@ const KeywordsPage = () => {
             </button>
           </>
         ) : (
-          <p className="text-gray-500 italic">No adjectives generated yet.</p>
+          <>
+            <p className="text-gray-500 italic mb-4">No adjectives generated yet.</p>
+            <button
+              onClick={generateNewKeywords}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Generating...' : 'Generate Keywords'}
+            </button>
+          </>
         )}
       </div>
     </div>
