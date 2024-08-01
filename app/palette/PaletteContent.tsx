@@ -26,18 +26,18 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
       
       const { data, error: fetchError } = await supabase
         .from('ideas')
-        .select('color_palette')
+        .select('colors')
         .eq('id', ideaId)
         .single();
 
       if (fetchError) {
-        setError('Error fetching color palette');
+        setError('Error fetching colors');
         setIsLoading(false);
         return;
       }
 
-      if (data.color_palette) {
-        setPalette(data.color_palette);
+      if (data.colors) {
+        setPalette(data.colors);
       }
 
       setIsLoading(false);
@@ -54,13 +54,13 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate color palette');
+        throw new Error('Failed to generate colors');
       }
 
       const result = await response.json();
-      setPalette(result.palette);
+      setPalette(result.colors);
     } catch (apiError) {
-      setError('Error generating color palette');
+      setError('Error generating colors');
     }
     setIsLoading(false);
   };
