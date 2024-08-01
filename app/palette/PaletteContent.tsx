@@ -115,7 +115,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
                 <div
                   className="h-24"
                   style={{ backgroundColor: color.hexCode }}
-                  aria-label={`Color swatch ${index + 1}`}
+                  aria-label={`Color swatch ${index + 1}: ${color.hexCode}`}
                   role="img"
                 ></div>
                 <div className="bg-white p-4">
