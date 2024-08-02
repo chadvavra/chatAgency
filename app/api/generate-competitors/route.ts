@@ -63,6 +63,7 @@ export async function POST(request: Request) {
       .eq('id', id);
 
     if (updateError) {
+      console.error('Error saving competitors:', updateError);
       return NextResponse.json({ error: 'Error saving competitors' }, { status: 500 });
     }
 
