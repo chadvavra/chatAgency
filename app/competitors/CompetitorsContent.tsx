@@ -5,13 +5,13 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
 
 const CompetitorsContent = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [idea, setIdea] = useState<string | null>(null);
   const [competitors, setCompetitors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [ideaId, setIdeaId] = useState<string | null>(null);
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchIdea = async () => {
