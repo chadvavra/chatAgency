@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { Anthropic } from '@anthropic-ai/sdk';
+import { webSearchWithAI } from '@/utils/braveSearch';
 
 export async function POST(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -32,15 +33,19 @@ export async function POST(request: Request) {
       apiKey: process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY,
     });
 
+    const searchQuery = `competitors for ${idea.generated_idea}`;
+    const searchResults = await webSearchWithAI(searchQuery);
+
     const response = await anthropic.messages.create({
       model: "claude-3-sonnet-20240229",
       max_tokens: 300,
       messages: [
         {
           role: "user",
-          content: `Given the following business idea, provide exactly 5 competitors doing inspiring work in the same space. For each competitor, provide their name, website, and a brief description of their inspiring work. Separate the competitors with semicolons. If you don't know of any real competitors, say so.  Don't make up new ones.:
+          content: `Based on the following web search results about competitors for a business idea, provide exactly 5 competitors doing inspiring work in the same space. For each competitor, provide their name, website, and a brief description of their inspiring work. Separate the competitors with semicolons. Use only real competitors mentioned in the search results. Don't make up any information.
 
-          ${idea.generated_idea}
+          Search results:
+          ${searchResults}
 
           5 competitors:`
         }
