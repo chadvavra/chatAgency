@@ -84,7 +84,7 @@ const CompetitorsContent = () => {
       <h1 className="text-2xl font-bold mb-4">Competitors for Your Idea</h1>
       <div className="bg-white shadow-md rounded-lg p-6 mt-4">
         <h2 className="text-xl font-semibold mb-4">Inspiring Competitors:</h2>
-        {competitors.length > 0 ? (
+        {Array.isArray(competitors) && competitors.length > 0 ? (
           <>
             <ul className="list-disc pl-5 space-y-4 mb-4">
               {competitors.map((comp, index) => (
