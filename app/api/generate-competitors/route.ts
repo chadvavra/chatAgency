@@ -33,7 +33,9 @@ export async function POST(request: Request) {
       apiKey: process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY,
     });
 
-    const searchQuery = `competitors for ${idea.generated_idea}`;
+    // Extract the product description from the generated idea
+    const productDescription = idea.generated_idea.split(':')[1]?.trim() || idea.generated_idea;
+    const searchQuery = `competitors for ${productDescription}`;
     const searchResults = await webSearchWithAI(searchQuery);
 
     const response = await anthropic.messages.create({
