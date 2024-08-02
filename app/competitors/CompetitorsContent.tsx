@@ -88,7 +88,8 @@ const CompetitorsContent = () => {
           <>
             <div className="space-y-4 mb-4">
               {competitors.map((comp, index) => {
-                const [name, url, description] = comp.split(':');
+                const [name, url, fullDescription] = comp.split(':');
+                const description = fullDescription.split(';')[0].split('\n')[0].trim();
                 return (
                   <div key={`comp-${index}`} className="text-gray-700">
                     <p className="font-bold">{name}</p>
