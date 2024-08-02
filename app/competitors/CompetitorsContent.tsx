@@ -72,11 +72,11 @@ const CompetitorsContent = () => {
   };
 
   if (isLoading) {
-    return <div className="container mx-auto px-4 py-8 text-center" role="status" aria-live="polite">Loading...</div>;
+    return <div className="container mx-auto px-4 py-8 text-center" role="status" aria-live="polite"><p>Loading...</p></div>;
   }
 
   if (error) {
-    return <div className="container mx-auto px-4 py-8 text-center text-red-500" role="alert" aria-live="assertive">Error: {error}</div>;
+    return <div className="container mx-auto px-4 py-8 text-center text-red-500" role="alert" aria-live="assertive"><p>Error: {error}</p></div>;
   }
 
   return (
@@ -102,7 +102,7 @@ const CompetitorsContent = () => {
               onClick={generateNewCompetitors}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               disabled={isLoading}
-              aria-busy={isLoading}
+              aria-busy={isLoading.toString()}
             >
               {isLoading ? 'Generating...' : 'Generate New Competitors'}
             </button>
