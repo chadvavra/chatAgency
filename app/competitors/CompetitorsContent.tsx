@@ -88,8 +88,15 @@ const CompetitorsContent = () => {
           <>
             <div className="space-y-4 mb-4">
               {competitors.map((comp, index) => {
-                const [name, url, fullDescription] = comp.split(':');
-                const description = fullDescription.split(';')[0].split('\n')[0].trim();
+                if (typeof comp !== 'string') {
+                  console.error(`Invalid competitor data at index ${index}:`, comp);
+                  return null;
+                }
+                const parts = comp.split(':');
+                const name = parts[0] || 'Unknown';
+                const url = parts[1] || '#';
+                const fullDescription = parts[2] || '';
+                const description = fullDescription.split(';')[0]?.split('\n')[0]?.trim() || 'No description available';
                 return (
                   <div key={`comp-${index}`} className="text-gray-700">
                     <p className="font-bold">{name}</p>
