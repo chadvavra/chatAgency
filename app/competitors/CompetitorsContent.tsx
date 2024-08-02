@@ -86,14 +86,18 @@ const CompetitorsContent = () => {
         <h2 className="text-xl font-semibold mb-4">Inspiring Competitors:</h2>
         {Array.isArray(competitors) && competitors.length > 0 ? (
           <>
-            <ul className="list-disc pl-5 space-y-4 mb-4">
-              {competitors.map((comp, index) => (
-                <li key={`comp-${index}`} className="text-gray-700">
-                  <p className="font-semibold">{comp.split(':')[0]}</p>
-                  <p>{comp.split(':')[1]}</p>
-                </li>
-              ))}
-            </ul>
+            <div className="space-y-4 mb-4">
+              {competitors.map((comp, index) => {
+                const [name, url, description] = comp.split(':');
+                return (
+                  <div key={`comp-${index}`} className="text-gray-700">
+                    <p className="font-bold">{name}</p>
+                    <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{url}</a>
+                    <p className="text-gray-500">{description}</p>
+                  </div>
+                );
+              })}
+            </div>
             <button
               onClick={generateNewCompetitors}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
