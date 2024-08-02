@@ -92,11 +92,9 @@ const CompetitorsContent = () => {
                   console.error(`Invalid competitor data at index ${index}:`, comp);
                   return null;
                 }
-                const parts = comp.split(':');
-                const name = parts[0] || 'Unknown';
-                const url = parts[1] || '#';
-                const fullDescription = parts[2] || '';
-                const description = fullDescription.split(';')[0]?.split('\n')[0]?.trim() || 'No description available';
+                const [name, url, ...descriptionParts] = comp.split(':');
+                const fullDescription = descriptionParts.join(':');
+                const [description] = fullDescription.split(/;|\n/, 1);
                 return (
                   <div key={`comp-${index}`} className="text-gray-700">
                     <p className="font-bold">{name}</p>
