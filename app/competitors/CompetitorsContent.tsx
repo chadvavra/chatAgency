@@ -115,7 +115,7 @@ const CompetitorsContent = () => {
               onClick={generateNewCompetitors}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               disabled={isLoading}
-              aria-busy={isLoading}
+              aria-busy={isLoading.toString()}
             >
               {isLoading ? 'Generating...' : 'Generate Competitors'}
             </button>
