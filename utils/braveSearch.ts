@@ -9,10 +9,9 @@ const NEXT_PUBLIC_BRAVE_API_KEY = process.env.NEXT_PUBLIC_BRAVE_API_KEY;
 const BRAVE_SEARCH_URL = 'https://api.search.brave.com/res/v1/web/search';
 
 const axiosInstance = axios.create({
-  config: {
-    transitional: {
-      silentJSONParsing: true,
-    },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip',
   },
 });
 
