@@ -10,6 +10,7 @@
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "autoprefixer": "10.4.17",
+    "axios": "^1.7.3",
     "geist": "^1.2.1",
     "next": "latest",
     "openai": "^4.53.2",
