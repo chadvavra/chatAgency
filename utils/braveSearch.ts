@@ -8,9 +8,17 @@ const anthropic = new Anthropic({
 const BRAVE_API_KEY = process.env.NEXT_PUBLIC_BRAVE_API_KEY;
 const BRAVE_SEARCH_URL = 'https://api.search.brave.com/res/v1/web/search';
 
+const axiosInstance = axios.create({
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+    },
+  },
+});
+
 async function braveSearch(query: string, count: number = 3): Promise<string> {
   try {
-    const response = await axios.get(BRAVE_SEARCH_URL, {
+    const response = await axiosInstance.get(BRAVE_SEARCH_URL, {
       params: { q: query, count: count },
       headers: { 'X-Subscription-Token': BRAVE_API_KEY },
     });
