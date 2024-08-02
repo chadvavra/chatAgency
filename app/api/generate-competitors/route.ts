@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "user",
-          content: `Given the following business idea, provide exactly 5 competitors doing inspiring work in the same space. For each competitor, provide their name and a brief description of their inspiring work. Separate the competitors with semicolons:
+          content: `Given the following business idea, provide exactly 5 competitors doing inspiring work in the same space. For each competitor, provide their name, website, and a brief description of their inspiring work. Separate the competitors with semicolons. If you don't know of any real competitors, say so.  Don't make up new ones.:
 
           ${idea.generated_idea}
 
