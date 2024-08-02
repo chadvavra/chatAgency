@@ -39,6 +39,11 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
             Product Image (beta)
           </Link>
         </li>
+        <li>
+          <Link href="/web-search" className="text-blue-600 hover:underline">
+            Web Search
+          </Link>
+        </li>
       </ul>
     </nav>
   );
