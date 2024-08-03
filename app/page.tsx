@@ -19,6 +19,7 @@ export default async function Home() {
         layout="fill"
         objectFit="cover"
         quality={100}
+        className="w-full"
       />
       <div className="z-10 text-white text-center">
         <h1 className="text-4xl font-semibold mb-6">Chat Agency</h1>
