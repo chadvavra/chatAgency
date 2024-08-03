@@ -22,9 +22,9 @@ export default async function Home() {
         className="w-full"
       />
       <div className="z-10 text-white text-center">
-        <h1 className="text-4xl font-semibold mb-6">Chat Agency</h1>
-        <p className="text-xl mb-6">
-          The #1 suite of AI powered tools to take your ideas from start, to funded.
+        <h1 className="text-6xl font-semibold mb-6">Chat Agency</h1>
+        <p className="text-xl mb-6 w-96">
+          The most affordable way to take your ideas from start, to funded.
         </p>
       </div>
     </div>
