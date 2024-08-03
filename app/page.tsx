@@ -11,7 +11,7 @@ export default async function Home() {
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center relative w-full">
+    <div className="min-h-screen flex flex-col items-center relative w-full">
       <Image
         priority
         src={BackgroundHome}
@@ -21,7 +21,7 @@ export default async function Home() {
         quality={100}
         className="w-full"
       />
-      <div className="z-10 text-white text-center">
+      <div className="z-10 text-white text-center mt-32">
         <h1 className="text-6xl font-semibold mb-6">Chat Agency</h1>
         <p className="text-xl mb-6 w-96">
           The most affordable way to take your ideas from start, to funded.
