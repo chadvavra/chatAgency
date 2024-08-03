@@ -15,7 +15,7 @@ export default async function Home() {
       <Image
         priority
         src={BackgroundHome}
-        alt="cool looking waves"
+        alt="background image"
         layout="fill"
         objectFit="cover"
         quality={100}
