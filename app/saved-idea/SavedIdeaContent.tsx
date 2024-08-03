@@ -145,7 +145,7 @@ export default function SavedIdeaContent() {
             </h2>
             <p className="text-gray-700 bg-gray-100 p-4 rounded-md">{idea.original_idea}</p>
           </section>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
             <section>
               <h2 className="text-xl font-semibold mb-2 flex items-center">
                 Generated Idea
