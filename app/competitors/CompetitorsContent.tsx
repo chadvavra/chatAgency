@@ -72,11 +72,11 @@ const CompetitorsContent = () => {
   };
 
   if (isLoading) {
-    return <div className="container mx-auto px-4 py-8 text-center" role="status" aria-live="polite"><p>Loading...</p></div>;
+    return <div className="container mx-auto px-4 py-8 text-center" role="status" aria-live="polite">Loading...</div>;
   }
 
   if (error) {
-    return <div className="container mx-auto px-4 py-8 text-center text-red-500" role="alert" aria-live="assertive"><p>Error: {error}</p></div>;
+    return <div className="container mx-auto px-4 py-8 text-center text-red-500" role="alert">Error: {error}</div>;
   }
 
   return (
@@ -121,7 +121,7 @@ const CompetitorsContent = () => {
               onClick={generateNewCompetitors}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               disabled={isLoading}
-              aria-busy={isLoading.toString()}
+              aria-busy={isLoading}
             >
               {isLoading ? 'Generating...' : 'Generate Competitors'}
             </button>
@@ -131,6 +131,7 @@ const CompetitorsContent = () => {
       <button
         onClick={() => router.back()}
         className="mt-4 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+        aria-label="Go back to previous page"
       >
         Back
       </button>
