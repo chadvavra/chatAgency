@@ -9,13 +9,13 @@ export default async function AuthButton() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const signOut = async () => {
+  async function signOut() {
     "use server";
 
     const supabase = createClient();
     await supabase.auth.signOut();
-    return redirect("/login");
-  };
+    redirect("/login");
+  }
 
   return user ? (
     <div className="flex items-center gap-4">
