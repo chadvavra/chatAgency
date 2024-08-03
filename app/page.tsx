@@ -1,5 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
+import Image from 'next/image';
+import BackgroundHome from "./background-home.png";
+import Waves from "./waves.svg";
 import IdeaForm from "@/components/IdeaForm";
 import Link from "next/link";
 
@@ -9,15 +12,23 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen py-6 flex flex-col justify-normal sm:py-12">
+      <div className="">
+      <div className="text-2xl font-semibold mb-6 text-center position: absolute top-48 left-1/2">Chat Agency</div>
+        <div className="text-center mb-6 position: absolute top-1/2 left-1/2">
+          The #1 suite of AI powered tools to take your ideas from start, to funded.
+        </div>
+      <Image
+        priority
+        src={BackgroundHome}
+        alt="cool looking waves"
+        fill={false}
+      />
+      
+      </div>
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-sky-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <div className="max-w-md mx-auto">
-            <h1 className="text-2xl font-semibold mb-6 text-center">Business Idea Generator</h1>
-            <p className="text-center mb-6 text-gray-600">
-              Welcome to Chat Agency AI - The Agency Alternative. We're here to help you validate and develop your business ideas quickly and efficiently.
-            </p>
-            {user ? (
+        <div className="max-w-md mx-auto">
+
+          {/* {user ? (
               <IdeaForm user={user} />
             ) : (
               <div className="text-center">
@@ -26,8 +37,7 @@ export default async function Home() {
                   Log In
                 </Link>
               </div>
-            )}
-          </div>
+            )} */}
         </div>
       </div>
     </div>
