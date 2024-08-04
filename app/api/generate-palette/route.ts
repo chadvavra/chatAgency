@@ -48,12 +48,11 @@ export async function POST(request: Request) {
 
            Respond in this format:
 
-           <colors>
+          
            <color>hex code</color>
            <name>color name</name>
-           </colors
 
-           Do not provide descriptions.  Only the colors and names.
+           Do not provide descriptions.  Only the color and name for 5 colors.
           `
         }
       ]
