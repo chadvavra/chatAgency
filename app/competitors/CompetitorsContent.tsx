@@ -40,8 +40,10 @@ const CompetitorsContent = () => {
 
       setIdea(data.generated_idea);
 
-      if (data.competitors && data.competitors.length > 0) {
+      if (Array.isArray(data.competitors) && data.competitors.length > 0) {
         setCompetitors(data.competitors);
+      } else {
+        setCompetitors([]);
       }
 
       setIsLoading(false);
