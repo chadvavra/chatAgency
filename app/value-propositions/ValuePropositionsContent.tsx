@@ -103,12 +103,19 @@ const ValuePropositionsContent = () => {
           .split('\n')
           .filter((vp: string) => vp.trim() !== '')
           .map((vp: string) => vp.trim());
-        setValuePropositions(parsedValuePropositions);
-        setShowSaveButton(true);
-        setIsModified(true);
+        
+        if (parsedValuePropositions.length > 0) {
+          setValuePropositions(parsedValuePropositions);
+          setShowSaveButton(true);
+          setIsModified(true);
+        } else {
+          setValuePropositions([]);
+          setError('No valid value propositions generated. Please try again.');
+        }
       } else {
         console.error('Invalid value propositions data:', data.valuePropositions);
-        throw new Error('No valid value propositions generated');
+        setValuePropositions([]);
+        setError('No valid value propositions generated. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -172,6 +179,16 @@ const ValuePropositionsContent = () => {
           <h2 className="text-lg font-semibold">Value Propositions:</h2>
           {isLoading ? (
             <p>Loading value propositions...</p>
+          ) : error ? (
+            <div>
+              <p className="text-red-500">{error}</p>
+              <button
+                onClick={() => generateValuePropositions(idea)}
+                className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Retry
+              </button>
+            </div>
           ) : (
             <>
               <ul className="list-disc pl-5 space-y-2">
