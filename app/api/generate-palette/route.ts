@@ -38,11 +38,23 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "user",
-          content: `Given the adjectives, return 5 hex colors. Do not provide explainations. Do not number the colors:
+          content: `Your task is to take the provided adjectives and generate 
+          a HEX color codes that visually represents them. Use color psychology principles and common
+           associations to determine the most appropriate color for the given adjective. If the adjective is unclear, 
+           ambiguous, or does not provide enough information to determine a suitable color, 
+           provide a HEX color that compliments the other colors listed:
 
-          ${idea.generated_idea}
+           ${idea.generated_idea}
 
-          5 colors:`
+           Respond in this format:
+
+           <colors>
+           <color>hex code</color>
+           <name>color name</name>
+           </colors
+
+           Do not provide descriptions.  Only the colors and names.
+          `
         }
       ]
     });
