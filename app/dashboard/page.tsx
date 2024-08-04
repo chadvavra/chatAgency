@@ -45,8 +45,26 @@ export default function Dashboard() {
       setIsLoading(false);
     };
 
+  useEffect(() => {
     fetchUserAndIdeas();
-  }, [router]);
+  }, []);
+
+  const deleteIdea = async (ideaId: string) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this idea?');
+    if (confirmDelete) {
+      const { error } = await supabase
+        .from('ideas')
+        .delete()
+        .eq('id', ideaId);
+
+      if (error) {
+        console.error('Error deleting idea:', error);
+        alert('Failed to delete idea. Please try again.');
+      } else {
+        fetchUserAndIdeas(); // Reload the dashboard
+      }
+    }
+  };
 
   if (isLoading) {
     return (
