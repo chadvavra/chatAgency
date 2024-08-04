@@ -40,12 +40,12 @@ const ValuePropositionsContent = () => {
         if (user) {
           const { data, error } = await supabase
             .from('ideas')
-            .select('original_idea, generated_idea')
+            .select('id, original_idea, generated_idea')
             .eq('user_id', user.id)
             .single();
-          
+        
           console.log('Fetched from Supabase:', data);
-          
+        
           if (data) {
             setIdea(data.generated_idea || '');
             setOriginalIdea(data.original_idea || '');
