@@ -111,6 +111,14 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="text-center text-red-500" aria-live="assertive">
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
