@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import Logo from '/app/logo.png';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import NavLinks from './NavLinks';
@@ -21,7 +22,13 @@ export default function Header() {
     <header className="w-full p-4 bg-background">
       <div className="flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/favicon.ico" alt="Chat Agency AI Logo" width={32} height={32} />
+          <Image
+            priority
+            src={Logo}
+            alt="CA Logo"
+            height={64}
+            width={64}
+          />
         </Link>
         <button
           className="md:hidden"
