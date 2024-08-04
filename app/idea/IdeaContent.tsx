@@ -108,35 +108,53 @@ export default function IdeaContent() {
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div>
         <h2 className="text-lg font-semibold mb-2">Generated Idea:</h2>
-        <p className="text-gray-700 whitespace-pre-wrap bg-gray-100 p-4 rounded-md">
-          {generatedIdea}
-        </p><div className="text-gray-700 bg-gray-100 p-4 rounded-md">
-          <h3 className="font-semibold mb-2">Business Overview</h3>
-          <p className="whitespace-pre-wrap mb-4">{idea.generated_idea.match(/<Business Overview>([\s\S]*?)<\/Business Overview>/)?.[1]}</p>
+        <div className="text-gray-700 bg-gray-100 p-4 rounded-md">
+          {generatedIdea.includes('<Business Overview>') && (
+            <>
+              <h3 className="font-semibold mb-2">Business Overview</h3>
+              <p className="whitespace-pre-wrap mb-4">{generatedIdea.match(/<Business Overview>([\s\S]*?)<\/Business Overview>/)?.[1]}</p>
+            </>
+          )}
 
-          <h3 className="font-semibold mb-2">Target Markets</h3>
-          <ul className="list-disc list-inside mb-4">
-            {idea.generated_idea.match(/<Target Markets>([\s\S]*?)<\/Target Markets>/)?.[1].split('\n').filter(Boolean).map((market, index) => (
-              <li key={index}>{market.trim().replace(/^-\s*/, '')}</li>
-            ))}
-          </ul>
+          {generatedIdea.includes('<Target Markets>') && (
+            <>
+              <h3 className="font-semibold mb-2">Target Markets</h3>
+              <ul className="list-disc list-inside mb-4">
+                {generatedIdea.match(/<Target Markets>([\s\S]*?)<\/Target Markets>/)?.[1].split('\n').filter(Boolean).map((market, index) => (
+                  <li key={index}>{market.trim().replace(/^-\s*/, '')}</li>
+                ))}
+              </ul>
+            </>
+          )}
 
-          <h3 className="font-semibold mb-2">Key Features</h3>
-          <ul className="list-disc list-inside mb-4">
-            {idea.generated_idea.match(/<Key Features>([\s\S]*?)<\/Key Features>/)?.[1].split('\n').filter(Boolean).map((feature, index) => (
-              <li key={index}>{feature.trim().replace(/^-\s*/, '')}</li>
-            ))}
-          </ul>
+          {generatedIdea.includes('<Key Features>') && (
+            <>
+              <h3 className="font-semibold mb-2">Key Features</h3>
+              <ul className="list-disc list-inside mb-4">
+                {generatedIdea.match(/<Key Features>([\s\S]*?)<\/Key Features>/)?.[1].split('\n').filter(Boolean).map((feature, index) => (
+                  <li key={index}>{feature.trim().replace(/^-\s*/, '')}</li>
+                ))}
+              </ul>
+            </>
+          )}
 
-          <h3 className="font-semibold mb-2">Challenges</h3>
-          <ul className="list-disc list-inside mb-4">
-            {idea.generated_idea.match(/<Challenges>([\s\S]*?)<\/Challenges>/)?.[1].split('\n').filter(Boolean).map((challenge, index) => (
-              <li key={index}>{challenge.trim().replace(/^-\s*/, '')}</li>
-            ))}
-          </ul>
+          {generatedIdea.includes('<Challenges>') && (
+            <>
+              <h3 className="font-semibold mb-2">Challenges</h3>
+              <ul className="list-disc list-inside mb-4">
+                {generatedIdea.match(/<Challenges>([\s\S]*?)<\/Challenges>/)?.[1].split('\n').filter(Boolean).map((challenge, index) => (
+                  <li key={index}>{challenge.trim().replace(/^-\s*/, '')}</li>
+                ))}
+              </ul>
+            </>
+          )}
 
-          <h3 className="font-semibold mb-2">Summary</h3>
-          <p className="whitespace-pre-wrap">{idea.generated_idea.match(/<Summary>([\s\S]*?)<\/Summary>/)?.[1]}</p>
+          {generatedIdea.includes('<Summary>') && (
+            <>
+              <h3 className="font-semibold mb-2">Summary</h3>
+              <p className="whitespace-pre-wrap">{generatedIdea.match(/<Summary>([\s\S]*?)<\/Summary>/)?.[1]}</p>
+            </>
+          )}
         </div>
       </div>
       <form onSubmit={handleChangeRequest} className="space-y-4">
