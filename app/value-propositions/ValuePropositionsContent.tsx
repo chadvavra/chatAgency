@@ -104,7 +104,19 @@ const ValuePropositionsContent = () => {
       
       const data = await response.json();
       
-      if (data.valuePropositions && typeof data.valuePropositions === 'string') {
+      if (data.valuePropositions && Array.isArray(data.valuePropositions)) {
+        const parsedValuePropositions = data.valuePropositions
+          .filter((vp: string) => vp.trim() !== '')
+          .map((vp: string) => vp.trim());
+        
+        if (parsedValuePropositions.length > 0) {
+          setValuePropositions(parsedValuePropositions);
+          setShowSaveButton(true);
+          setIsModified(true);
+        } else {
+          throw new Error('No valid value propositions generated.');
+        }
+      } else if (data.valuePropositions && typeof data.valuePropositions === 'string') {
         const parsedValuePropositions = data.valuePropositions
           .split('\n')
           .filter((vp: string) => vp.trim() !== '')
