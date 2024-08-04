@@ -43,13 +43,13 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
 
     if (data.colors && data.colors.length > 0) {
       try {
-        const colorData = data.colors[0];
-        if (typeof colorData === 'string') {
-          const colors = colorData.match(/<colors>[\s\S]*?<\/colors>/g);
-          if (colors) {
-            const parsedColors = colors.map((colorString: string) => {
-              const hexCode = colorString.match(/<color>(.*?)<\/color>/)?.[1] || '';
-              const name = colorString.match(/<name>(.*?)<\/name>/)?.[1] || '';
+        const colorData = JSON.parse(data.colors[0]);
+        if (typeof colorData.hexCode === 'string') {
+          const colorPairs = colorData.hexCode.match(/<color>#[A-Fa-f0-9]{6}<\/color>\s*<name>.*?<\/name>/g);
+          if (colorPairs) {
+            const parsedColors = colorPairs.map((pair: string) => {
+              const hexCode = pair.match(/<color>(#[A-Fa-f0-9]{6})<\/color>/)?.[1] || '';
+              const name = pair.match(/<name>(.*?)<\/name>/)?.[1] || '';
               return { hexCode, name };
             });
             setPalette(parsedColors);
@@ -126,9 +126,10 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
           <span>{isLoading ? 'Generating...' : (palette.length > 0 ? 'Regenerate color palette' : 'Generate color palette')}</span>
         </button>
       </div>
-      {palette.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-          {palette.map((color, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        {[...Array(5)].map((_, index) => {
+          const color = palette[index] || { hexCode: '#CCCCCC', name: 'Placeholder' };
+          return (
             <div key={`color-${index}`} className="flex flex-col">
               <div className="flex flex-col rounded-lg overflow-hidden shadow">
                 <div
@@ -154,11 +155,9 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500 italic">No color palette generated yet.</p>
-      )}
+          );
+        })}
+      </div>
       <button
         onClick={() => router.back()}
         className="mt-6 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded transition duration-300"
