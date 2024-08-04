@@ -93,7 +93,11 @@ const ValuePropositionsContent = () => {
       const data = await response.json();
       
       if (data.valuePropositions) {
-        setValuePropositions(data.valuePropositions);
+        const parsedValuePropositions = data.valuePropositions
+          .split('\n')
+          .filter((vp: string) => vp.trim() !== '')
+          .map((vp: string) => vp.trim());
+        setValuePropositions(parsedValuePropositions);
         setShowSaveButton(true);
         setIsModified(true);
       } else {
