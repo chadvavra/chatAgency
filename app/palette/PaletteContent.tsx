@@ -43,13 +43,24 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
 
     if (data.colors && data.colors.length > 0) {
       try {
-        const colorData = JSON.parse(data.colors[0]);
-        const colors = colorData.match(/<colors>[\s\S]*?<\/colors>/g).map((colorString: string) => {
-          const hexCode = colorString.match(/<color>(.*?)<\/color>/)[1];
-          const name = colorString.match(/<name>(.*?)<\/name>/)[1];
-          return { hexCode, name };
-        });
-        setPalette(colors);
+        const colorData = data.colors[0];
+        if (typeof colorData === 'string') {
+          const colors = colorData.match(/<colors>[\s\S]*?<\/colors>/g);
+          if (colors) {
+            const parsedColors = colors.map((colorString: string) => {
+              const hexCode = colorString.match(/<color>(.*?)<\/color>/)?.[1] || '';
+              const name = colorString.match(/<name>(.*?)<\/name>/)?.[1] || '';
+              return { hexCode, name };
+            });
+            setPalette(parsedColors);
+          } else {
+            console.error('No color data found in the expected format');
+            setError('No color data found');
+          }
+        } else {
+          console.error('Color data is not a string:', colorData);
+          setError('Invalid color data format');
+        }
       } catch (parseError) {
         console.error('Error parsing color data:', parseError);
         setError('Error parsing color data');
