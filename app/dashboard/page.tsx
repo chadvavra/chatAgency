@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import IdeaForm from '@/components/IdeaForm';
+import { FaTrash } from 'react-icons/fa';
 
 interface Idea {
   id: string;
@@ -20,11 +21,9 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('list');
   const router = useRouter();
+  const supabase = createClient();
 
-  useEffect(() => {
-    const supabase = createClient();
-
-    const fetchUserAndIdeas = async () => {
+  const fetchUserAndIdeas = async () => {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (user) {
@@ -66,25 +65,37 @@ export default function Dashboard() {
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {ideas.map((idea) => (
-            <Link href={`/saved-idea?id=${idea.id}`} key={idea.id}>
-              <div className="bg-white shadow-md rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200">
-                {idea.image_urls && idea.image_urls.length > 0 && (
-                  <div className="mb-4">
-                    <Image
-                      src={idea.image_urls[idea.image_urls.length - 1]}
-                      alt={`Thumbnail for ${idea.original_idea}`}
-                      width={100}
-                      height={100}
-                      className="rounded-md object-cover"
-                    />
-                  </div>
-                )}
-                <p className="text-gray-600">{idea.original_idea}</p>
-                <p className="text-sm text-gray-400 mt-2">
-                  Created: {new Date(idea.created_at).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
-                </p>
-              </div>
-            </Link>
+            <div key={idea.id} className="bg-white shadow-md rounded-lg p-6 cursor-pointer hover:shadow-lg transition-shadow duration-200 relative">
+              <Link href={`/saved-idea?id=${idea.id}`}>
+                <div>
+                  {idea.image_urls && idea.image_urls.length > 0 && (
+                    <div className="mb-4">
+                      <Image
+                        src={idea.image_urls[idea.image_urls.length - 1]}
+                        alt={`Thumbnail for ${idea.original_idea}`}
+                        width={100}
+                        height={100}
+                        className="rounded-md object-cover"
+                      />
+                    </div>
+                  )}
+                  <p className="text-gray-600">{idea.original_idea}</p>
+                  <p className="text-sm text-gray-400 mt-2">
+                    Created: {new Date(idea.created_at).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
+                  </p>
+                </div>
+              </Link>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteIdea(idea.id);
+                }}
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                aria-label="Delete idea"
+              >
+                <FaTrash />
+              </button>
+            </div>
           ))}
         </div>
       );
@@ -92,7 +103,7 @@ export default function Dashboard() {
       return (
         <ul className="space-y-4">
           {ideas.map((idea) => (
-            <li key={idea.id} className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-200">
+            <li key={idea.id} className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-200 relative">
               <Link href={`/saved-idea?id=${idea.id}`} className="flex justify-between items-center">
                 <div className="flex items-center">
                   {idea.image_urls && idea.image_urls.length > 0 && (
@@ -112,6 +123,16 @@ export default function Dashboard() {
                   Created: {new Date(idea.created_at).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
                 </p>
               </Link>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteIdea(idea.id);
+                }}
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                aria-label="Delete idea"
+              >
+                <FaTrash />
+              </button>
             </li>
           ))}
         </ul>
