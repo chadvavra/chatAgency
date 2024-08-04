@@ -15,6 +15,7 @@ const ValuePropositionsContent = () => {
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [isModified, setIsModified] = useState(false);
   const [ideaId, setIdeaId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (ideaSaved) {
@@ -83,6 +84,7 @@ const ValuePropositionsContent = () => {
 
   const generateValuePropositions = async (ideaText: string) => {
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/generate-value-propositions', {
         method: 'POST',
@@ -120,7 +122,7 @@ const ValuePropositionsContent = () => {
     } catch (error) {
       console.error('Error:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      alert(`An error occurred: ${errorMessage}`);
+      setError(`An error occurred: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
