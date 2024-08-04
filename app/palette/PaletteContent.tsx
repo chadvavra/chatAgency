@@ -11,6 +11,7 @@ interface PaletteContentProps {
 
 interface Color {
   hexCode: string;
+  name: string;
 }
 
 const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
@@ -42,7 +43,12 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
 
     if (data.colors && data.colors.length > 0) {
       try {
-        const colors = data.colors.map((colorString: string) => JSON.parse(colorString));
+        const colorData = JSON.parse(data.colors[0]);
+        const colors = colorData.match(/<colors>[\s\S]*?<\/colors>/g).map((colorString: string) => {
+          const hexCode = colorString.match(/<color>(.*?)<\/color>/)[1];
+          const name = colorString.match(/<name>(.*?)<\/name>/)[1];
+          return { hexCode, name };
+        });
         setPalette(colors);
       } catch (parseError) {
         console.error('Error parsing color data:', parseError);
@@ -125,19 +131,22 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
                 <div
                   className="h-24"
                   style={{ backgroundColor: color.hexCode }}
-                  aria-label={`Color swatch ${index + 1}: ${color.hexCode}`}
+                  aria-label={`Color swatch ${index + 1}: ${color.name} (${color.hexCode})`}
                   role="img"
                 ></div>
                 <div className="bg-white p-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-mono">{color.hexCode}</span>
-                    <button
-                      onClick={() => copyToClipboard(color.hexCode)}
-                      className="text-blue-500 hover:text-blue-600 transition duration-300"
-                      aria-label={`Copy ${color.hexCode} to clipboard`}
-                    >
-                      <FaClipboard className="w-4 h-4" />
-                    </button>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold mb-1">{color.name}</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-mono">{color.hexCode}</span>
+                      <button
+                        onClick={() => copyToClipboard(color.hexCode)}
+                        className="text-blue-500 hover:text-blue-600 transition duration-300"
+                        aria-label={`Copy ${color.hexCode} to clipboard`}
+                      >
+                        <FaClipboard className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
