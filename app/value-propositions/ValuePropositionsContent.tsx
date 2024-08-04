@@ -7,7 +7,6 @@ import { createClient, saveIdea } from "@/utils/supabase/client";
 const ValuePropositionsContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const router = useRouter();
   const [idea, setIdea] = useState('');
   const [originalIdea, setOriginalIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState<string[]>([]);
