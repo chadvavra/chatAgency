@@ -17,6 +17,12 @@ const ValuePropositionsContent = () => {
   const [ideaId, setIdeaId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (ideaSaved) {
+      router.push('/dashboard');
+    }
+  }, [ideaSaved, router]);
+
+  useEffect(() => {
     const urlIdea = searchParams.get('generatedIdea');
     const urlOriginalIdea = searchParams.get('originalIdea');
 
@@ -187,9 +193,6 @@ const ValuePropositionsContent = () => {
                     Start Over
                   </button>
                 </div>
-              )}
-              {ideaSaved && (
-                router.push(`/dashboard`)
               )}
             </>
           )}
