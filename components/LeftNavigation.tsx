@@ -22,6 +22,11 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
             </Link>
           </li>
           <li>
+            <button onClick={toggleInstructions} className="text-blue-600 hover:underline">
+              Instructions
+            </button>
+          </li>
+          <li>
             <Link href={`/keywords?id=${ideaId}`} className="text-blue-600 hover:underline">
               Keywords
             </Link>
@@ -41,11 +46,6 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
               Product Image (beta)
             </Link>
           </li>
-          <li>
-            <button onClick={toggleInstructions} className="text-blue-600 hover:underline">
-              Instructions
-            </button>
-          </li>
         </ul>
       </nav>
 
@@ -58,20 +58,23 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
               </svg>
             </button>
             <h2 className="text-2xl font-bold mb-4">Instructions</h2>
-            <ol className="list-decimal list-inside space-y-4">
+            <ul className="list-decimal list-outside p-4 space-y-4">
+              <li>
+                <strong>Saved Idea:</strong>The Saved Idea page displays the detailed idea and value propositions for your idea. Includes a feature to request updates to the idea. Value propositions will be updated automatically.
+              </li>
               <li>
                 <strong>Keywords:</strong> Generate and review relevant keywords for your idea. These will help in SEO and understanding your target market.
               </li>
               <li>
-                <strong>Color Palette:</strong> Create a color scheme that represents your brand. You can regenerate until you find a palette that fits your vision.
+                <strong>Color Palette:</strong> Create a color scheme that represents your brand. You can regenerate until you find a palette that fits your vision. Only one color palette is saved. (Requires generated Keywords).
               </li>
               <li>
-                <strong>Competitors:</strong> Analyze potential competitors in your market. This will help you understand your unique selling points and market positioning.
+                <strong>Competitors:</strong> Uses the generated description to automatically search the web and analyzes potential competitors in your market. This will help you understand your unique selling points and market positioning.  Multiple searches can result in different competitors.
               </li>
               <li>
-                <strong>Product Image:</strong> Generate a visual representation of your product or service idea. This can help in conceptualizing and presenting your idea.
+                <strong>Product Image:</strong> Uses the entire Detailed description to generate a visual representations of your product or service idea. This can help in conceptualizing and presenting your idea.  All generated images are saved automatically.
               </li>
-            </ol>
+            </ul>
           </div>
         </div>
       )}
