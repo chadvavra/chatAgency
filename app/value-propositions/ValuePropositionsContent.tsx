@@ -83,6 +83,10 @@ const ValuePropositionsContent = () => {
   console.log('Current state:', { idea, originalIdea, valuePropositions });
 
   const generateValuePropositions = async (ideaText: string) => {
+    if (!ideaText.trim()) {
+      setError("No idea provided. Please enter an idea first.");
+      return;
+    }
     setIsLoading(true);
     setError(null);
     try {
