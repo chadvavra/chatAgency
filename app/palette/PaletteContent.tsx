@@ -122,7 +122,7 @@ const PaletteContent: React.FC<PaletteContentProps> = ({ ideaId }) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Color Palette</h2>
+        {/* <h2 className="text-2xl font-semibold">Color Palette</h2> */}
         <button
           onClick={generateNewPalette}
           className={`flex items-center space-x-2 ${isLoading ? 'bg-blue-400' : 'bg-blue-500 hover:bg-blue-600'} text-white font-bold py-2 px-4 rounded transition duration-300`}
