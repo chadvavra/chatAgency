@@ -98,7 +98,7 @@ const ValuePropositionsContent = () => {
       
       const data = await response.json();
       
-      if (data.valuePropositions) {
+      if (data.valuePropositions && typeof data.valuePropositions === 'string') {
         const parsedValuePropositions = data.valuePropositions
           .split('\n')
           .filter((vp: string) => vp.trim() !== '')
@@ -107,7 +107,8 @@ const ValuePropositionsContent = () => {
         setShowSaveButton(true);
         setIsModified(true);
       } else {
-        throw new Error('No value propositions generated');
+        console.error('Invalid value propositions data:', data.valuePropositions);
+        throw new Error('No valid value propositions generated');
       }
     } catch (error) {
       console.error('Error:', error);
