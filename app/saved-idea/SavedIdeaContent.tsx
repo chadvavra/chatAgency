@@ -195,9 +195,34 @@ export default function SavedIdeaContent() {
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-700 whitespace-pre-wrap bg-gray-100 p-4 rounded-md h-full">
-                    {idea.generated_idea}
-                  </p>
+                  <div className="text-gray-700 bg-gray-100 p-4 rounded-md">
+                    <h3 className="font-semibold mb-2">Business Overview</h3>
+                    <p className="whitespace-pre-wrap mb-4">{idea.generated_idea.match(/<Business Overview>([\s\S]*?)<\/Business Overview>/)?.[1]}</p>
+                    
+                    <h3 className="font-semibold mb-2">Target Markets</h3>
+                    <ul className="list-disc list-inside mb-4">
+                      {idea.generated_idea.match(/<Target Markets>([\s\S]*?)<\/Target Markets>/)?.[1].split('\n').filter(Boolean).map((market, index) => (
+                        <li key={index}>{market.trim().replace(/^-\s*/, '')}</li>
+                      ))}
+                    </ul>
+                    
+                    <h3 className="font-semibold mb-2">Key Features</h3>
+                    <ul className="list-disc list-inside mb-4">
+                      {idea.generated_idea.match(/<Key Features>([\s\S]*?)<\/Key Features>/)?.[1].split('\n').filter(Boolean).map((feature, index) => (
+                        <li key={index}>{feature.trim().replace(/^-\s*/, '')}</li>
+                      ))}
+                    </ul>
+                    
+                    <h3 className="font-semibold mb-2">Challenges</h3>
+                    <ul className="list-disc list-inside mb-4">
+                      {idea.generated_idea.match(/<Challenges>([\s\S]*?)<\/Challenges>/)?.[1].split('\n').filter(Boolean).map((challenge, index) => (
+                        <li key={index}>{challenge.trim().replace(/^-\s*/, '')}</li>
+                      ))}
+                    </ul>
+                    
+                    <h3 className="font-semibold mb-2">Summary</h3>
+                    <p className="whitespace-pre-wrap">{idea.generated_idea.match(/<Summary>([\s\S]*?)<\/Summary>/)?.[1]}</p>
+                  </div>
                   <button
                     onClick={handleEdit}
                     className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
