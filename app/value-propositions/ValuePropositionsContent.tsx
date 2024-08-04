@@ -185,7 +185,7 @@ const ValuePropositionsContent = () => {
                 </div>
               )}
               {ideaSaved && (
-                router.push(`/saved-idea?id=${ideaId}`)
+                router.push(`/dashboard`)
               )}
             </>
           )}
