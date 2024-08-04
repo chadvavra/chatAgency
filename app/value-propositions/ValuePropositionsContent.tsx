@@ -7,6 +7,7 @@ import { createClient, saveIdea } from "@/utils/supabase/client";
 const ValuePropositionsContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const router = useRouter();
   const [idea, setIdea] = useState('');
   const [originalIdea, setOriginalIdea] = useState('');
   const [valuePropositions, setValuePropositions] = useState<string[]>([]);
@@ -183,7 +184,7 @@ const ValuePropositionsContent = () => {
                 </div>
               )}
               {ideaSaved && (
-                <p className="mt-4 text-green-600 font-semibold">Idea saved successfully!</p>
+                router.push(`/saved-idea?id=${idea.id}`)
               )}
             </>
           )}
