@@ -44,10 +44,15 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "user",
-          content: `Based on the following web search results about competitors for a business idea, provide exactly 5 competitors doing inspiring work in the same space. For each competitor, provide their name, website, and a brief description of their inspiring work. Separate the competitors with semicolons. Use only real competitors mentioned in the search results. Don't make up any information.
+          content: `Based on the following web search results about competitors for a business idea, 
+          provide exactly 5 competitors doing inspiring work in the same space.  Use only real competitors mentioned in the search results. 
+          Don't make up any information. Search results:${searchResults}. Respond in this format.
+          
+          <URL>Website url for company</URL>
+          <Name>The name of the company</Name>
+          <Description>A short summary of how the company competes with the idea</Description>
 
-          Search results:
-          ${searchResults}
+          
 
           5 competitors:`
         }

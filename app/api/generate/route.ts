@@ -8,9 +8,20 @@ export async function POST(req: NextRequest) {
     let formattedPrompt;
     
     if (changeRequest) {
-      formattedPrompt = `\n\nHuman: Here's an existing business idea or product feature: ${idea}\n\nPlease update or improve this idea based on the following request: ${changeRequest}\n\nAssistant:`;
+      formattedPrompt = `\n\nHuman: Here's an existing business idea or product feature: ${idea}\n\nPlease update or improve this idea based on the following request: ${changeRequest}. Keep the formatting consistent.\n\nAssistant:`;
     } else {
-      formattedPrompt = `\n\nHuman: Generate a detailed business idea or product feature based on the following concept: ${idea}\n\nAssistant:`;
+      formattedPrompt = `\n\nHuman: You are a highly experienced entrepreneur AI agent 
+      that creates detailed descriptions of business ideas and product features. 
+      Generate a detailed business idea or product feature based on the following concept: ${idea}
+      Respond in this format.
+
+      <Business Overview>Detailed explaination of idea</Business Overview>
+      <Target Markets>List of potential markets that would benefit from the idea</Target Markets>
+      <Key Features>List of features that idea can offer</Key Features>
+      <Challenges>List of challenges the idea will face</Challenges>
+      <Summary>A summarization of the idea</Summary>
+
+      \n\nAssistant:`;
     }
     
     console.log('Formatted prompt:', formattedPrompt);
