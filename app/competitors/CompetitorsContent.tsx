@@ -8,7 +8,7 @@ const CompetitorsContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [idea, setIdea] = useState<string | null>(null);
-  const [competitors, setCompetitors] = useState<string[]>([]);
+  const [competitors, setCompetitors] = useState<Array<{url: string, name: string, description: string}>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [ideaId, setIdeaId] = useState<string | null>(null);
@@ -65,7 +65,13 @@ const CompetitorsContent = () => {
       }
 
       const result = await response.json();
-      setCompetitors(result.competitors);
+      const parsedCompetitors = result.competitors[0].split('\n\n').filter(Boolean).map((comp: string) => {
+        const url = comp.match(/<URL>(.*?)<\/URL>/)?.[1] || '';
+        const name = comp.match(/<Name>(.*?)<\/Name>/)?.[1] || '';
+        const description = comp.match(/<Description>(.*?)<\/Description>/)?.[1] || '';
+        return { url, name, description };
+      });
+      setCompetitors(parsedCompetitors);
     } catch (apiError) {
       setError('Error generating competitors');
     }
@@ -85,31 +91,16 @@ const CompetitorsContent = () => {
       <h1 className="text-2xl font-bold mb-4">Competitors for Your Idea</h1>
       <div className="bg-white shadow-md rounded-lg p-6 mt-4">
         <h2 className="text-xl font-semibold mb-4">Inspiring Competitors:</h2>
-        {Array.isArray(competitors) && competitors.length > 0 ? (
+        {competitors.length > 0 ? (
           <>
             <div className="space-y-4 mb-4">
-              {competitors.map((comp, index) => {
-                if (typeof comp !== 'string') {
-                  console.error(`Invalid competitor data at index ${index}:`, comp);
-                  return null;
-                }
-                try {
-                  const [name, rawUrl, ...descriptionParts] = comp.split(':');
-                  const fullDescription = descriptionParts.join(':');
-                  const [description] = fullDescription.split(/;|\n/, 1);
-                  const url = rawUrl ? rawUrl.replace(/^https?:\/\/localhost:3000/, '') : '#';
-                  return (
-                    <div key={`comp-${index}`} className="text-gray-700">
-                      <p className="font-bold">{name || 'Unnamed Competitor'}</p>
-                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{url}</a>
-                      <p className="text-gray-500">{description?.trim() || 'No description available'}</p>
-                    </div>
-                  );
-                } catch (error) {
-                  console.error(`Error parsing competitor data at index ${index}:`, error);
-                  return null;
-                }
-              })}
+              {competitors.map((comp, index) => (
+                <div key={`comp-${index}`} className="text-gray-700">
+                  <p className="font-bold">{comp.name || 'Unnamed Competitor'}</p>
+                  <a href={comp.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{comp.url}</a>
+                  <p className="text-gray-500">{comp.description || 'No description available'}</p>
+                </div>
+              ))}
             </div>
             <button
               onClick={generateNewCompetitors}
