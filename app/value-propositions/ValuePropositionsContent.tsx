@@ -14,6 +14,7 @@ const ValuePropositionsContent = () => {
   const [ideaSaved, setIdeaSaved] = useState(false);
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [isModified, setIsModified] = useState(false);
+  const [ideaId, setIdeaId] = useState<string | null>(null);
 
   useEffect(() => {
     const urlIdea = searchParams.get('generatedIdea');
@@ -48,6 +49,7 @@ const ValuePropositionsContent = () => {
           if (data) {
             setIdea(data.generated_idea || '');
             setOriginalIdea(data.original_idea || '');
+            setIdeaId(data.id);
             await generateValuePropositions(data.generated_idea || '');
           }
         }
@@ -183,7 +185,7 @@ const ValuePropositionsContent = () => {
                 </div>
               )}
               {ideaSaved && (
-                router.push(`/saved-idea?id=${idea.id}`)
+                router.push(`/saved-idea?id=${ideaId}`)
               )}
             </>
           )}
