@@ -111,18 +111,16 @@ const ValuePropositionsContent = () => {
           setShowSaveButton(true);
           setIsModified(true);
         } else {
-          setValuePropositions([]);
-          setError('No valid value propositions generated. Please try again.');
+          throw new Error('No valid value propositions generated.');
         }
       } else {
-        console.error('Invalid value propositions data:', data.valuePropositions);
-        setValuePropositions([]);
-        setError('No valid value propositions generated. Please try again.');
+        throw new Error('Invalid value propositions data received.');
       }
     } catch (error) {
       console.error('Error:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      setError(`An error occurred: ${errorMessage}`);
+      setError(`An error occurred: ${errorMessage}. Please try again.`);
+      setValuePropositions([]);
     } finally {
       setIsLoading(false);
     }
@@ -191,7 +189,7 @@ const ValuePropositionsContent = () => {
                 Retry
               </button>
             </div>
-          ) : (
+          ) : valuePropositions.length > 0 ? (
             <>
               <ul className="list-disc pl-5 space-y-2">
                 {valuePropositions.map((vp, index) => (
@@ -215,6 +213,16 @@ const ValuePropositionsContent = () => {
                 </div>
               )}
             </>
+          ) : (
+            <div>
+              <p>No value propositions generated. Please try again.</p>
+              <button
+                onClick={() => generateValuePropositions(idea)}
+                className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Generate Value Propositions
+              </button>
+            </div>
           )}
         </section>
       </div>
