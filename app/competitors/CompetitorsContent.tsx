@@ -51,11 +51,12 @@ const CompetitorsContent = () => {
   }, [searchParams]);
 
   const generateNewCompetitors = async () => {
-    if (!ideaId) return;
+    if (!ideaId || !idea) return;
 
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/generate-competitors?id=${ideaId}`, {
+      const searchParam = idea.split('Target Markets:')[0].trim();
+      const response = await fetch(`/api/generate-competitors?id=${ideaId}&search=${encodeURIComponent(searchParam)}`, {
         method: 'POST',
       });
 
