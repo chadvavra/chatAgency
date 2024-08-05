@@ -3,13 +3,16 @@ import { oswald, plex } from '../utils/fonts';
 import { cookies } from "next/headers";
 import Image from 'next/image';
 import BackgroundHome from "./background-home.png";
-import Waves from "./waves.svg";
 import IdeaForm from "@/components/IdeaForm";
 import Link from "next/link";
+
+
 
 export default async function Home() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
+
+
 
   return (
     <div className="min-h-screen flex flex-col items-center w-full">
@@ -23,15 +26,15 @@ export default async function Home() {
           height={1080}
           className="w-full"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50">
-          <h1 className={`${plex.className} text-6xl font-semibold mb-6 text-white`}>Agency For Your Ideas</h1>
-          <p className={`${oswald.className} text-2xl mb-6 text-white`}>
+        <div className="absolute inset-0 flex flex-col items-center my-24">
+          <h1 className={`{plex.className} text-6xl font-semibold mb-6 text-white`}>Agency For Your Ideas</h1>
+          <p className={`{oswald.className} text-2xl mb-6 text-white`}>
             The fastest way to take your ideas from start, to funded.
           </p>
         </div>
       </header>
 
-      <section className="w-full bg-gray-100 py-16">
+      <section className="w-full bg-white-100 py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-8 text-center">Our Features</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
