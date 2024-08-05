@@ -12,47 +12,47 @@ export default async function Home() {
   const { data: { user } } = await supabase.auth.getUser();
 
   return (
-    <div className="min-h-screen flex flex-col items-center relative w-full">
-      <Image
-        priority
-        src={BackgroundHome}
-        alt="background image"
-        layout="fill"
-        objectFit="cover"
-        quality={100}
-        className="w-full"
-      />
+    <div className="min-h-screen flex flex-col items-center w-full">
+      <header className="w-full relative">
+        <Image
+          priority
+          src={BackgroundHome}
+          alt="background image"
+          layout="responsive"
+          width={1920}
+          height={1080}
+          className="w-full"
+        />
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50">
+          <h1 className={`${plex.className} text-6xl font-semibold mb-6 text-white`}>Agency For Your Ideas</h1>
+          <p className={`${oswald.className} text-2xl mb-6 text-white`}>
+            The fastest way to take your ideas from start, to funded.
+          </p>
+        </div>
+      </header>
 
-      <div className="z-10 text-white text-center mt-16 justify-center">
-        <h1 className="{plex.className} text-6xl font-semibold mb-6">Agency For Your Ideas </h1>
-        <p className="{oswald.className} text-2xl mb-6  ">
-          The fastest way to take your ideas from start, to funded.
-        </p>
-      </div>
-      <div className="z-10 container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
-            <h3 className="text-lg font-semibold mb-2">Generate New Idea</h3>
-            <p className="text-gray-600 mb-4">Create a fresh business idea using AI.</p>
-            <Link href="/idea" className="text-blue-500 hover:text-blue-700">Get Started →</Link>
+      <section className="w-full bg-gray-100 py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-8 text-center">Our Features</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
+              <h3 className="text-lg font-semibold mb-2">Generate New Idea</h3>
+              <p className="text-gray-600 mb-4">Create a fresh business idea using AI.</p>
+              <Link href="/idea" className="text-blue-500 hover:text-blue-700">Get Started →</Link>
+            </div>
+            <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
+              <h3 className="text-lg font-semibold mb-2">Explore Competitors</h3>
+              <p className="text-gray-600 mb-4">Analyze your competition in the market.</p>
+              <Link href="/competitors" className="text-blue-500 hover:text-blue-700">Explore →</Link>
+            </div>
+            <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
+              <h3 className="text-lg font-semibold mb-2">Generate Images</h3>
+              <p className="text-gray-600 mb-4">Create visuals for your business idea.</p>
+              <Link href="/image-generation" className="text-blue-500 hover:text-blue-700">Create Images →</Link>
+            </div>
           </div>
-          <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
-            <h3 className="text-lg font-semibold mb-2">Explore Competitors</h3>
-            <p className="text-gray-600 mb-4">Analyze your competition in the market.</p>
-            <Link href="/competitors" className="text-blue-500 hover:text-blue-700">Explore →</Link>
-          </div>
-          <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
-            <h3 className="text-lg font-semibold mb-2">Generate Images</h3>
-           <p className="text-gray-600 mb-4">Create visuals for your business idea.</p>
-           <Link href="/image-generation" className="text-blue-500 hover:text-blue-700">Create Images →</Link>
-         </div>
-       </div>
-     </div>
-
+        </div>
+      </section>
     </div>
-    
-
-
-
   );
 }
