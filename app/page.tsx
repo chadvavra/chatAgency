@@ -22,12 +22,24 @@ export default async function Home() {
         quality={100}
         className="w-full"
       />
+
       <div className="z-10 text-white text-center mt-16 justify-center">
         <h1 className="{plex.className} text-6xl font-semibold mb-6">Agency For Your Ideas </h1>
-        <p className="{oswald.className} text-xl mb-6  ">
-          The most affordable way to take your ideas from start, to funded.
+        <p className="{oswald.className} text-2xl mb-6  ">
+          The fastest way to take your ideas from start, to funded.
         </p>
       </div>
+
+
+     
+      <div className="container mx-auto px-4 py-8 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+
     </div>
+    
+
+
+
   );
 }
