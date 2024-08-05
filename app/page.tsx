@@ -26,9 +26,9 @@ export default async function Home() {
           height={1080}
           className="w-full"
         />
-        <div className="absolute inset-0 flex flex-col items-center my-24">
-          <h1 className={`{plex.className} text-6xl font-semibold mb-6 text-white`}>Agency For Your Ideas</h1>
-          <p className={`{oswald.className} text-2xl mb-6 text-white`}>
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+          <h1 className={`${plex.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold mb-4 sm:mb-6 text-white text-center`}>Agency For Your Ideas</h1>
+          <p className={`${oswald.className} text-lg sm:text-xl md:text-2xl mb-4 sm:mb-6 text-white text-center max-w-3xl`}>
             The fastest way to take your ideas from start, to funded.
           </p>
         </div>
