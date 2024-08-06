@@ -22,6 +22,12 @@ export default function VisionPage() {
     setAnswers({ ...answers, [currentQuestion]: answer });
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
     } else {
       generateVisionStatement();
     }
@@ -59,19 +65,30 @@ export default function VisionPage() {
         <div className={`{oswald.className} text-lg text-gray-700 space-y-6`}>
           {currentQuestion < questions.length ? (
             <div>
+              <p className="mb-2 text-sm text-gray-500">Question {currentQuestion + 1} of {questions.length}</p>
               <p className="mb-4">{questions[currentQuestion]}</p>
               <textarea 
                 className="w-full p-2 border border-gray-300 rounded"
                 rows={4}
+                value={answers[currentQuestion] || ''}
                 onChange={(e) => handleAnswer(e.target.value)}
               />
-              <button 
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={() => handleAnswer(document.querySelector('textarea').value)}
-                disabled={isLoading}
-              >
-                {currentQuestion === questions.length - 1 ? 'Generate Vision' : 'Next'}
-              </button>
+              <div className="flex justify-between mt-4">
+                <button 
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                  onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
+                  disabled={currentQuestion === 0}
+                >
+                  Previous
+                </button>
+                <button 
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={handleNext}
+                  disabled={isLoading || !answers[currentQuestion]}
+                >
+                  {currentQuestion === questions.length - 1 ? 'Generate Vision' : 'Next'}
+                </button>
+              </div>
             </div>
           ) : (
             <div>
