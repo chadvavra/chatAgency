@@ -5,13 +5,14 @@ import { oswald, plex } from '../../utils/fonts';
 import { generateIdea } from '../../utils/anthropic';
 import { createClient } from '@/utils/supabase/client';
 import { FaSpinner } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 export default function VisionPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [visionStatement, setVisionStatement] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [supabase, setSupabase] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     setSupabase(createClient());
@@ -50,24 +51,12 @@ export default function VisionPage() {
         Please create a concise, inspiring vision statement that captures the essence of this idea and its potential impact.`;
 
       const statement = await generateIdea(prompt);
-      setVisionStatement(statement);
-
-      // Save the vision statement to Supabase
-      if (supabase) {
-        const { data, error } = await supabase
-          .from('ideas')
-          .insert({ vision: statement })
-          .select();
-
-        if (error) {
-          console.error('Error saving vision statement to Supabase:', error);
-        } else {
-          console.log('Vision statement saved successfully:', data);
-        }
-      }
+      
+      // Navigate to the new page with the generated vision
+      router.push(`/vision/result?statement=${encodeURIComponent(statement)}`);
     } catch (error) {
       console.error('Error generating vision statement:', error);
-      setVisionStatement('An error occurred while generating the vision statement. Please try again.');
+      alert('An error occurred while generating the vision statement. Please try again.');
     } finally {
       setIsLoading(false);
     }
