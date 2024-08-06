@@ -79,12 +79,25 @@ const VisionContent = () => {
         throw new Error('No idea ID provided');
       }
 
+      const supabase = createClient();
+      const { data: ideaData, error: ideaError } = await supabase
+        .from('ideas')
+        .select('generated_idea')
+        .eq('id', ideaId)
+        .single();
+
+      if (ideaError) {
+        throw new Error(`Error fetching idea: ${ideaError.message}`);
+      }
+
+      const generatedIdea = ideaData?.generated_idea;
+
       const response = await fetch('/api/vision', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ answers, ideaId }),
+        body: JSON.stringify({ answers, ideaId, generatedIdea }),
       });
 
       if (!response.ok) {
@@ -151,7 +164,7 @@ const VisionContent = () => {
               onClick={handleNext}
               disabled={!answers[currentQuestion]}
             >
-              {currentQuestion === questions.length - 1 ? 'Next' : 'Next'}
+              {currentQuestion === questions.length - 1 ? 'Generate Vision' : 'Next'}
             </button>
           </div>
         </div>
@@ -191,7 +204,10 @@ const VisionContent = () => {
             </div>
           ) : (
             <>
-              <p className="p-4 bg-white rounded shadow">{visionStatement}</p>
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold mb-2">Generated Vision:</h3>
+                <p className="p-4 bg-white rounded shadow">{visionStatement}</p>
+              </div>
               {!isSaved && (
                 <button 
                   onClick={saveVision}
