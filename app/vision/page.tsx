@@ -1,14 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { oswald, plex } from '../../utils/fonts';
 import { generateIdea } from '../../utils/anthropic';
+import { createClient } from '@/utils/supabase/client';
 
 export default function VisionPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [visionStatement, setVisionStatement] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [supabase, setSupabase] = useState(null);
+
+  useEffect(() => {
+    setSupabase(createClient());
+  }, []);
 
   const questions = [
     "What is the primary goal or purpose of your idea?",
@@ -44,6 +50,20 @@ export default function VisionPage() {
 
       const statement = await generateIdea(prompt);
       setVisionStatement(statement);
+
+      // Save the vision statement to Supabase
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('ideas')
+          .insert({ vision: statement })
+          .select();
+
+        if (error) {
+          console.error('Error saving vision statement to Supabase:', error);
+        } else {
+          console.log('Vision statement saved successfully:', data);
+        }
+      }
     } catch (error) {
       console.error('Error generating vision statement:', error);
       setVisionStatement('An error occurred while generating the vision statement. Please try again.');
