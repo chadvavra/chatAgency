@@ -1,48 +1,76 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import Anthropic from '@anthropic-ai/sdk';
+import { Anthropic } from '@anthropic-ai/sdk';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY,
-});
+export async function POST(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
 
-export const runtime = 'edge';
-
-export async function POST(req: NextRequest) {
-  const { ideaId } = await req.json();
+  if (!id) {
+    return NextResponse.json({ error: 'Missing idea ID' }, { status: 400 });
+  }
 
   const supabase = createClient();
 
-  // Fetch the idea and value propositions from the database
-  const { data, error } = await supabase
+  // Fetch the idea from the database
+  const { data: idea, error: fetchError } = await supabase
     .from('ideas')
     .select('generated_idea, value_propositions')
-    .eq('id', ideaId)
+    .eq('id', id)
     .single();
 
-  if (error) {
-    return NextResponse.json({ error: 'Failed to fetch idea data' }, { status: 500 });
+  if (fetchError) {
+    return NextResponse.json({ error: 'Failed to fetch idea' }, { status: 500 });
   }
 
-  const { generated_idea, value_propositions } = data;
+  if (!idea || !idea.generated_idea || !idea.value_propositions) {
+    return NextResponse.json({ error: 'Idea or value propositions not found' }, { status: 404 });
+  }
 
-  const prompt = `You are a business strategy expert specializing in revenue stream generation. Based on the following business idea and value propositions, generate 3-5 potential revenue streams. Explain each revenue stream briefly and why it's suitable for this business idea.
+  try {
+    const anthropic = new Anthropic({
+      apiKey: process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY,
+    });
 
-Business Idea: ${generated_idea}
+    const response = await anthropic.messages.create({
+      model: "claude-3-sonnet-20240229",
+      max_tokens: 1000,
+      messages: [
+        {
+          role: "user",
+          content: `Given the following business idea and value propositions, generate 3-5 potential revenue streams. Explain each revenue stream briefly and why it's suitable for this business idea:
 
-Value Propositions: ${value_propositions}
+          Business Idea: ${idea.generated_idea}
 
-Please provide your response in a clear, structured format.`;
+          Value Propositions: ${idea.value_propositions}
 
-  const response = await anthropic.completions.create({
-    model: "claude-3-sonnet-20240229",
-    prompt,
-    max_tokens_to_sample: 1000,
-    temperature: 0.7,
-    stream: true,
-  });
+          Please provide your response in a clear, structured format.`
+        }
+      ]
+    });
 
-  const stream = AnthropicStream(response);
+    let generatedText = '';
+    if (response.content[0].type === 'text') {
+      generatedText = response.content[0].text;
+    } else {
+      throw new Error('Unexpected response format from Anthropic API');
+    }
 
-  return new StreamingTextResponse(stream);
+    // Save revenue streams to the database
+    const { error: updateError } = await supabase
+      .from('ideas')
+      .update({ revenue_streams: generatedText })
+      .eq('id', id);
+
+    if (updateError) {
+      return NextResponse.json({ error: 'Error saving revenue streams' }, { status: 500 });
+    }
+
+    return NextResponse.json({ revenueStreams: generatedText });
+  } catch (error) {
+    console.error('Error generating revenue streams:', error);
+    return NextResponse.json({ error: 'Failed to generate revenue streams' }, { status: 500 });
+  }
 }
+
+export const dynamic = 'force-dynamic';
