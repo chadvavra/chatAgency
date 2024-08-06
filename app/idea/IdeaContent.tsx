@@ -109,10 +109,10 @@ export default function IdeaContent() {
       <div>
         <h2 className="text-lg font-semibold mb-2">Generated Idea:</h2>
         <div className="text-gray-700 bg-gray-100 p-4 rounded-md">
-          {generatedIdea.includes('<Business Overview>') && (
+          {generatedIdea.includes('<Details>') && (
             <>
-              <h3 className="font-semibold mb-2">Business Overview</h3>
-              <p className="whitespace-pre-wrap mb-4">{generatedIdea.match(/<Business Overview>([\s\S]*?)<\/Business Overview>/)?.[1]}</p>
+              <h3 className="font-semibold mb-2">Details</h3>
+              <p className="whitespace-pre-wrap mb-4">{generatedIdea.match(/<Details>([\s\S]*?)<\/Details>/)?.[1]}</p>
             </>
           )}
 
