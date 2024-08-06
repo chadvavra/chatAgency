@@ -44,7 +44,7 @@ const RevenueStreamsContent: React.FC<RevenueStreamsContentProps> = ({ ideaId })
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch('/api/generate-revenue-streams', {
+    const response = await fetch(`${window.location.origin}/api/generate-revenue-streams`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
