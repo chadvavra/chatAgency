@@ -40,6 +40,7 @@ export async function POST(req: Request) {
     // Generate the vision statement using Anthropic's API
     const visionStatement = await generateIdea(prompt);
 
+    // Ensure we're returning a response
     return NextResponse.json({ visionStatement });
   } catch (error) {
     console.error('Error in vision generation:', error);
