@@ -46,11 +46,11 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
               Product Image (beta)
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link href={`/vision?id=${ideaId}`} className="text-blue-600 hover:underline">
               Vision
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
 
