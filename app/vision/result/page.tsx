@@ -39,11 +39,11 @@ export default function VisionResult() {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className={`{plex.className} text-4xl font-bold text-gray-900 mb-8 text-center`}>
+        <h1 className={`${plex.className} text-4xl font-bold text-gray-900 mb-8 text-center`}>
           Your Generated Vision
         </h1>
         
-        <div className={`{oswald.className} text-lg text-gray-700 space-y-6`}>
+        <div className={`${oswald.className} text-lg text-gray-700 space-y-6`}>
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-semibold mb-4">Vision Statement:</h2>
             <p className="mb-6">{visionStatement}</p>
