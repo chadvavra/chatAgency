@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { oswald, plex } from '../../../utils/fonts';
+import { oswald, plex } from '../../../utils/fonts';
 
 export default function VisionResult() {
   const [visionStatement, setVisionStatement] = useState('');
