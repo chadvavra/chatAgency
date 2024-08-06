@@ -14,6 +14,7 @@ const VisionContent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [generatedIdea, setGeneratedIdea] = useState('');
 
   const questions = [
     "What is the primary goal or purpose of your idea?",
@@ -25,10 +26,29 @@ const VisionContent = () => {
 
   useEffect(() => {
     const urlAnswers = searchParams.get('answers');
+    const ideaId = searchParams.get('id');
     if (urlAnswers) {
       setAnswers(JSON.parse(decodeURIComponent(urlAnswers)));
     }
+    if (ideaId) {
+      fetchGeneratedIdea(ideaId);
+    }
   }, [searchParams]);
+
+  const fetchGeneratedIdea = async (ideaId: string) => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('ideas')
+      .select('generated_idea')
+      .eq('id', ideaId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching generated idea:', error);
+    } else if (data) {
+      setGeneratedIdea(data.generated_idea);
+    }
+  };
 
   const handleAnswer = (answer: string) => {
     setAnswers({ ...answers, [currentQuestion]: answer });
@@ -61,7 +81,9 @@ const VisionContent = () => {
         Core values: ${answers[3]}
         5-year vision: ${answers[4]}
         
-        Please create a concise, inspiring vision statement that captures the essence of this idea and its potential impact.`;
+        Generated Idea: ${generatedIdea}
+        
+        Please create a concise, inspiring vision statement that captures the essence of this idea and its potential impact, taking into account the details of the generated idea.`;
 
       const response = await fetch('/api/generate', {
         method: 'POST',
