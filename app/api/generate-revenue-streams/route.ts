@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { StreamingTextResponse, AnthropicStream } from 'ai';
 import Anthropic from '@anthropic-ai/sdk';
 
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+  apiKey: process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY,
 });
 
 export const runtime = 'edge';
@@ -36,7 +35,7 @@ Value Propositions: ${value_propositions}
 Please provide your response in a clear, structured format.`;
 
   const response = await anthropic.completions.create({
-    model: 'claude-2',
+    model: "claude-3-sonnet-20240229",
     prompt,
     max_tokens_to_sample: 1000,
     temperature: 0.7,
