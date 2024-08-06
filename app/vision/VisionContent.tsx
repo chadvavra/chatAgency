@@ -85,7 +85,7 @@ const VisionContent = () => {
         
         Please create a concise, inspiring vision statement that captures the essence of this idea and its potential impact, taking into account the details of the generated idea.`;
 
-      const response = await fetch('/api/generate', {
+      const response = await fetch('/api/vision', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
