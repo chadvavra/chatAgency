@@ -43,10 +43,11 @@ export async function POST(request: Request) {
     }
 
     const ideaDescription = idea.generated_idea;
+    const truncatedDescription = ideaDescription.slice(0, 4000); // Limit to 4000 characters
 
     const response = await openai.images.generate({
       model: "dall-e-3",
-      prompt: ideaDescription,
+      prompt: truncatedDescription,
       n: 1,
       size: "1024x1024",
     });
