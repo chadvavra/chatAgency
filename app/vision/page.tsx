@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { oswald, plex } from '../../utils/fonts';
 import { generateIdea } from '../../utils/anthropic';
 import { createClient } from '@/utils/supabase/client';
+import { FaSpinner } from 'react-icons/fa';
 
 export default function VisionPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -111,7 +112,10 @@ export default function VisionPage() {
             <div>
               <h2 className="text-2xl font-semibold mb-4">Your Vision Statement:</h2>
               {isLoading ? (
-                <p className="text-gray-600">Generating vision statement...</p>
+                <div className="flex items-center justify-center">
+                  <FaSpinner className="animate-spin text-4xl text-blue-500 mr-3" />
+                  <p className="text-gray-600">Generating vision statement...</p>
+                </div>
               ) : (
                 <p className="p-4 bg-white rounded shadow">{visionStatement}</p>
               )}
