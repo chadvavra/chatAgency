@@ -62,7 +62,10 @@ export default function SavedIdeaContent() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ idea: editedIdea, changeRequest: updateRequest }),
+        body: JSON.stringify({ 
+          idea: idea.generated_idea, // Use the existing generated_idea
+          changeRequest: updateRequest 
+        }),
       });
 
       if (!response.ok) {
