@@ -8,7 +8,7 @@ import { oswald, plex } from '../../../utils/fonts';
 export default function VisionResult() {
   const [visionStatement, setVisionStatement] = useState('');
   const [isSaved, setIsSaved] = useState(false);
-  const [supabase, setSupabase] = useState(null);
+  const [supabase, setSupabase] = useState<ReturnType<typeof createClient> | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
