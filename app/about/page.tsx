@@ -4,11 +4,11 @@ export default function About() {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className={`${plex.className} text-4xl font-bold text-gray-900 mb-8 text-center`}>
+        <h1 className={`${oswald.className} text-4xl font-bold text-gray-900 mb-8 text-center`}>
         About 
         </h1>
         
-        <div className={`${oswald.className} text-lg text-gray-700 space-y-6`}>
+        <div className={`${plex.className} text-lg text-gray-700 space-y-6`}>
           <p>
             I believe that every idea is worth exploring. My mission is to empower individuals, especially creatives who may lack formal training, with the tools and resources to turn their ideas into viable products.
           </p>
