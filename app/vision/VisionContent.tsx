@@ -8,7 +8,7 @@ import { FaSpinner } from 'react-icons/fa';
 const VisionContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState<Record<number, string>>({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [visionStatement, setVisionStatement] = useState('');
   const [isLoading, setIsLoading] = useState(false);
