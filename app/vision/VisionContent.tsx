@@ -74,23 +74,17 @@ const VisionContent = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const prompt = `Generate a compelling vision statement based on the following information:
-        Primary goal: ${answers[0]}
-        Beneficiaries: ${answers[1]}
-        Desired impact: ${answers[2]}
-        Core values: ${answers[3]}
-        5-year vision: ${answers[4]}
-        
-        Generated Idea: ${generatedIdea}
-        
-        Please create a concise, inspiring vision statement that captures the essence of this idea and its potential impact, taking into account the details of the generated idea.`;
+      const ideaId = searchParams.get('id');
+      if (!ideaId) {
+        throw new Error('No idea ID provided');
+      }
 
       const response = await fetch('/api/vision', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ answers, ideaId }),
       });
 
       if (!response.ok) {
@@ -98,7 +92,7 @@ const VisionContent = () => {
       }
 
       const data = await response.json();
-      setVisionStatement(data.generatedText);
+      setVisionStatement(data.visionStatement);
     } catch (error) {
       console.error('Error generating vision statement:', error);
       setError('An error occurred while generating the vision statement. Please try again.');
