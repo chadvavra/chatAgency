@@ -1,4 +1,7 @@
-import VisionContent from './VisionContent';
+// import VisionContent from './VisionContent';
+import dynamic from 'next/dynamic';
+const VisionContent = dynamic(() => import('./VisionContent'), { ssr: false });
+
 import { oswald, plex } from '../../utils/fonts';
 
 export default function Page() {
