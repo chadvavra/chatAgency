@@ -42,6 +42,14 @@ const VisionContent = () => {
     }
   };
 
+  const handleGenerateVision = () => {
+    if (Object.keys(answers).length === questions.length) {
+      generateVisionStatement();
+    } else {
+      setError('Please answer all questions before generating the vision statement.');
+    }
+  };
+
   const generateVisionStatement = async () => {
     setIsLoading(true);
     setError(null);
@@ -127,9 +135,25 @@ const VisionContent = () => {
               onClick={handleNext}
               disabled={!answers[currentQuestion]}
             >
-              {currentQuestion === questions.length - 1 ? 'Generate Vision' : 'Next'}
+              {currentQuestion === questions.length - 1 ? 'Next' : 'Next'}
             </button>
           </div>
+        </div>
+      ) : !visionStatement ? (
+        <div>
+          <h2 className="text-2xl font-semibold mb-4">Review Your Answers:</h2>
+          {questions.map((question, index) => (
+            <div key={index} className="mb-4">
+              <p className="font-semibold">{question}</p>
+              <p className="ml-4">{answers[index]}</p>
+            </div>
+          ))}
+          <button 
+            onClick={handleGenerateVision}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Generate Vision
+          </button>
         </div>
       ) : (
         <div>
