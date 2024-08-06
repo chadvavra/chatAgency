@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { oswald, plex } from '../../utils/fonts';
+import { generateIdea } from '../../utils/anthropic';
 
 export default function VisionPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [visionStatement, setVisionStatement] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const questions = [
     "What is the primary goal or purpose of your idea?",
@@ -26,12 +28,25 @@ export default function VisionPage() {
   };
 
   const generateVisionStatement = async () => {
-    // Here you would typically make an API call to your AI service
-    // For now, we'll just combine the answers into a simple statement
-    const statement = `Our vision is to ${answers[0]} for ${answers[1]}. 
-    We aim to ${answers[2]} while upholding the values of ${answers[3]}. 
-    In 5 years, we envision ${answers[4]}.`;
-    setVisionStatement(statement);
+    setIsLoading(true);
+    try {
+      const prompt = `Generate a compelling vision statement based on the following information:
+        Primary goal: ${answers[0]}
+        Beneficiaries: ${answers[1]}
+        Desired impact: ${answers[2]}
+        Core values: ${answers[3]}
+        5-year vision: ${answers[4]}
+        
+        Please create a concise, inspiring vision statement that captures the essence of this idea and its potential impact.`;
+
+      const statement = await generateIdea(prompt);
+      setVisionStatement(statement);
+    } catch (error) {
+      console.error('Error generating vision statement:', error);
+      setVisionStatement('An error occurred while generating the vision statement. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -53,6 +68,7 @@ export default function VisionPage() {
               <button 
                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 onClick={() => handleAnswer(document.querySelector('textarea').value)}
+                disabled={isLoading}
               >
                 {currentQuestion === questions.length - 1 ? 'Generate Vision' : 'Next'}
               </button>
@@ -60,7 +76,11 @@ export default function VisionPage() {
           ) : (
             <div>
               <h2 className="text-2xl font-semibold mb-4">Your Vision Statement:</h2>
-              <p className="p-4 bg-white rounded shadow">{visionStatement}</p>
+              {isLoading ? (
+                <p className="text-gray-600">Generating vision statement...</p>
+              ) : (
+                <p className="p-4 bg-white rounded shadow">{visionStatement}</p>
+              )}
             </div>
           )}
         </div>
