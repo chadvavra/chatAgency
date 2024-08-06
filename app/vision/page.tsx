@@ -20,9 +20,6 @@ export default function VisionPage() {
 
   const handleAnswer = (answer) => {
     setAnswers({ ...answers, [currentQuestion]: answer });
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    }
   };
 
   const handleNext = () => {
