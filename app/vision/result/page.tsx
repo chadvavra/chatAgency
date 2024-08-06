@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { oswald, plex } from '../../../utils/fonts';
 
-export default function VisionResult() {
+export default function Page() {
   const [visionStatement, setVisionStatement] = useState('');
   const [isSaved, setIsSaved] = useState(false);
   const [supabase, setSupabase] = useState<ReturnType<typeof createClient> | null>(null);

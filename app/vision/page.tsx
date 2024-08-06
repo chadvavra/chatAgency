@@ -1,7 +1,7 @@
 import VisionContent from './VisionContent';
 import { oswald, plex } from '../../utils/fonts';
 
-export default function VisionPage() {
+export default function Page() {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
