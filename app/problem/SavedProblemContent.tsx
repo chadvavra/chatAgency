@@ -55,7 +55,7 @@ const ProblemContent = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/generate-keywords?id=${ideaId}`, {
+      const response = await fetch(`/api/generate-problem?id=${ideaId}`, {
         method: 'POST',
       });
 
