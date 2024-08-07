@@ -85,14 +85,19 @@ const ProblemContent = () => {
       
       
       <div className="bg-white shadow-md rounded-lg p-6 mt-4">
-        {/* <h2 className="text-xl font-semibold mb-4">Generated Problem:</h2> */}
         {problem && problem.length > 0 ? (
           <>
-            <ul className="list-disc pl-5 space-y-2 mb-4">
-              {problem.map((adj, index) => (
-                <li key={`adj-${index}`} className="text-gray-700">{adj}</li>
+            <div className="mb-4">
+              {problem[0].split('\n\n').map((paragraph, index) => (
+                <div key={index} className="mb-4">
+                  {paragraph.split('\n').map((line, lineIndex) => (
+                    <p key={`${index}-${lineIndex}`} className="text-gray-700">
+                      {line}
+                    </p>
+                  ))}
+                </div>
               ))}
-            </ul>
+            </div>
             <button
               onClick={generateNewProblem}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
