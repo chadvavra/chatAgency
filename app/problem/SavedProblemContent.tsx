@@ -89,9 +89,9 @@ const ProblemContent = () => {
           <>
             <div className="mb-4">
               {problem[0].split('\n\n').map((paragraph, index) => (
-                <div key={index} className="mb-4">
+                <div key={index} className="mb-4 font-bold">
                   {paragraph.split('\n').map((line, lineIndex) => (
-                    <p key={`${index}-${lineIndex}`} className="text-gray-700">
+                    <p key={`${index}-${lineIndex}`} className="text-gray-700 font-normal">
                       {line}
                     </p>
                   ))}
