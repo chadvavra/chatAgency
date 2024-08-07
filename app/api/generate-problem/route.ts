@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
           ${idea.generated_idea}
 
-          5 Whys:`
+          `
         }
       ]
     });
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       throw new Error('Unexpected response format from Anthropic API');
     }
 
-    const generatedProblem = generatedText.trim().split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(adj => adj.trim());
+    const generatedProblem = generatedText;
 
     // Save adjectives to the database
     const { error: updateError } = await supabase
