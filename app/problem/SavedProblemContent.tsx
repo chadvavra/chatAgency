@@ -82,8 +82,10 @@ const ProblemContent = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">Problem Statement for Your Idea</h1>
+      
+      
       <div className="bg-white shadow-md rounded-lg p-6 mt-4">
-        <h2 className="text-xl font-semibold mb-4">Generated Problem:</h2>
+        {/* <h2 className="text-xl font-semibold mb-4">Generated Problem:</h2> */}
         {problem && problem.length > 0 ? (
           <>
             <ul className="list-disc pl-5 space-y-2 mb-4">
