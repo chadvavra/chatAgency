@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const { idea } = await req.json();
     const formattedPrompt = `\n\nHuman: Generate 5 unique value propositions for the following business idea: ${idea} Please provide your response as a numbered list of exactly 5 value propositions, with no additional text or     
- explanations.\n\nAssistant:`;
+ explanations. Provide data to back up the value and references when you can.\n\nAssistant:`;
     
     const generatedContent = await generateIdea(formattedPrompt);
     
