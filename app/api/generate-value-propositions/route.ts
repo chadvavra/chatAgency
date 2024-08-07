@@ -4,7 +4,8 @@ import { generateIdea } from '@/utils/anthropic';
 export async function POST(req: NextRequest) {
   try {
     const { idea } = await req.json();
-    const formattedPrompt = `\n\nHuman: Generate 5 unique value propositions for the following business idea: ${idea}\n\nAssistant:`;
+    const formattedPrompt = `\n\nHuman: Generate 5 unique value propositions for the following business idea: ${idea} Please provide your response as a numbered list of exactly 5 value propositions, with no additional text or     
+ explanations.\n\nAssistant:`;
     
     const generatedContent = await generateIdea(formattedPrompt);
     
