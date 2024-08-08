@@ -101,13 +101,13 @@ export default function Login({
         >
           Sign In
         </SubmitButton>
-        {/* <SubmitButton
+        <SubmitButton
           formAction={signUp}
           className="bg-sky-500 border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
           pendingText="Signing Up..."
         >
           Don't have an account? <br />Sign Up.
-        </SubmitButton> */}
+        </SubmitButton>
         {searchParams?.message && (
           <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
             {searchParams.message}
