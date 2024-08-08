@@ -108,6 +108,9 @@ export default function Login({
         >
           Don't have an account? <br />Sign Up.
         </SubmitButton>
+        <Link href="/profile" className="text-center text-sm text-blue-500 hover:underline mt-4">
+          Go to Profile
+        </Link>
         {searchParams?.message && (
           <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
             {searchParams.message}
