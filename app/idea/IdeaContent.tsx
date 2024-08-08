@@ -228,7 +228,6 @@ export default function IdeaContent() {
             className="mt-1 block w-full p-4 rounded-md border border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             value={changeRequest}
             onChange={(e) => setChangeRequest(e.target.value)}
-            optional
           />
         </div>
         <div className="mt-4 space-x-4">
