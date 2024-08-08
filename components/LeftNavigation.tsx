@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface LeftNavigationProps {
   ideaId: string;
@@ -8,57 +9,84 @@ interface LeftNavigationProps {
 
 const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const router = useRouter();
 
   const toggleInstructions = () => {
     setIsInstructionsOpen(!isInstructionsOpen);
   };
 
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
   return (
-    <>
-      <nav className="bg-gray-100 p-4 rounded-lg" aria-label="Left Navigation">
-        <ul className="space-y-2" role="list">
-          <li>
-            <Link href="/dashboard" className="text-blue-600 hover:underline">
+    <div className={`transition-all duration-300 ${isCollapsed ? 'w-12' : 'w-[180px]'}`}>
+      <div className={`bg-gray-100 p-4 ${isCollapsed ? 'w-12' : 'w-[180px]'} transition-all duration-300 relative`}>
+        <button
+          onClick={toggleCollapse}
+          className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 z-10"
+        >
+          {isCollapsed ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          )}
+        </button>
+        {!isCollapsed && (
+          <>
+            <button
+              onClick={() => router.back()}
+              className="mb-6 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded transition duration-300"
+            >
               Back
-            </Link>
-          </li>
-          <li>
-            <button onClick={toggleInstructions} className="text-blue-600 hover:underline">
-              Instructions
             </button>
-          </li>
-          <li>
-            <Link href={`/keywords?id=${ideaId}`} className="text-blue-600 hover:underline">
-              Keywords
-            </Link>
-          </li>
-          <li>
-            <Link href={`/competitors?id=${ideaId}`} className="text-blue-600 hover:underline">
-              Competitors
-            </Link>
-          </li>
-          <li>
-            <Link href={`/palette?id=${ideaId}`} className="text-blue-600 hover:underline">
-              Color Palette
-            </Link>
-          </li>
-          <li>
-            <Link href={`/image-generation?id=${ideaId}`} className="text-blue-600 hover:underline">
-              Product Image (beta)
-            </Link>
-          </li>
-          <li>
-            <Link href={`/revenue-streams?id=${ideaId}`} className="text-blue-600 hover:underline">
-              Revenue Streams
-            </Link>
-          </li>
-          {/* <li>
-            <Link href={`/vision?id=${ideaId}`} className="text-blue-600 hover:underline">
-              Vision
-            </Link>
-          </li> */}
-        </ul>
-      </nav>
+            <nav className="bg-gray-100 rounded-lg" aria-label="Left Navigation">
+              <ul className="space-y-2" role="list">
+                <li>
+                  <button onClick={toggleInstructions} className="text-blue-600 hover:underline">
+                    Instructions
+                  </button>
+                </li>
+                <li>
+                  <Link href={`/problem?id=${ideaId}`} className="text-blue-600 hover:underline">
+                    Problem Statement
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/revenue-streams?id=${ideaId}`} className="text-blue-600 hover:underline">
+                    Revenue Streams
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/competitors?id=${ideaId}`} className="text-blue-600 hover:underline">
+                    Competitors
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/keywords?id=${ideaId}`} className="text-blue-600 hover:underline">
+                    Keywords
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/palette?id=${ideaId}`} className="text-blue-600 hover:underline">
+                    Color Palette
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/image-generation?id=${ideaId}`} className="text-blue-600 hover:underline">
+                    Product Image 
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </>
+        )}
+      </div>
 
       {isInstructionsOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={toggleInstructions}>
@@ -89,7 +117,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
