@@ -37,33 +37,37 @@ const ValuePropositionsContent = () => {
     }
 
     const fetchIdea = async () => {
-      if (urlIdea) {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from('ideas')
+          .select('id, original_idea, generated_idea, value_propositions')
+          .eq('user_id', user.id)
+          .single();
+
+        console.log('Fetched from Supabase:', data);
+
+        if (data) {
+          setIdea(data.generated_idea || '');
+          setOriginalIdea(data.original_idea || '');
+          setIdeaId(data.id);
+          if (data.value_propositions) {
+            setValuePropositions(data.value_propositions);
+            setShowSaveButton(true);
+          } else if (data.generated_idea) {
+            await generateValuePropositions(data.generated_idea);
+          }
+        }
+      } else if (urlIdea) {
         await generateValuePropositions(decodeURIComponent(urlIdea));
       } else if (idea) {
         await generateValuePropositions(idea);
-      } else {
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data, error } = await supabase
-            .from('ideas')
-            .select('id, original_idea, generated_idea')
-            .eq('user_id', user.id)
-            .single();
-
-          console.log('Fetched from Supabase:', data);
-
-          if (data) {
-            setIdea(data.generated_idea || '');
-            setOriginalIdea(data.original_idea || '');
-            setIdeaId(data.id);
-            await generateValuePropositions(data.generated_idea || '');
-          }
-        }
       }
     };
 
     fetchIdea();
+    setIsLoading(false);
   }, [searchParams, idea]);
 
   const handleBeforeUnload = useCallback((event: BeforeUnloadEvent) => {
