@@ -1,255 +1,218 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { createClient, saveValueProp } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
+import LeftNavigation from '@/components/LeftNavigation';
+import { FaCopy } from 'react-icons/fa';
 
-const ValuePropositionsContent = () => {
+interface Idea {
+  id: string;
+  original_idea: string;
+  generated_idea: string;
+  value_propositions: string[];
+}
+
+export default function ValuePropositionsContent() {
+  const [idea, setIdea] = useState<Idea | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedValueProps, setEditedValueProps] = useState<string[]>([]);
+  const [updateRequest, setUpdateRequest] = useState('');
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [idea, setIdea] = useState('');
-  const [originalIdea, setOriginalIdea] = useState('');
-  const [valuePropositions, setValuePropositions] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [valueSaved, setValueSaved] = useState(false);
-  const [showSaveButton, setShowSaveButton] = useState(false);
-  const [isModified, setIsModified] = useState(false);
-  const [ideaId, setIdeaId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (valueSaved) {
-      router.push('#');
-    }
-  }, [valueSaved, router]);
-
-  useEffect(() => {
-    const urlIdea = searchParams.get('generatedIdea');
-    const urlOriginalIdea = searchParams.get('originalIdea');
-
-    console.log('URL params:', { urlIdea, urlOriginalIdea });
-
-    if (urlIdea) {
-      setIdea(decodeURIComponent(urlIdea));
-    }
-    if (urlOriginalIdea) {
-      setOriginalIdea(decodeURIComponent(urlOriginalIdea));
-    }
-
     const fetchIdea = async () => {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data, error } = await supabase
-          .from('ideas')
-          .select('id, original_idea, generated_idea, value_propositions')
-          .eq('user_id', user.id)
-          .single();
-
-        console.log('Fetched from Supabase:', data);
-
-        if (data) {
-          setIdea(data.generated_idea || '');
-          setOriginalIdea(data.original_idea || '');
-          setIdeaId(data.id);
-          if (data.value_propositions) {
-            setValuePropositions(data.value_propositions);
-            setShowSaveButton(true);
-          } else if (data.generated_idea) {
-            await generateValuePropositions(data.generated_idea);
-          }
-        }
-      } else if (urlIdea) {
-        await generateValuePropositions(decodeURIComponent(urlIdea));
-      } else if (idea) {
-        await generateValuePropositions(idea);
+      const ideaId = searchParams.get('id');
+      if (!ideaId) {
+        setIsLoading(false);
+        return;
       }
+
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('ideas')
+        .select('*')
+        .eq('id', ideaId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching idea:', error);
+      } else {
+        setIdea(data);
+        setEditedValueProps(data.value_propositions || []);
+      }
+      setIsLoading(false);
     };
 
     fetchIdea();
-    setIsLoading(false);
-  }, [searchParams, idea]);
+  }, [searchParams]);
 
-  const handleBeforeUnload = useCallback((event: BeforeUnloadEvent) => {
-    if (isModified && !valueSaved) {
-      event.preventDefault();
-      event.returnValue = '';
-    }
-  }, [isModified, valueSaved]);
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
 
-  useEffect(() => {
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [handleBeforeUnload]);
+  const handleSave = async () => {
+    if (!idea) return;
 
-  console.log('Current state:', { idea, originalIdea, valuePropositions });
-
-  const generateValuePropositions = async (ideaText: string) => {
-    if (!ideaText.trim()) {
-      setError("No idea provided. Please enter an idea first.");
-      return;
-    }
-    setIsLoading(true);
-    setError(null);
     try {
       const response = await fetch('/api/generate-value-propositions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ idea: ideaText }),
+        body: JSON.stringify({ 
+          idea: idea.generated_idea,
+          changeRequest: updateRequest 
+        }),
       });
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status}. Please try again later.`);
+        throw new Error(`Server error: ${response.status}`);
       }
 
       const data = await response.json();
 
-      if (data.valuePropositions && Array.isArray(data.valuePropositions)) {
-        const parsedValuePropositions = data.valuePropositions
-          .filter((vp: string) => vp.trim() !== '')
-          .map((vp: string) => vp.trim());
+      if (data.valuePropositions) {
+        const supabase = createClient();
+        const { error } = await supabase
+          .from('ideas')
+          .update({ value_propositions: data.valuePropositions })
+          .eq('id', idea.id);
 
-        if (parsedValuePropositions.length > 0) {
-          setValuePropositions(parsedValuePropositions);
-          setShowSaveButton(true);
-          setIsModified(true);
-        } else {
-          throw new Error('No valid value propositions generated.');
+        if (error) {
+          throw new Error(`Failed to update value propositions: ${error.message}`);
         }
-      } else if (data.valuePropositions && typeof data.valuePropositions === 'string') {
-        const parsedValuePropositions = data.valuePropositions
-          .split('\n')
-          .filter((vp: string) => vp.trim() !== '')
-          .map((vp: string) => vp.trim());
 
-        if (parsedValuePropositions.length > 0) {
-          setValuePropositions(parsedValuePropositions);
-          setShowSaveButton(true);
-          setIsModified(true);
-        } else {
-          throw new Error('No valid value propositions generated.');
-        }
+        setIdea({ ...idea, value_propositions: data.valuePropositions });
+        setIsEditing(false);
+        setUpdateRequest('');
       } else {
-        throw new Error('Invalid value propositions data received.');
+        throw new Error('No value propositions generated');
       }
     } catch (error) {
       console.error('Error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      setError(`An error occurred: ${errorMessage}. Please try again.`);
-      setValuePropositions([]);
-    } finally {
-      setIsLoading(false);
+      alert(`An error occurred: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
-  const handleSaveValueProps = async () => {
-    try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        console.log('Saving idea with:', {
-          userId: user.id,
-          valuePropositions
-        });
-        await saveValueProp(user.id, valuePropositions);
-        setValueSaved(true);
-        setIsModified(false);
-        alert('Idea saved successfully!');
-      } else {
-        alert('You must be logged in to save ideas.');
-      }
-    } catch (error) {
-      console.error('Error saving idea:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      alert(`Failed to save idea: ${errorMessage}`);
-    }
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditedValueProps(idea?.value_propositions || []);
+    setUpdateRequest('');
   };
 
-  const handleDiscard = () => {
-    setIsModified(false);
-    router.push('/');
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  if (!idea) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h2 className="text-xl font-semibold text-red-600">Idea not found</h2>
+      </div>
+    );
+  }
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold mb-4">Value Propositions</h1>
-
-      <div className="space-y-4">
-        {isLoading ? (
-          <p>Loading value propositions...</p>
-        ) : error ? (
-          <ErrorDisplay error={error} onRetry={() => generateValuePropositions(idea)} />
-        ) : valuePropositions.length > 0 ? (
-          <ValuePropositionsList 
-            valuePropositions={valuePropositions} 
-            onGenerateNew={() => generateValuePropositions(idea)}
-            showSaveButton={showSaveButton}
-            valueSaved={valueSaved}
-            onSave={handleSaveValueProps}
-            onDiscard={handleDiscard}
-          />
-        ) : (
-          <p>No value propositions generated yet.</p>
-        )}
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex">
+        <div className="w-1/4 mr-8">
+          <LeftNavigation ideaId={idea.id} />
+        </div>
+        <div className="w-3/4">
+          <h1 className="text-2xl font-bold mb-6">Value Propositions</h1>
+          <section>
+            <h2 className="text-xl font-semibold mb-2 flex items-center">
+              Original Idea
+              <button 
+                onClick={() => copyToClipboard(idea.original_idea)}
+                className="ml-2 text-gray-500 hover:text-gray-700"
+                title="Copy to clipboard"
+              >
+                <FaCopy />
+              </button>
+            </h2>
+            <p className="text-gray-700 bg-gray-100 p-4 rounded-md">{idea.original_idea}</p>
+          </section>
+          <section className="mt-6">
+            <h2 className="text-xl font-semibold mb-2 flex items-center">
+              Value Propositions
+              {!isEditing && (
+                <button 
+                  onClick={() => copyToClipboard(idea.value_propositions.join('\n'))}
+                  className="ml-2 text-gray-500 hover:text-gray-700"
+                  title="Copy to clipboard"
+                >
+                  <FaCopy />
+                </button>
+              )}
+            </h2>
+            {isEditing ? (
+              <div>
+                <textarea
+                  className="w-full h-64 p-2 border rounded-md"
+                  value={editedValueProps.join('\n')}
+                  onChange={(e) => setEditedValueProps(e.target.value.split('\n'))}
+                />
+                <div className="mt-2">
+                  <label htmlFor="updateRequest" className="block text-sm font-medium text-gray-700">
+                    Update Request:
+                  </label>
+                  <textarea
+                    id="updateRequest"
+                    className="w-full h-32 p-2 border rounded-md mt-1"
+                    value={updateRequest}
+                    onChange={(e) => setUpdateRequest(e.target.value)}
+                    placeholder="Describe how you want to update or improve the value propositions..."
+                  />
+                </div>
+                <div className="mt-2 space-x-2">
+                  <button
+                    onClick={handleSave}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Update Value Propositions
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <ul className="list-disc pl-5 space-y-2 bg-gray-100 p-4 rounded-md">
+                  {idea.value_propositions.map((vp, index) => (
+                    <li key={index} className="text-gray-700">{vp}</li>
+                  ))}
+                </ul>
+                <button
+                  onClick={handleEdit}
+                  className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Edit
+                </button>
+              </div>
+            )}
+          </section>
+        </div>
       </div>
     </div>
   );
 }
-
-export default ValuePropositionsContent;
-const ErrorDisplay = ({ error, onRetry }) => (
-  <div>
-    <p className="text-red-500">{error}</p>
-    <button
-      onClick={onRetry}
-      className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Retry
-    </button>
-  </div>
-);
-
-const ValuePropositionsList = ({ 
-  valuePropositions, 
-  onGenerateNew, 
-  showSaveButton, 
-  valueSaved, 
-  onSave, 
-  onDiscard 
-}) => (
-  <>
-    <ul className="list-disc pl-5 space-y-2">
-      {valuePropositions.map((vp, index) => (
-        <li key={index} className="text-gray-700">{vp}</li>
-      ))}
-    </ul>
-    <div className="mt-4 space-x-4">
-      <button
-        onClick={onGenerateNew}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Generate New Value Propositions
-      </button>
-      {showSaveButton && !valueSaved && (
-        <>
-          <button
-            onClick={onSave}
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Save
-          </button>
-          <button
-            onClick={onDiscard}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Discard
-          </button>
-        </>
-      )}
-    </div>
-  </>
-);
