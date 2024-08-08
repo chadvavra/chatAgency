@@ -177,8 +177,15 @@ const ValuePropositionsContent = () => {
 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold">Original Idea</h2>
+          <p className="text-gray-700">{originalIdea}</p>
+          <h2 className="text-xl font-semibold mt-4">Generated Idea</h2>
+          <p className="text-gray-700">{idea}</p>
+        </section>
 
         <section className="space-y-4">
+          <h2 className="text-xl font-semibold">Value Propositions</h2>
           {isLoading ? (
             <p>Loading value propositions...</p>
           ) : error ? (
@@ -202,14 +209,28 @@ const ValuePropositionsContent = () => {
                 <div className="mt-4 space-x-4">
                   <button
                     onClick={() => generateValuePropositions(idea)}
-                    className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                   >
                     Generate Value Propositions
                   </button>
+                  <button
+                    onClick={handleSaveValueProps}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={handleDiscard}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Discard
+                  </button>
                 </div>
-              )}}
+              )}
             </>
-          ):}
+          ) : (
+            <p>No value propositions generated yet.</p>
+          )}
         </section>
       </div>
         
