@@ -10,7 +10,6 @@ interface Idea {
   id: string;
   original_idea: string;
   generated_idea: string;
-  value_propositions: string[];
 }
 
 export default function SavedIdeaContent() {
@@ -234,23 +233,6 @@ export default function SavedIdeaContent() {
                   </button>
                 </div>
               )}
-            </section>
-            <section>
-              <h2 className="text-xl font-semibold mb-2 flex items-center">
-                Value Propositions
-                <button 
-                  onClick={() => copyToClipboard(idea.value_propositions.join('\n'))}
-                  className="ml-2 text-gray-500 hover:text-gray-700"
-                  title="Copy to clipboard"
-                >
-                  <FaCopy />
-                </button>
-              </h2>
-              <ul className="list-disc pl-5 space-y-2 bg-gray-100 p-4 rounded-md h-full">
-                {idea.value_propositions.map((vp, index) => (
-                  <li key={index} className="text-gray-700">{vp}</li>
-                ))}
-              </ul>
             </section>
           </div>
         </div>
