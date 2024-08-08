@@ -91,9 +91,9 @@ const ProblemContent = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">Problem Statement for Your Idea
-      {idea && (
+      {problem && problem.length > 0 && (
         <button 
-          onClick={() => copyToClipboard(idea.problem)}
+          onClick={() => copyToClipboard(problem[0])}
           className="ml-2 text-gray-500 hover:text-gray-700"
           title="Copy to clipboard"
         >
