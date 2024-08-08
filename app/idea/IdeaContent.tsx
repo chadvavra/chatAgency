@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createClient, getIdea } from "@/utils/supabase/client";
+import { createClient, getIdea, saveIdea } from "@/utils/supabase/client";
 
 interface Idea {
   id: string;
@@ -13,22 +13,35 @@ interface Idea {
 export default function IdeaContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [idea, setIdea] = useState<Idea | null>(null);
+  const [originalIdea, setOriginalIdea] = useState('');
+  const [idea, setIdea] = useState('');
+  // const [idea, setIdea] = useState<Idea | null>(null);
   const [generatedIdea, setGeneratedIdea] = useState('');
   const [changeRequest, setChangeRequest] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [ideaSaved, setIdeaSaved] = useState(false);
+  const [showSaveButton, setShowSaveButton] = useState(false);
+  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
-    const idea = searchParams.get('generatedIdea');
+    const urlIdea = searchParams.get('generatedIdea');
     const original = searchParams.get('originalIdea');
-    if (idea) {
-      console.log('Received generated idea:', decodeURIComponent(idea));
-      setGeneratedIdea(decodeURIComponent(idea));
+    const urlOriginalIdea = searchParams.get('originalIdea');
+    if (urlIdea) {
+      setIdea(decodeURIComponent(urlIdea));
     }
-    if (original) {
-      console.log('Received original idea:', decodeURIComponent(original));
-      // You might want to store this original idea in state if needed
+    if (urlOriginalIdea) {
+      setOriginalIdea(decodeURIComponent(urlOriginalIdea));
     }
+
+    // if (idea) {
+    //   console.log('Received generated idea:', decodeURIComponent(idea));
+    //   setGeneratedIdea(decodeURIComponent(idea));
+    // }
+    // if (original) {
+    //   console.log('Received original idea:', decodeURIComponent(original));
+    //   // You might want to store this original idea in state if needed
+    // }
   }, [searchParams]);
 
   const handleChangeRequest = async (e: React.FormEvent) => {
@@ -78,6 +91,41 @@ export default function IdeaContent() {
     });
   };
 
+  const handleSaveIdea = async () => {
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        console.log('Saving idea with:', {
+          userId: user.id,
+          originalIdea,
+          idea
+        });
+        await saveIdea(user.id, originalIdea, idea);
+        setIdeaSaved(true);
+        setIsModified(false);
+        alert('Idea saved successfully!');
+      } else {
+        alert('You must be logged in to save ideas.');
+      }
+    } catch (error) {
+      console.error('Error saving idea:', error);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      alert(`Failed to save idea: ${errorMessage}`);
+    }
+  };
+
+  const handleDiscard = () => {
+    setIsModified(false);
+    router.push('/dashboard');
+  };
+
+  useEffect(() => {
+    if (ideaSaved) {
+      router.push('/dashboard');
+    }
+  }, [ideaSaved, router]);
+
   useEffect(() => {
     const loadIdea = async () => {
       const idea = searchParams.get('generatedIdea');
@@ -106,6 +154,14 @@ export default function IdeaContent() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <section className="space-y-4">
+        <h2 className="text-lg font-semibold">Original Idea:</h2>
+        {originalIdea ? (
+          <p className="text-gray-700 whitespace-pre-wrap bg-gray-100 p-4 rounded-md">{originalIdea}</p>
+        ) : (
+          <p className="text-gray-500 italic">No original idea available</p>
+        )}
+      </section>
       <div>
         <h2 className="text-lg font-semibold mb-2">Generated Idea:</h2>
         <div className="text-gray-700 bg-gray-100 p-4 rounded-md">
@@ -172,24 +228,44 @@ export default function IdeaContent() {
             className="mt-1 block w-full p-4 rounded-md border border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             value={changeRequest}
             onChange={(e) => setChangeRequest(e.target.value)}
-            required
+            optional
           />
         </div>
-        <div className="flex space-x-4">
-          <button
-            type="submit"
-            className="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Updating...' : 'Update Idea'}
-          </button>
-          <button
+        <div className="mt-4 space-x-4">
+
+          {/* <button
             type="button"
             onClick={handleContinue}
             className="flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
             Continue
-          </button>
+          </button> */}
+          <>
+
+            {/* {showSaveButton && !ideaSaved && ( */}
+            <div className="mt-4 space-x-4">
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Updating...' : 'Update Idea'}
+              </button>
+              <button
+                onClick={handleSaveIdea}
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Save Idea
+              </button>
+              <button
+                onClick={handleDiscard}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Start Over
+              </button>
+            </div>
+            {/* )} */}
+          </>
         </div>
       </form>
     </div>
