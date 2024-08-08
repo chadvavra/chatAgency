@@ -2,13 +2,20 @@
 
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { useSearchParams } from 'next/navigation';
 import LeftNavigation from '@/components/LeftNavigation';
 
 const SavedProblemContent = dynamic(() => import('./SavedProblemContent'));
 
 export default function Page() {
-  const searchParams = useSearchParams();
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProblemPageContent />
+    </Suspense>
+  );
+}
+
+function ProblemPageContent() {
+  const searchParams = new URLSearchParams(window.location.search);
   const ideaId = searchParams.get('id') || '';
 
   return (
