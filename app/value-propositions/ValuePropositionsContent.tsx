@@ -19,6 +19,8 @@ export default function ValuePropositionsContent() {
   const [isEditing, setIsEditing] = useState(false);
   const [editedValueProps, setEditedValueProps] = useState<string[]>([]);
   const [updateRequest, setUpdateRequest] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isGeneratingNew, setIsGeneratingNew] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -55,6 +57,7 @@ export default function ValuePropositionsContent() {
 
   const handleSave = async () => {
     if (!idea) return;
+    setIsUpdating(true);
 
     try {
       const response = await fetch('/api/generate-value-propositions', {
@@ -94,6 +97,8 @@ export default function ValuePropositionsContent() {
     } catch (error) {
       console.error('Error:', error);
       alert(`An error occurred: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -101,6 +106,51 @@ export default function ValuePropositionsContent() {
     setIsEditing(false);
     setEditedValueProps(idea?.value_propositions || []);
     setUpdateRequest('');
+  };
+
+  const handleGenerateNew = async () => {
+    if (!idea) return;
+    setIsGeneratingNew(true);
+
+    try {
+      const response = await fetch('/api/generate-value-propositions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          idea: idea.generated_idea,
+          changeRequest: 'Generate new value propositions' 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.valuePropositions) {
+        const supabase = createClient();
+        const { error } = await supabase
+          .from('ideas')
+          .update({ value_propositions: data.valuePropositions })
+          .eq('id', idea.id);
+
+        if (error) {
+          throw new Error(`Failed to update value propositions: ${error.message}`);
+        }
+
+        setIdea({ ...idea, value_propositions: data.valuePropositions });
+      } else {
+        throw new Error('No value propositions generated');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert(`An error occurred: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsGeneratingNew(false);
+    }
   };
 
   if (isLoading) {
@@ -184,12 +234,14 @@ export default function ValuePropositionsContent() {
                   <button
                     onClick={handleSave}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    disabled={isUpdating}
                   >
-                    Update Value Propositions
+                    {isUpdating ? 'Updating...' : 'Update Value Propositions'}
                   </button>
                   <button
                     onClick={handleCancel}
                     className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                    disabled={isUpdating}
                   >
                     Cancel
                   </button>
@@ -202,12 +254,21 @@ export default function ValuePropositionsContent() {
                     <li key={index} className="text-gray-700">{vp}</li>
                   ))}
                 </ul>
-                <button
-                  onClick={handleEdit}
-                  className="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                >
-                  Edit
-                </button>
+                <div className="mt-2 space-x-2">
+                  <button
+                    onClick={handleEdit}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={handleGenerateNew}
+                    className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+                    disabled={isGeneratingNew}
+                  >
+                    {isGeneratingNew ? 'Generating...' : 'Generate New'}
+                  </button>
+                </div>
               </div>
             )}
           </section>
