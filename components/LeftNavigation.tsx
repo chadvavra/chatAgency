@@ -22,7 +22,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
 
   return (
     <div className={`transition-all duration-300 ${isCollapsed ? 'w-12' : 'w-[180px]'}`}>
-      <div className={`fixed top-0 left-0 h-full bg-gray-100 p-4 ${isCollapsed ? 'w-12' : 'w-[180px]'} transition-all duration-300`}>
+      <div className={`bg-gray-100 p-4 ${isCollapsed ? 'w-12' : 'w-[180px]'} transition-all duration-300`}>
         <button
           onClick={toggleCollapse}
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"

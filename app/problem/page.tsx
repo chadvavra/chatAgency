@@ -12,11 +12,11 @@ export default function Page() {
   const ideaId = searchParams.get('id') || '';
 
   return (
-    <div className="flex">
-      <div className="w-1/4 p-4">
+    <div className="flex flex-col md:flex-row">
+      <div className="w-full md:w-1/4 p-4">
         <LeftNavigation ideaId={ideaId} />
       </div>
-      <div className="w-3/4 p-4">
+      <div className="w-full md:w-3/4 p-4">
         <Suspense fallback={<div>Loading...</div>}>
           <SavedProblemContent />
         </Suspense>
