@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface LeftNavigationProps {
   ideaId: string;
@@ -9,23 +10,38 @@ interface LeftNavigationProps {
 const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
 
+  const router = useRouter();
+
   const toggleInstructions = () => {
     setIsInstructionsOpen(!isInstructionsOpen);
   };
 
   return (
     <>
+      <button
+        onClick={() => router.back()}
+        className="mb-6 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded transition duration-300"
+      >
+        Back
+      </button>
       <nav className="bg-gray-100 p-4 rounded-lg" aria-label="Left Navigation">
-        <ul className="space-y-2" role="list">
-          <li>
+
+        <ul className="space-y-2 " role="list">
+
+          {/* <li>
             <Link href="/dashboard" className="text-blue-600 hover:underline">
               Back
             </Link>
-          </li>
+          </li> */}
           <li>
             <button onClick={toggleInstructions} className="text-blue-600 hover:underline">
               Instructions
             </button>
+          </li>
+          <li>
+            <Link href={`/problem?id=${ideaId}`} className="text-blue-600 hover:underline">
+              Problem Statement
+            </Link>
           </li>
           <li>
             <Link href={`/keywords?id=${ideaId}`} className="text-blue-600 hover:underline">
@@ -44,7 +60,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
           </li>
           <li>
             <Link href={`/image-generation?id=${ideaId}`} className="text-blue-600 hover:underline">
-              Product Image (beta)
+              Product Image 
             </Link>
           </li>
           <li>
