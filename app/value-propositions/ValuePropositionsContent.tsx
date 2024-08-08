@@ -223,9 +223,7 @@ const ValuePropositionsContent = () => {
           ) : (
             <p>No value propositions generated yet.</p>
           )}
-        </section>
       </div>
-        
     </div>
   );
 }
