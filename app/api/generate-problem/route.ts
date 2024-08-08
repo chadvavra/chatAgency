@@ -55,6 +55,7 @@ export async function POST(request: Request) {
     }
 
     const generatedProblem = [generatedText];
+    // .trim().split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(adj => adj.trim());
 
     // Save adjectives to the database
     const { error: updateError } = await supabase
