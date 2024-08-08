@@ -174,18 +174,8 @@ const ValuePropositionsContent = () => {
     <div className="max-w-7xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold mb-4">Value Propositions</h1>
 
-
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Original Idea</h2>
-          <p className="text-gray-700">{originalIdea}</p>
-          <h2 className="text-xl font-semibold mt-4">Generated Idea</h2>
-          <p className="text-gray-700">{idea}</p>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Value Propositions</h2>
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Value Propositions</h2>
           {isLoading ? (
             <p>Loading value propositions...</p>
           ) : error ? (
@@ -205,28 +195,30 @@ const ValuePropositionsContent = () => {
                   <li key={index} className="text-gray-700">{vp}</li>
                 ))}
               </ul>
-              {showSaveButton && !valueSaved && (
-                <div className="mt-4 space-x-4">
-                  <button
-                    onClick={() => generateValuePropositions(idea)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Generate Value Propositions
-                  </button>
-                  <button
-                    onClick={handleSaveValueProps}
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={handleDiscard}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Discard
-                  </button>
-                </div>
-              )}
+              <div className="mt-4 space-x-4">
+                <button
+                  onClick={() => generateValuePropositions(idea)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Generate New Value Propositions
+                </button>
+                {showSaveButton && !valueSaved && (
+                  <>
+                    <button
+                      onClick={handleSaveValueProps}
+                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={handleDiscard}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                      Discard
+                    </button>
+                  </>
+                )}
+              </div>
             </>
           ) : (
             <p>No value propositions generated yet.</p>
