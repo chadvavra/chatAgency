@@ -179,57 +179,77 @@ const ValuePropositionsContent = () => {
       <h1 className="text-2xl font-bold mb-4">Value Propositions</h1>
 
       <div className="space-y-4">
-        {/* <h2 className="text-xl font-semibold">Value Propositions</h2> */}
-          {isLoading ? (
-            <p>Loading value propositions...</p>
-          ) : error ? (
-            <div>
-              <p className="text-red-500">{error}</p>
-              <button
-                onClick={() => generateValuePropositions(idea)}
-                className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Retry
-              </button>
-            </div>
-          ) : valuePropositions.length > 0 ? (
-            <>
-              <ul className="list-disc pl-5 space-y-2">
-                {valuePropositions.map((vp, index) => (
-                  <li key={index} className="text-gray-700">{vp}</li>
-                ))}
-              </ul>
-              <div className="mt-4 space-x-4">
-                <button
-                  onClick={() => generateValuePropositions(idea)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                >
-                  Generate New Value Propositions
-                </button>
-                {showSaveButton && !valueSaved && (
-                  <>
-                    <button
-                      onClick={handleSaveValueProps}
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={handleDiscard}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                    >
-                      Discard
-                    </button>
-                  </>
-                )}
-              </div>
-            </>
-          ) : (
-            <p>No value propositions generated yet.</p>
-          )}
+        {isLoading ? (
+          <p>Loading value propositions...</p>
+        ) : error ? (
+          <ErrorDisplay error={error} onRetry={() => generateValuePropositions(idea)} />
+        ) : valuePropositions.length > 0 ? (
+          <ValuePropositionsList 
+            valuePropositions={valuePropositions} 
+            onGenerateNew={() => generateValuePropositions(idea)}
+            showSaveButton={showSaveButton}
+            valueSaved={valueSaved}
+            onSave={handleSaveValueProps}
+            onDiscard={handleDiscard}
+          />
+        ) : (
+          <p>No value propositions generated yet.</p>
+        )}
       </div>
     </div>
   );
 }
 
 export default ValuePropositionsContent;
+const ErrorDisplay = ({ error, onRetry }) => (
+  <div>
+    <p className="text-red-500">{error}</p>
+    <button
+      onClick={onRetry}
+      className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    >
+      Retry
+    </button>
+  </div>
+);
+
+const ValuePropositionsList = ({ 
+  valuePropositions, 
+  onGenerateNew, 
+  showSaveButton, 
+  valueSaved, 
+  onSave, 
+  onDiscard 
+}) => (
+  <>
+    <ul className="list-disc pl-5 space-y-2">
+      {valuePropositions.map((vp, index) => (
+        <li key={index} className="text-gray-700">{vp}</li>
+      ))}
+    </ul>
+    <div className="mt-4 space-x-4">
+      <button
+        onClick={onGenerateNew}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Generate New Value Propositions
+      </button>
+      {showSaveButton && !valueSaved && (
+        <>
+          <button
+            onClick={onSave}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Save
+          </button>
+          <button
+            onClick={onDiscard}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Discard
+          </button>
+        </>
+      )}
+    </div>
+  </>
+);
