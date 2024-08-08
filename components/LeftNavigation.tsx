@@ -58,13 +58,18 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
                   </Link>
                 </li>
                 <li>
-                  <Link href={`/keywords?id=${ideaId}`} className="text-blue-600 hover:underline">
-                    Keywords
+                  <Link href={`/revenue-streams?id=${ideaId}`} className="text-blue-600 hover:underline">
+                    Revenue Streams
                   </Link>
                 </li>
                 <li>
                   <Link href={`/competitors?id=${ideaId}`} className="text-blue-600 hover:underline">
                     Competitors
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/keywords?id=${ideaId}`} className="text-blue-600 hover:underline">
+                    Keywords
                   </Link>
                 </li>
                 <li>
@@ -75,11 +80,6 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
                 <li>
                   <Link href={`/image-generation?id=${ideaId}`} className="text-blue-600 hover:underline">
                     Product Image 
-                  </Link>
-                </li>
-                <li>
-                  <Link href={`/revenue-streams?id=${ideaId}`} className="text-blue-600 hover:underline">
-                    Revenue Streams
                   </Link>
                 </li>
               </ul>
