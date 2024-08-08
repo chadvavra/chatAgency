@@ -101,7 +101,7 @@ export default function Login({
         >
           Sign In
         </SubmitButton>
-        <SubmitButton
+        {/* <SubmitButton
           formAction={signUp}
           className="bg-sky-500 border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
           pendingText="Signing Up..."
@@ -110,7 +110,7 @@ export default function Login({
         </SubmitButton>
         <Link href="/profile" className="text-center text-sm text-blue-500 hover:underline mt-4">
           Go to Profile
-        </Link>
+        </Link> */}
         {searchParams?.message && (
           <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
             {searchParams.message}

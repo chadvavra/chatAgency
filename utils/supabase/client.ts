@@ -32,14 +32,13 @@ export const createClient = () => {
   return supabase;
 };
 
-export const saveIdea = async (userId: string, originalIdea: string, generatedIdea: string, valuePropositions: string[]) => {
+export const saveIdea = async (userId: string, originalIdea: string, generatedIdea: string) => {
   const supabase = createClient();
   
   const newIdea = {
     user_id: userId,
     original_idea: originalIdea || '',
-    generated_idea: generatedIdea || '',
-    value_propositions: valuePropositions || []
+    generated_idea: generatedIdea || ''
   };
 
   console.log('Saving new idea with data:', newIdea);
@@ -55,6 +54,30 @@ export const saveIdea = async (userId: string, originalIdea: string, generatedId
   }
   
   console.log('New idea saved successfully:', data);
+  return data[0];
+};
+
+export const saveValueProp = async (userId: string, valuePropositions: string[]) => {
+  const supabase = createClient();
+  
+  const newValueProp = {
+    user_id: userId,
+    value_propositions: valuePropositions || []
+  };
+
+  console.log('Saving new Value Propositions with data:', newValueProp);
+
+  const { data, error } = await supabase
+    .from('ideas')
+    .insert(newValueProp)
+    .select();
+
+  if (error) {
+    console.error('Supabase error:', error);
+    throw new Error(`Failed to save Value propositions: ${error.message}`);
+  }
+  
+  console.log('Value Propostions saved successfully:', data);
   return data[0];
 };
 
