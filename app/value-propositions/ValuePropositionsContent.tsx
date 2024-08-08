@@ -175,7 +175,7 @@ const ValuePropositionsContent = () => {
       <h1 className="text-2xl font-bold mb-4">Value Propositions</h1>
 
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Value Propositions</h2>
+        {/* <h2 className="text-xl font-semibold">Value Propositions</h2> */}
           {isLoading ? (
             <p>Loading value propositions...</p>
           ) : error ? (
