@@ -37,6 +37,7 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
             </svg>
           )}
         </button>
+        {!isCollapsed && (
           <>
             <button
               onClick={() => router.back()}
