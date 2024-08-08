@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import LeftNavigation from '@/components/LeftNavigation';
 
@@ -15,7 +16,7 @@ export default function Page() {
 }
 
 function ProblemPageContent() {
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = useSearchParams();
   const ideaId = searchParams.get('id') || '';
 
   return (
