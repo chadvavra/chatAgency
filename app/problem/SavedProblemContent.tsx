@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
+import { FaCopy } from 'react-icons/fa';
 
 const ProblemContent = () => {
   const router = useRouter();
@@ -79,10 +80,25 @@ const ProblemContent = () => {
     return <div className="container mx-auto px-4 py-8 text-center text-red-500" role="alert" aria-live="assertive">Error: {error}</div>;
   }
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">Problem Statement for Your Idea</h1>
-      
+      <h1 className="text-2xl font-bold mb-4">Problem Statement for Your Idea
+      <button 
+                onClick={() => copyToClipboard(idea.problem)}
+                className="ml-2 text-gray-500 hover:text-gray-700"
+                title="Copy to clipboard"
+              >
+                <FaCopy />
+              </button>
+              </h1>
       
       <div className="bg-white shadow-md rounded-lg p-6 mt-4">
         {problem && problem.length > 0 ? (
@@ -91,10 +107,7 @@ const ProblemContent = () => {
               {problem[0].split('\n\n').map((paragraph, index) => (
                 <div key={index} className="mb-4">
                   {paragraph.split('\n').map((line, lineIndex) => (
-                    <p 
-                      key={`${index}-${lineIndex}`} 
-                      className={`${lineIndex === 0 ? 'font-bold' : 'font-normal'} text-gray-700`}
-                    >
+                    <p key={`${index}-${lineIndex}`} className="text-gray-700">
                       {line}
                     </p>
                   ))}
