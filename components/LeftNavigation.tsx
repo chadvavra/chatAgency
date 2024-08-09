@@ -53,6 +53,11 @@ const LeftNavigation: React.FC<LeftNavigationProps> = ({ ideaId }) => {
                   </button>
                 </li>
                 <li>
+                  <Link href={`/value-propositions?id=${ideaId}`} className="text-blue-600 hover:underline">
+                    Value Proposition
+                  </Link>
+                </li>
+                <li>
                   <Link href={`/problem?id=${ideaId}`} className="text-blue-600 hover:underline">
                     Problem Statement
                   </Link>
