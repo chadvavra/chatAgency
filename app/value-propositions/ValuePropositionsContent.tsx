@@ -249,11 +249,15 @@ export default function ValuePropositionsContent() {
               </div>
             ) : (
               <div>
-                <ul className="list-disc pl-5 space-y-2 bg-gray-100 p-4 rounded-md">
-                  {idea.value_propositions.map((vp, index) => (
-                    <li key={index} className="text-gray-700">{vp}</li>
-                  ))}
-                </ul>
+                {idea.value_propositions && idea.value_propositions.length > 0 ? (
+                  <ul className="list-disc pl-5 space-y-2 bg-gray-100 p-4 rounded-md">
+                    {idea.value_propositions.map((vp, index) => (
+                      <li key={index} className="text-gray-700">{vp}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-700 bg-gray-100 p-4 rounded-md">No value propositions available.</p>
+                )}
                 <div className="mt-2 space-x-2">
                   <button
                     onClick={handleEdit}
